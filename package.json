@@ -1,6 +1,7 @@
 {
   "name": "headlessui-float",
   "version": "0.0.0",
+  "description": "The Floating UI (Popper.js) integration for Headless UI",
   "private": true,
   "workspaces": [
     "packages/headlessui-float-vue",
