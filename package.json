@@ -1,0 +1,13 @@
+{
+  "name": "headlessui-float",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/headlessui-float-vue",
+    "examples/example-vue"
+  ],
+  "scripts": {
+    "vue": "yarn workspace headlessui-float-vue",
+    "example:vue": "yarn workspace example-vue"
+  }
+}

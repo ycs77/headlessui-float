@@ -1,0 +1,31 @@
+{
+  "name": "headlessui-float-vue",
+  "version": "0.0.0",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "main": "./dist/headlessui-float-vue.es.js",
+  "module": "./dist/headlessui-float-vue.es.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/headlessui-float-vue.es.js"
+    }
+  },
+  "scripts": {
+    "build": "vue-tsc --noEmit && vite build && vue-tsc --emitDeclarationOnly",
+    "watch": "vue-tsc --noEmit && vite build --watch"
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^0.2.0",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@vitejs/plugin-vue": "^2.2.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0",
+    "vue-tsc": "^0.29.8"
+  }
+}
