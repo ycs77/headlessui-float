@@ -2,4 +2,4 @@
 
 > wip
 
-The Floating UI (Popper.js) integration for Headless UI.
+The [Floating UI](https://floating-ui.com/) (Popper.js) integration for [Headless UI](https://headlessui.dev/).
