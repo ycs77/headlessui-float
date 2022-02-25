@@ -1,17 +1,17 @@
 import { cloneVNode, defineComponent, h, inject, onMounted, getCurrentInstance } from 'vue'
-import { arrowStateKey } from '../states/arrowState'
+import { arrowElKey } from '../composables/useArrow'
 
 export default defineComponent({
   name: 'FloatArrow',
   setup(props, { slots, attrs }) {
-    const arrowState = inject(arrowStateKey)
-    if (!arrowState) {
-        console.error(`[headlessui-float]: <FloatArrow> must be move in Headless UI's Items component.`)
-        return
+    const arrowEl = inject(arrowElKey)
+    if (!arrowEl) {
+      console.error(`[headlessui-float]: <FloatArrow> must be move in Headless UI's Items component.`)
+      return
     }
 
     onMounted(() => {
-      arrowState.set(getCurrentInstance()!.vnode.el as HTMLElement)
+      arrowEl.value = getCurrentInstance()!.vnode.el as HTMLElement
     })
 
     return () => {

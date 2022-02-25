@@ -1,9 +1,11 @@
-import { defineComponent, ref, computed, nextTick, h, cloneVNode, Transition, Teleport, PropType, VNode } from 'vue'
-import { computePosition, offset, flip, shift, arrow, autoPlacement, hide, getScrollParents, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
+import { defineComponent, ref, computed, toRef, nextTick, h, cloneVNode, Transition, Teleport, PropType, VNode } from 'vue'
+import { offset, flip, shift, arrow, autoPlacement, hide, getScrollParents, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
 import { defaultPlacementClassResolver } from '../placement-class-resolvers'
 import { dom } from '../utils/dom'
-import { filterSlot, flattenFragment, isValidElement } from '../utils/render'
-import { useArrow } from '../states/arrowState'
+import { filterSlot, findVNode, flattenFragment, isValidElement } from '../utils/render'
+import { useFloat } from '../composables/useFloat'
+import { useFloatContent } from '../composables/useFloatContent'
+import { useArrow } from '../composables/useArrow'
 import { PlacementClassResolver } from '../types'
 
 export default defineComponent({
@@ -68,16 +70,28 @@ export default defineComponent({
     platform: Object as PropType<Platform>,
   },
   setup(props, { slots }) {
-    const arrowState = useArrow()
-
-    const referenceEl = ref<HTMLElement | null>(null)
-    const floatingEl = ref<HTMLElement | null>(null)
-
-    const placementOriginClass = computed(() => {
-      return props.originClass || props.placementClassResolver(props.placement)
+    const arrowEl = useArrow()
+    const { floatApi, referenceEl, floatingEl } = useFloat({
+      computePositionConfig: computePositionOptions(),
+      updateMiddleware,
+      rootProps: props,
+      zIndex: props.zIndex,
+      arrowEl,
     })
 
-    const getComputePositionOptions = () => {
+    function computePositionOptions() {
+      const options = {
+        placement: props.placement,
+        strategy: props.strategy,
+        middleware: [],
+      }
+      if (props.platform) {
+        Object.assign(options, { platform: props.platform })
+      }
+      return options
+    }
+
+    function updateMiddleware() {
       const middleware = []
       if (typeof props.offset === 'number') {
         middleware.push(offset(props.offset))
@@ -88,9 +102,9 @@ export default defineComponent({
       if (props.flip) {
         middleware.push(flip())
       }
-      if (arrowState.el) {
+      if (arrowEl.value) {
         middleware.push(arrow({
-          element: arrowState.el,
+          element: arrowEl.value,
           padding: props.arrowPadding,
         }))
       }
@@ -100,130 +114,40 @@ export default defineComponent({
       if (props.hide) {
         middleware.push(hide())
       }
-
-      const options = {
-        placement: props.placement,
-        strategy: props.strategy,
-        middleware: middleware.concat(props.middleware),
-      }
-      if (props.platform) {
-        Object.assign(options, { platform: props.platform })
-      }
-      return options
-    }
-
-    const updateFloatingEl = () => {
-      Object.assign(dom(floatingEl)!.style, {
-        position: props.strategy,
-        zIndex: props.zIndex,
-      })
-
-      computePosition(dom(referenceEl)!, dom(floatingEl)!, getComputePositionOptions())
-        .then(({ x, y, placement, middlewareData }) => {
-          Object.assign(dom(floatingEl)!.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-          })
-
-          if (arrowState.el) {
-            const { x: arrowX, y: arrowY } = middlewareData.arrow as { x?: number, y?: number }
-            const staticSide = {
-              top: 'bottom',
-              right: 'left',
-              bottom: 'top',
-              left: 'right',
-            }[placement.split('-')[0]]!
-            Object.assign(arrowState.el.style, {
-              left: typeof arrowX === 'number' ? `${arrowX}px` : '',
-              top: typeof arrowY === 'number' ? `${arrowY}px` : '',
-              right: '',
-              bottom: '',
-              [staticSide]: '-4px',
-            })
-          }
-        })
-    }
-
-    const hideFloatingEl = () => {
-      if (dom(floatingEl)?.style) {
-        Object.assign(dom(floatingEl)!.style, {
-          position: null,
-          zIndex: null,
-          left: null,
-          top: null,
-        })
-      }
-    }
-
-    const attachListeners = () => {
-      [
-        ...getScrollParents(dom(referenceEl)!),
-        ...getScrollParents(dom(floatingEl)!),
-      ].forEach((el) => {
-        el.addEventListener('scroll', updateFloatingEl)
-        el.addEventListener('resize', updateFloatingEl)
-      })
-    }
-    const detachListeners = () => {
-      [
-        ...getScrollParents(dom(referenceEl)!),
-        ...(dom(floatingEl) ? getScrollParents(dom(floatingEl)!) : []),
-      ].forEach((el) => {
-        el.removeEventListener('scroll', updateFloatingEl)
-        el.removeEventListener('resize', updateFloatingEl)
-      })
-    }
-
-    const transitionProps = {
-      enterActiveClass: props.transition ? `${props.enterActiveClass} ${placementOriginClass.value}` : undefined,
-      enterFromClass: props.transition ? props.enterFromClass : undefined,
-      enterToClass: props.transition ? props.enterToClass : undefined,
-      leaveActiveClass: props.transition ? `${props.leaveActiveClass} ${placementOriginClass.value}` : undefined,
-      leaveFromClass: props.transition ? props.leaveFromClass : undefined,
-      leaveToClass: props.transition ? props.leaveToClass : undefined,
-      async onBeforeEnter() {
-        await nextTick()
-        updateFloatingEl()
-        attachListeners()
-      },
-      onAfterLeave() {
-        detachListeners()
-        hideFloatingEl()
-      },
+      return middleware.concat(props.middleware)
     }
 
     return () => {
-      const [referenceNode, defaultSlotContentNode, ...otherNodes] = filterSlot(
-        flattenFragment(slots.default?.() || [])
-      )
+      if (slots.default) {
+        const defaultSlotNodes = filterSlot(flattenFragment(slots.default() || []))
+        const hasFloatComponent = typeof findVNode(defaultSlotNodes, node => {
+          return ['FloatButton', 'FloatContent'].includes((node.type as { name: string }).name)
+        }) !== 'undefined'
 
-      if (!isValidElement(referenceNode)) {
-        console.error(`[headlessui-float]: default slot must contains Headless UI's Button & Items Components.`)
-        return
-      }
-
-      const floatingNode = filterSlot(
-        flattenFragment(slots.content?.() || [])
-      )[0] || defaultSlotContentNode
-
-      const wrapTeleport = (node: VNode) => {
-        if (props.teleport === false) {
-          return node
+        if (hasFloatComponent) {
+          return defaultSlotNodes
         }
-        return h(Teleport, { to: props.teleport === true ? 'body' : props.teleport }, [node])
-      }
 
-      return [
-        cloneVNode(referenceNode, { ref: referenceEl }),
-        wrapTeleport(
-          h(Transition, transitionProps, () => {
-            return floatingNode
+        const { createFloatContent } = useFloatContent({ floatApi, referenceEl, floatingEl })
+
+        const [referenceNode, floatingNode] = filterSlot(
+          flattenFragment(slots.default() || [])
+        )
+
+        if (!isValidElement(referenceNode) || !isValidElement(floatingNode)) {
+          console.error(`[headlessui-float]: default slot must contains Headless UI's Button & Items Components.`)
+          return
+        }
+
+        return [
+          cloneVNode(referenceNode, { ref: referenceEl }),
+          createFloatContent(
+            floatingNode
               ? cloneVNode(floatingNode, { ref: floatingEl })
               : undefined
-          })
-        ),
-        ...otherNodes.map(node => cloneVNode(node)),
-      ]
+          ),
+        ]
+      }
     }
   },
 })
