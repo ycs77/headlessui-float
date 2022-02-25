@@ -1,6 +1,19 @@
 {
   "name": "headlessui-float-vue",
   "version": "0.0.0",
+  "description": "Using Floating UI (Popper.js) in Headless UI",
+  "keywords": [
+    "floating",
+    "floating-ui",
+    "popper",
+    "popperjs",
+    "popover",
+    "tooltip",
+    "dropdown",
+    "headless",
+    "headlessui",
+    "vue"
+  ],
   "files": [
     "dist",
     "types"
