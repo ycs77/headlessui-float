@@ -1,4 +1,4 @@
-import { defineComponent, ref, computed, nextTick, h, cloneVNode, Transition, PropType, ComponentPublicInstance } from 'vue'
+import { defineComponent, ref, computed, nextTick, h, cloneVNode, Transition, Teleport, PropType, ComponentPublicInstance, VNode } from 'vue'
 import { computePosition, offset, flip, shift, Placement, Strategy, Middleware } from '@floating-ui/dom'
 import { ComputePositionConfig } from '@floating-ui/core'
 import { defaultPlacementClassResolver } from '../placement-class-resolvers'
@@ -20,13 +20,24 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
+    zIndex: {
+      type: Number,
+      default: 9999,
+    },
     transition: {
       type: Boolean,
       default: false,
     },
-    zIndex: {
-      type: Number,
-      default: 9999,
+    enterActiveClass: String,
+    enterFromClass: String,
+    enterToClass: String,
+    leaveActiveClass: String,
+    leaveFromClass: String,
+    leaveToClass: String,
+    originClass: String,
+    teleport: {
+      type: [Boolean, String],
+      default: false,
     },
     placementClassResolver: {
       type: Function as PropType<PlacementClassResolver>,
@@ -40,13 +51,6 @@ export default defineComponent({
       type: Object as PropType<Partial<ComputePositionConfig>>,
       default: () => ({}),
     },
-    enterActiveClass: String,
-    enterFromClass: String,
-    enterToClass: String,
-    leaveActiveClass: String,
-    leaveFromClass: String,
-    leaveToClass: String,
-    originClass: String,
   },
   setup(props, { slots }) {
     const buttonRef = ref<ComponentPublicInstance>(null!)
@@ -104,18 +108,30 @@ export default defineComponent({
         })
       }
 
+      const transitionProps = {
+        enterActiveClass: props.transition ? `${props.enterActiveClass} ${placementOriginClass.value}` : undefined,
+        enterFromClass: props.transition ? props.enterFromClass : undefined,
+        enterToClass: props.transition ? props.enterToClass : undefined,
+        leaveActiveClass: props.transition ? `${props.leaveActiveClass} ${placementOriginClass.value}` : undefined,
+        leaveFromClass: props.transition ? props.leaveFromClass : undefined,
+        leaveToClass: props.transition ? props.leaveToClass : undefined,
+        onBeforeEnter: showFloatEl,
+        onAfterLeave: hideFloatEl,
+      }
+
+      const wrapTeleport = (node: VNode) => {
+        if (props.teleport === false) {
+          return node
+        }
+        return h(Teleport, { to: props.teleport === true ? 'body' : props.teleport }, [node])
+      }
+
       return [
         ...[cloneVNode(buttonNode, { ref: buttonRef })],
-        h(Transition, {
-          enterActiveClass: props.transition ? `${props.enterActiveClass} ${placementOriginClass.value}` : undefined,
-          enterFromClass: props.transition ? props.enterFromClass : undefined,
-          enterToClass: props.transition ? props.enterToClass : undefined,
-          leaveActiveClass: props.transition ? `${props.leaveActiveClass} ${placementOriginClass.value}` : undefined,
-          leaveFromClass: props.transition ? props.leaveFromClass : undefined,
-          leaveToClass: props.transition ? props.leaveToClass : undefined,
-          onBeforeEnter: showFloatEl,
-          onAfterLeave: hideFloatEl,
-        }, () => contentNode || defaultContentNode)
+
+        wrapTeleport(
+          h(Transition, transitionProps, () => contentNode || defaultContentNode)
+        ),
       ]
     }
   },
