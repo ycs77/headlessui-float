@@ -1,6 +1,7 @@
-import { defineComponent, ref, computed, nextTick, h, cloneVNode, Transition, Teleport, PropType, ComponentPublicInstance, VNode, onMounted, onBeforeUnmount } from 'vue'
+import { defineComponent, ref, computed, nextTick, h, cloneVNode, Transition, Teleport, PropType, VNode } from 'vue'
 import { computePosition, offset, flip, shift, getScrollParents, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
 import { defaultPlacementClassResolver } from '../placement-class-resolvers'
+import { dom } from '../utils/dom'
 import { filterSlot, isValidElement } from '../utils/render'
 import { PlacementClassResolver } from '../types'
 
@@ -54,8 +55,8 @@ export default defineComponent({
     platform: Object as PropType<Platform>,
   },
   setup(props, { slots }) {
-    const referenceEl = ref<ComponentPublicInstance>(null!)
-    const floatingEl = ref<ComponentPublicInstance>(null!)
+    const referenceEl = ref<HTMLElement | null>(null)
+    const floatingEl = ref<HTMLElement | null>(null)
 
     const placementOriginClass = computed(() => {
       return props.originClass || props.placementClassResolver(props.placement)
@@ -86,13 +87,13 @@ export default defineComponent({
     const options = getComputePositionOptions()
 
     const updateFloatingEl = () => {
-      Object.assign(floatingEl.value.$el.style, {
+      Object.assign(dom(floatingEl)!.style, {
         position: props.strategy,
         zIndex: props.zIndex,
       })
 
-      computePosition(referenceEl.value.$el, floatingEl.value.$el, options).then(({ x, y }) => {
-        Object.assign(floatingEl.value.$el.style, {
+      computePosition(dom(referenceEl)!, dom(floatingEl)!, options).then(({ x, y }) => {
+        Object.assign(dom(floatingEl)!.style, {
           left: `${x}px`,
           top: `${y}px`,
         })
@@ -100,8 +101,8 @@ export default defineComponent({
     }
 
     const hideFloatingEl = () => {
-      if (floatingEl.value?.$el.style) {
-        Object.assign(floatingEl.value.$el.style, {
+      if (dom(floatingEl)?.style) {
+        Object.assign(dom(floatingEl)!.style, {
           position: null,
           zIndex: null,
           left: null,
@@ -112,8 +113,8 @@ export default defineComponent({
 
     const attachListeners = () => {
       [
-        ...getScrollParents(referenceEl.value.$el),
-        ...getScrollParents(floatingEl.value.$el),
+        ...getScrollParents(dom(referenceEl)!),
+        ...getScrollParents(dom(floatingEl)!),
       ].forEach((el) => {
         el.addEventListener('scroll', updateFloatingEl)
         el.addEventListener('resize', updateFloatingEl)
@@ -121,8 +122,8 @@ export default defineComponent({
     }
     const detachListeners = () => {
       [
-        ...getScrollParents(referenceEl.value.$el),
-        ...(floatingEl.value?.$el ? getScrollParents(floatingEl.value.$el) : []),
+        ...getScrollParents(dom(referenceEl)!),
+        ...(dom(floatingEl) ? getScrollParents(dom(floatingEl)!) : []),
       ].forEach((el) => {
         el.removeEventListener('scroll', updateFloatingEl)
         el.removeEventListener('resize', updateFloatingEl)
@@ -141,10 +142,8 @@ export default defineComponent({
         updateFloatingEl()
         attachListeners()
       },
-      onBeforeLeave() {
-        detachListeners()
-      },
       onAfterLeave() {
+        detachListeners()
         hideFloatingEl()
       },
     }
