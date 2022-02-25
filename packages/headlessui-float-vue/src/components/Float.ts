@@ -56,11 +56,7 @@ export default defineComponent({
     const buttonRef = ref<ComponentPublicInstance>(null!)
 
     const placementOriginClass = computed(() => {
-      if (props.originClass) {
-        return props.originClass
-      }
-
-      return props.placementClassResolver(props.placement)
+      return props.originClass || props.placementClassResolver(props.placement)
     })
 
     return () => {
