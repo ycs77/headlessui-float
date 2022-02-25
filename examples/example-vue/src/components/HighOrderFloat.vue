@@ -1,6 +1,7 @@
 <template>
   <Float
     :offset="8"
+    flip
     transition
     teleport
     enter-active-class="transition duration-200 ease-out"

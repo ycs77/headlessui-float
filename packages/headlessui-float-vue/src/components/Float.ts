@@ -1,5 +1,5 @@
 import { defineComponent, ref, computed, nextTick, h, cloneVNode, Transition, Teleport, PropType, VNode } from 'vue'
-import { computePosition, offset, flip, shift, arrow, getScrollParents, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
+import { computePosition, offset, flip, shift, arrow, autoPlacement, hide, getScrollParents, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
 import { defaultPlacementClassResolver } from '../placement-class-resolvers'
 import { dom } from '../utils/dom'
 import { filterSlot, flattenFragment, isValidElement } from '../utils/render'
@@ -24,11 +24,19 @@ export default defineComponent({
     },
     flip: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     arrowPadding: {
       type: Number,
       default: 0,
+    },
+    autoPlacement: {
+      type: Boolean,
+      default: false,
+    },
+    hide: {
+      type: Boolean,
+      default: false,
     },
     zIndex: {
       type: Number,
@@ -85,6 +93,12 @@ export default defineComponent({
           element: arrowState.el,
           padding: props.arrowPadding,
         }))
+      }
+      if (props.autoPlacement) {
+        middleware.push(autoPlacement())
+      }
+      if (props.hide) {
+        middleware.push(hide())
       }
 
       const options = {
@@ -188,21 +202,9 @@ export default defineComponent({
         return
       }
 
-      let floatingNode = filterSlot(
+      const floatingNode = filterSlot(
         flattenFragment(slots.content?.() || [])
       )[0] || defaultSlotContentNode
-
-      const eachFloatingNode = (node: any): any => {
-        const newNode = cloneVNode(node)
-        if (typeof newNode.children === 'string') {
-          newNode.children = newNode.children+'123'
-        }
-        if (Array.isArray(newNode.children)) {
-          newNode.children = newNode.children.map(n => eachFloatingNode(n))
-        }
-        return newNode
-      }
-      floatingNode = eachFloatingNode(floatingNode)
 
       const wrapTeleport = (node: VNode) => {
         if (props.teleport === false) {
