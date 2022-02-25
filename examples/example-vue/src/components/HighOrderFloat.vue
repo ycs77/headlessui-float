@@ -20,11 +20,13 @@
 </template>
 
 <script>
-import { Float, tailwindcssPlacementClassResolver } from 'headlessui-float-vue'
+import { Float, useArrow, tailwindcssPlacementClassResolver } from 'headlessui-float-vue'
 
 export default {
   components: { Float },
   setup() {
+    useArrow()
+
     return { tailwindcssPlacementClassResolver }
   },
 }

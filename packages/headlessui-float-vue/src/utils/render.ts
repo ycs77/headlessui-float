@@ -1,15 +1,18 @@
 import { VNode, Fragment } from 'vue'
 
 // Flatten Fragments in slots.
-export function filterSlot(slots: VNode[]): VNode[] {
-  return slots
+export function flattenFragment(nodes: VNode[]): VNode[] {
+  return nodes
     .reduce<VNode[]>((carry, node) => {
       if (node.type === Fragment) {
-        return carry.concat(filterSlot(node.children as VNode[]))
+        return carry.concat(flattenFragment(node.children as VNode[]))
       }
       return carry.concat(node)
     }, [])
-    .filter(isValidElement)
+}
+
+export function filterSlot(nodes: VNode[]): VNode[] {
+  return nodes.filter(isValidElement)
 }
 
 /** @see https://github.com/tailwindlabs/headlessui/blob/d8424fe311923f6858f6e3d55083df957bca824d/packages/%40headlessui-vue/src/utils/render.ts#L139-L145 */

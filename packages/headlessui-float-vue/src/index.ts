@@ -1,3 +1,5 @@
 export { default as Float } from './components/Float'
+export { default as FloatArrow } from './components/FloatArrow'
+export { useArrow } from './states/arrowState'
 export * from './placement-class-resolvers'
 export * from './types'
