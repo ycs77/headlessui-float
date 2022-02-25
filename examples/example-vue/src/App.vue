@@ -8,23 +8,21 @@
             Options
           </MenuButton>
 
-          <template #content>
-            <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
-              <MenuItem v-slot="{ active }">
-                <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                  Account settings
-                </button>
-              </MenuItem>
-              <MenuItem v-slot="{ active }">
-                <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                  Documentation
-                </button>
-              </MenuItem>
-              <MenuItem disabled>
-                <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
-              </MenuItem>
-            </MenuItems>
-          </template>
+          <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+            <MenuItem v-slot="{ active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                Account settings
+              </button>
+            </MenuItem>
+            <MenuItem v-slot="{ active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                Documentation
+              </button>
+            </MenuItem>
+            <MenuItem disabled>
+              <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+            </MenuItem>
+          </MenuItems>
         </Float>
       </Menu>
     </Block>
@@ -36,23 +34,21 @@
             Options
           </MenuButton>
 
-          <template #content>
-            <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
-              <MenuItem v-slot="{ active }">
-                <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                  Account settings
-                </button>
-              </MenuItem>
-              <MenuItem v-slot="{ active }">
-                <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                  Documentation
-                </button>
-              </MenuItem>
-              <MenuItem disabled>
-                <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
-              </MenuItem>
-            </MenuItems>
-          </template>
+          <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+            <MenuItem v-slot="{ active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                Account settings
+              </button>
+            </MenuItem>
+            <MenuItem v-slot="{ active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                Documentation
+              </button>
+            </MenuItem>
+            <MenuItem disabled>
+              <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+            </MenuItem>
+          </MenuItems>
         </HighOrderFloat>
       </Menu>
     </Block>
@@ -72,23 +68,21 @@
             Options
           </MenuButton>
 
-          <template #content>
-            <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
-              <MenuItem v-slot="{ active }">
-                <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                  Account settings
-                </button>
-              </MenuItem>
-              <MenuItem v-slot="{ active }">
-                <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                  Documentation
-                </button>
-              </MenuItem>
-              <MenuItem disabled>
-                <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
-              </MenuItem>
-            </MenuItems>
-          </template>
+          <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+            <MenuItem v-slot="{ active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                Account settings
+              </button>
+            </MenuItem>
+            <MenuItem v-slot="{ active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                Documentation
+              </button>
+            </MenuItem>
+            <MenuItem disabled>
+              <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+            </MenuItem>
+          </MenuItems>
         </HighOrderFloat>
       </Menu>
     </Block>
@@ -112,13 +106,11 @@
             <HeroiconsOutlineMenuAlt2 class="w-5 h-5" aria-hidden="true" />
           </PopoverButton>
 
-          <template #content>
-            <PopoverPanel v-if="open" static class="w-[240px] h-[70px] p-3 bg-white border border-gray-200 rounded-md shadow-lg">
-              <div>
-                content...
-              </div>
-            </PopoverPanel>
-          </template>
+          <PopoverPanel v-if="open" static class="w-[240px] h-[70px] p-3 bg-white border border-gray-200 rounded-md shadow-lg">
+            <div>
+              content...
+            </div>
+          </PopoverPanel>
         </HighOrderFloat>
       </Popover>
     </Block>
