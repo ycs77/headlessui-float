@@ -1,5 +1,5 @@
 <template>
-  <div ref="buttonRef">
+  <div ref="buttonRef" style="display: inline-block">
     <slot></slot>
   </div>
 
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, nextTick } from 'vue'
+import { defineComponent, ref, computed, nextTick, onMounted } from 'vue'
 import { computePosition, offset, flip, shift } from '@floating-ui/dom'
 import { defaultPlacementClassResolver } from '../placement-class-resolvers'
 import type { PropType } from 'vue'
@@ -82,7 +82,7 @@ export default defineComponent({
         zIndex: props.zIndex,
       })
 
-      computePosition(buttonRef.value, floatingRef.value, {
+      computePosition(buttonRef.value.children[0], floatingRef.value, {
         ...props.options,
         placement: props.placement,
         strategy: props.strategy,
@@ -116,6 +116,16 @@ export default defineComponent({
       }
 
       return props.placementClassResolver(props.placement)
+    })
+
+    const slotsValidation = () => {
+      if (buttonRef.value.children.length > 1) {
+        console.error(`[headlessui-float]: default slot only allows 1 child element.`)
+      }
+    }
+
+    onMounted(() => {
+      slotsValidation()
     })
 
     return { buttonRef, floatingRef, showFloatEl, hideFloatEl, placementOriginClass }
