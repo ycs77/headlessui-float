@@ -1,8 +1,6 @@
-# Headless UI Float
-
-> wip
-
-Using [Floating UI](https://floating-ui.com/) (Popper.js) in [Headless UI](https://headlessui.dev/).
+<h2 align="center">Headless UI Float</h2>
+<hr>
+<p align="center">Using <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) in <a href="https://headlessui.dev/">Headless UI</a>.</p>
 
 ## Packages
 
