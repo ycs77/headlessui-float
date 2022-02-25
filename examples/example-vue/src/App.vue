@@ -2,13 +2,13 @@
   <div class="p-6 grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
     <Block title="Menu (Dropdown) with original Float">
-      <Menu v-slot="{ open }">
+      <Menu>
         <Float placement="bottom-end">
           <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
             Options
           </MenuButton>
 
-          <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+          <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
             <MenuItem v-slot="{ active }">
               <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
                 Account settings
@@ -28,13 +28,13 @@
     </Block>
 
     <Block title="Menu (Dropdown) with high-order Float">
-      <Menu v-slot="{ open }">
+      <Menu>
         <HighOrderFloat placement="bottom-end">
           <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
             Options
           </MenuButton>
 
-          <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+          <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
             <MenuItem v-slot="{ active }">
               <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
                 Account settings
@@ -54,7 +54,7 @@
     </Block>
 
     <Block title="Menu (Dropdown) override transition class">
-      <Menu v-slot="{ open }">
+      <Menu>
         <HighOrderFloat
           placement="bottom-end"
           enter-active-class="transition duration-100 ease-out"
@@ -68,7 +68,7 @@
             Options
           </MenuButton>
 
-          <MenuItems v-if="open" static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
+          <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden">
             <MenuItem v-slot="{ active }">
               <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
                 Account settings
@@ -94,7 +94,7 @@
     </Block>
 
     <Block title="Popover">
-      <Popover v-slot="{ open }">
+      <Popover>
         <HighOrderFloat
           placement="bottom-start"
           enter-from-class="opacity-0 -translate-y-1"
@@ -106,7 +106,7 @@
             <HeroiconsOutlineMenuAlt2 class="w-5 h-5" aria-hidden="true" />
           </PopoverButton>
 
-          <PopoverPanel v-if="open" static class="w-[240px] h-[70px] p-3 bg-white border border-gray-200 rounded-md shadow-lg">
+          <PopoverPanel class="w-[240px] h-[70px] p-3 bg-white border border-gray-200 rounded-md shadow-lg">
             <div>
               content...
             </div>
