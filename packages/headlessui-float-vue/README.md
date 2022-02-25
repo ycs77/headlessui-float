@@ -1,11 +1,58 @@
-# Vue 3 + Typescript + Vite
+# Headless UI Float Vue
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+The [Floating UI](https://floating-ui.com/) (Popper.js) integration for [Headless UI](https://headlessui.dev/) Vue.
 
-## Recommended IDE Setup
+## Usage
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+Installation package:
 
-## Type Support For `.vue` Imports in TS
+```bash
+# via npm
+npm i headlessui-float-vue
+# via yarn
+yarn add headlessui-float-vue
+```
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+Basic example using Headless UI &lt;Menu&gt;:
+
+```vue
+<template>
+  <Menu v-slot="{ open }">
+    <Float placement="bottom-end">
+      <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
+        Options
+      </MenuButton>
+
+      <template #content>
+        <MenuItems
+         v-if="open"
+         static
+         class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden"
+        >
+          <MenuItem v-slot="{ active }">
+            <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+              Account settings
+            </button>
+          </MenuItem>
+          <MenuItem v-slot="{ active }">
+            <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+              Documentation
+            </button>
+          </MenuItem>
+          <MenuItem disabled>
+            <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+          </MenuItem>
+        </MenuItems>
+      </template>
+    </Float>
+  </Menu>
+</template>
+
+<script>
+import { Float } from 'headlessui-float-vue'
+
+export default {
+  components: { Float },
+}
+</script>
+```
