@@ -1,6 +1,5 @@
-import { defineComponent, inject, cloneVNode } from 'vue'
-import { floatingElKey, floatApiKey, referenceElKey } from '../composables/useFloat'
-import { useFloatContent } from '../composables/useFloatContent'
+import { defineComponent, computed, h, nextTick, inject, cloneVNode, Teleport, Transition, VNode } from 'vue'
+import { floatingKey, floatApiKey } from '../composables/useFloat'
 
 export default defineComponent({
   name: 'FloatContent',
@@ -11,18 +10,47 @@ export default defineComponent({
       return
     }
 
-    const referenceEl = inject(referenceElKey)!
-    const floatingEl = inject(floatingElKey)!
-    const { createFloatContent } = useFloatContent({ floatApi, referenceEl, floatingEl })
+    const floatingRef = inject(floatingKey)!
+
+    const rProps = floatApi.rootProps
+
+    const placementOriginClass = computed(() => {
+      return rProps.originClass || rProps.placementClassResolver(rProps.placement)
+    })
+
+    const transitionProps = {
+      enterActiveClass: rProps.transition ? `${rProps.enterActiveClass} ${placementOriginClass.value}` : undefined,
+      enterFromClass: rProps.transition ? rProps.enterFromClass : undefined,
+      enterToClass: rProps.transition ? rProps.enterToClass : undefined,
+      leaveActiveClass: rProps.transition ? `${rProps.leaveActiveClass} ${placementOriginClass.value}` : undefined,
+      leaveFromClass: rProps.transition ? rProps.leaveFromClass : undefined,
+      leaveToClass: rProps.transition ? rProps.leaveToClass : undefined,
+
+      async onBeforeEnter() {
+        await nextTick()
+        await floatApi.update()
+        await floatApi.show()
+      },
+      onAfterLeave() {
+        floatApi.hide()
+      },
+    }
+
+    const wrapTeleport = (node: VNode) => {
+      if (rProps.teleport === false) {
+        return node
+      }
+      return h(Teleport, { to: rProps.teleport === true ? 'body' : rProps.teleport }, [node])
+    }
 
     return () => {
       if (slots.default) {
         const [node] = slots.default()
-        return createFloatContent(
+        return wrapTeleport(h(Transition, transitionProps, () =>
           node
-            ? cloneVNode(node, { ref: floatingEl })
+            ? cloneVNode(node, { ref: floatingRef })
             : undefined
-        )
+        ))
       }
     }
   },

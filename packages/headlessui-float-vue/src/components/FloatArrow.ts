@@ -1,4 +1,4 @@
-import { cloneVNode, defineComponent, h, inject, onMounted } from 'vue'
+import { cloneVNode, defineComponent, h, inject } from 'vue'
 import { arrowElKey } from '../composables/useArrow'
 
 export default defineComponent({

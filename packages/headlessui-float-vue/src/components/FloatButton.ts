@@ -1,5 +1,5 @@
 import { defineComponent, inject, cloneVNode } from 'vue'
-import { floatApiKey, referenceElKey } from '../composables/useFloat'
+import { floatApiKey, referenceKey } from '../composables/useFloat'
 
 export default defineComponent({
   name: 'FloatButton',
@@ -10,13 +10,13 @@ export default defineComponent({
       return
     }
 
-    const referenceEl = inject(referenceElKey)!
+    const referenceRef = inject(referenceKey)!
 
     return () => {
       if (slots.default) {
         const [node] = slots.default()
         return node
-          ? cloneVNode(node, { ref: referenceEl })
+          ? cloneVNode(node, { ref: referenceRef })
           : undefined
       }
     }

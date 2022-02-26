@@ -5,26 +5,30 @@
 
     <Block title="Menu (Dropdown) with original Float" title-class="text-indigo-400">
       <Menu>
-        <Float placement="bottom-end">
-          <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
-            Options
-          </MenuButton>
+        <Float placement="bottom-start" :offset="4">
+          <FloatButton>
+            <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
+              Options
+            </MenuButton>
+          </FloatButton>
 
-          <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
-            <MenuItem v-slot="{ active }">
-              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                Account settings
-              </button>
-            </MenuItem>
-            <MenuItem v-slot="{ active }">
-              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
-                Documentation
-              </button>
-            </MenuItem>
-            <MenuItem disabled>
-              <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
-            </MenuItem>
-          </MenuItems>
+          <FloatContent>
+            <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
+              <MenuItem v-slot="{ active }">
+                <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
+                  Account settings
+                </button>
+              </MenuItem>
+              <MenuItem v-slot="{ active }">
+                <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
+                  Documentation
+                </button>
+              </MenuItem>
+              <MenuItem disabled>
+                <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+              </MenuItem>
+            </MenuItems>
+          </FloatContent>
         </Float>
       </Menu>
     </Block>
@@ -32,23 +36,23 @@
     <Block title="Menu (Dropdown) with high-order Float" title-class="text-indigo-400">
       <Menu>
         <HighOrderFloat placement="bottom-end">
-          <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
+          <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </MenuButton>
 
           <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
             <MenuItem v-slot="{ active }">
-              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
                 Account settings
               </button>
             </MenuItem>
             <MenuItem v-slot="{ active }">
-              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
                 Documentation
               </button>
             </MenuItem>
             <MenuItem disabled>
-              <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
             </MenuItem>
           </MenuItems>
         </HighOrderFloat>
@@ -66,23 +70,23 @@
           leave-from-class="scale-100 opacity-100"
           leave-to-class="scale-50 opacity-0"
         >
-          <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
+          <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </MenuButton>
 
           <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
             <MenuItem v-slot="{ active }">
-              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
                 Account settings
               </button>
             </MenuItem>
             <MenuItem v-slot="{ active }">
-              <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+              <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
                 Documentation
               </button>
             </MenuItem>
             <MenuItem disabled>
-              <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
             </MenuItem>
           </MenuItems>
         </HighOrderFloat>
@@ -91,8 +95,8 @@
 
     <Block title="Menu (Dropdown) has Arrow" title-class="text-indigo-400">
       <Menu>
-        <Float placement="bottom-end" :offset="12" flip>
-          <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
+        <Float placement="bottom-end" :offset="12" flip arrow>
+          <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </MenuButton>
 
@@ -102,7 +106,7 @@
               <MenuItem v-slot="{ active }">
                 <button
                   type="button"
-                  class="block w-full px-4 py-1.5 text-left"
+                  class="block w-full px-4 py-1.5 text-left text-sm"
                   :class="{ 'bg-indigo-500 text-white': active }"
                 >
                   Account settings
@@ -111,14 +115,14 @@
               <MenuItem v-slot="{ active }">
                 <button
                   type="button"
-                  class="block w-full px-4 py-1.5 text-left"
+                  class="block w-full px-4 py-1.5 text-left text-sm"
                   :class="{ 'bg-indigo-500 text-white': active }"
                 >
                   Documentation
                 </button>
               </MenuItem>
               <MenuItem disabled>
-                <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+                <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
               </MenuItem>
             </div>
           </MenuItems>
@@ -126,12 +130,12 @@
       </Menu>
     </Block>
 
-    <Block title="FloatButton & FloatContent" title-class="text-indigo-400">
+    <Block title="Explicit use FloatButton & FloatContent" title-class="text-indigo-400">
       <Menu>
         <Float placement="bottom-end">
-          <div class="p-8 bg-purple-50">
+          <div class="px-8 bg-purple-50">
             <FloatButton>
-              <MenuButton class="flex justify-center items-center px-4 py-1.5 text-indigo-500 bg-indigo-50 hover:bg-indigo-100 rounded-md">
+              <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
                 Options
               </MenuButton>
             </FloatButton>
@@ -141,17 +145,17 @@
             <FloatContent>
               <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
                 <MenuItem v-slot="{ active }">
-                  <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                  <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
                     Account settings
                   </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button type="button" class="block w-full px-4 py-1.5 text-left" :class="{ 'bg-indigo-500 text-white': active }">
+                  <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }">
                     Documentation
                   </button>
                 </MenuItem>
                 <MenuItem disabled>
-                  <span class="block w-full px-4 py-1.5 text-left opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+                  <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
                 </MenuItem>
               </MenuItems>
             </FloatContent>
@@ -205,6 +209,7 @@
         <HighOrderFloat
           placement="bottom-start"
           :offset="15"
+          arrow
           enter-from-class="opacity-0 -translate-y-1"
           enter-to-class="opacity-100 translate-y-0"
           leave-from-class="opacity-100 translate-y-0"
@@ -216,7 +221,7 @@
 
           <PopoverPanel class="w-[240px] h-[70px] bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
             <FloatArrow class="absolute bg-white w-5 h-5 rotate-45 border border-gray-200" />
-            <div class="relative z-[1] h-full bg-white p-3 text-rose-500">
+            <div class="relative z-[1] h-full bg-white p-3 text-rose-500 rounded-md">
               Popover & arrow, content...
             </div>
           </PopoverPanel>

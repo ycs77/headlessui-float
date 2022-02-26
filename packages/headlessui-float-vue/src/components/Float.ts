@@ -1,10 +1,12 @@
-import { defineComponent, cloneVNode, PropType } from 'vue'
-import { offset, flip, shift, arrow, autoPlacement, hide, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
+import { defineComponent, h, PropType } from 'vue'
+import { offset, flip, shift, autoPlacement, hide, Placement, Strategy, Middleware } from '@floating-ui/dom'
+import FloatButton from './FloatButton'
+import FloatContent from './FloatContent'
 import { useFloat } from '../composables/useFloat'
-import { useFloatContent } from '../composables/useFloatContent'
+import { arrow, Data } from '../composables/useFloating'
 import { useArrow } from '../composables/useArrow'
 import { defaultPlacementClassResolver } from '../placement-class-resolvers'
-import { filterSlot, findVNode, flattenFragment, isValidElement } from '../utils/render'
+import { filterSlot, findVNodeComponent, flattenFragment, isValidElement } from '../utils/render'
 import { PlacementClassResolver } from '../types'
 
 export default defineComponent({
@@ -20,16 +22,16 @@ export default defineComponent({
     },
     offset: Number,
     shift: {
-      type: [Boolean, Number] as PropType<number | false>,
+      type: [Boolean, Number],
       default: 6,
     },
     flip: {
       type: Boolean,
       default: false,
     },
-    arrowPadding: {
-      type: Number,
-      default: 0,
+    arrow: {
+      type: [Boolean, Number],
+      default: false,
     },
     autoPlacement: {
       type: Boolean,
@@ -66,45 +68,39 @@ export default defineComponent({
       type: Array as PropType<Middleware[]>,
       default: () => [],
     },
-    platform: Object as PropType<Platform>,
   },
-  setup(props, { slots }) {
+  emits: ['update', 'show', 'hide'],
+  setup(props, { slots, emit }) {
     const arrowEl = useArrow()
-    const { floatApi, referenceEl, floatingEl } = useFloat({
-      computePositionConfig: computePositionOptions(),
-      updateMiddleware,
+
+    useFloat({
+      placement: props.placement,
+      strategy: props.strategy,
+      middleware,
       rootProps: props,
-      zIndex: props.zIndex,
       arrowEl,
+      onUpdate,
+      onShow,
+      onHide,
     })
 
-    function computePositionOptions() {
-      const options = {
-        placement: props.placement,
-        strategy: props.strategy,
-        middleware: [],
-      }
-      if (props.platform) {
-        Object.assign(options, { platform: props.platform })
-      }
-      return options
-    }
-
-    function updateMiddleware() {
+    function middleware() {
       const middleware = []
       if (typeof props.offset === 'number') {
         middleware.push(offset(props.offset))
       }
-      if (typeof props.shift === 'number') {
-        middleware.push(shift({ padding: props.shift }))
+      if (props.shift === true || typeof props.shift === 'number') {
+        middleware.push(shift({
+          padding: props.shift === true ? 6 : props.shift,
+        }))
       }
       if (props.flip) {
         middleware.push(flip())
       }
-      if (arrowEl.value) {
+      if (props.arrow === true || typeof props.arrow === 'number') {
         middleware.push(arrow({
-          element: arrowEl.value,
-          padding: props.arrowPadding,
+          element: arrowEl,
+          padding: props.arrow === true ? 0 : props.arrow,
         }))
       }
       if (props.autoPlacement) {
@@ -116,22 +112,31 @@ export default defineComponent({
       return middleware.concat(props.middleware)
     }
 
+    function onUpdate(data: Data) {
+      emit('update', data)
+    }
+
+    function onShow() {
+      emit('show')
+    }
+
+    function onHide() {
+      emit('hide')
+    }
+
     return () => {
       if (slots.default) {
         const defaultSlotNodes = filterSlot(flattenFragment(slots.default() || []))
-        const hasFloatComponent = typeof findVNode(defaultSlotNodes, node => {
-          return ['FloatButton', 'FloatContent'].includes((node.type as { name: string }).name)
-        }) !== 'undefined'
+
+        const hasFloatComponent = typeof findVNodeComponent(
+          defaultSlotNodes, ['FloatButton', 'FloatContent']
+        ) !== 'undefined'
 
         if (hasFloatComponent) {
           return defaultSlotNodes
         }
 
-        const { createFloatContent } = useFloatContent({ floatApi, referenceEl, floatingEl })
-
-        const [referenceNode, floatingNode] = filterSlot(
-          flattenFragment(slots.default() || [])
-        )
+        const [referenceNode, floatingNode] = defaultSlotNodes
 
         if (!isValidElement(referenceNode) || !isValidElement(floatingNode)) {
           console.error(`[headlessui-float]: default slot must contains Headless UI's Button & Items Components.`)
@@ -139,12 +144,8 @@ export default defineComponent({
         }
 
         return [
-          cloneVNode(referenceNode, { ref: referenceEl }),
-          createFloatContent(
-            floatingNode
-              ? cloneVNode(floatingNode, { ref: floatingEl })
-              : undefined
-          ),
+          h(FloatButton, () => referenceNode),
+          h(FloatContent, () => floatingNode),
         ]
       }
     }
