@@ -6,15 +6,9 @@ export type ArrowEl = Ref<HTMLElement | null>
 export const arrowElKey = Symbol() as InjectionKey<ArrowEl>
 
 export function useArrow() {
-  const isNew = ref(false)
-  const arrowEl = injectOrCreate(arrowElKey, () => {
-    isNew.value = true
-    return ref(null)
-  })
+  const arrowEl = injectOrCreate(arrowElKey, () => ref(null))
 
-  if (isNew.value) {
-    provide(arrowElKey, arrowEl)
-  }
+  provide(arrowElKey, arrowEl)
 
   return arrowEl
 }

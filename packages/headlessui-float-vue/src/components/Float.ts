@@ -1,11 +1,10 @@
-import { defineComponent, ref, computed, toRef, nextTick, h, cloneVNode, Transition, Teleport, PropType, VNode } from 'vue'
-import { offset, flip, shift, arrow, autoPlacement, hide, getScrollParents, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
-import { defaultPlacementClassResolver } from '../placement-class-resolvers'
-import { dom } from '../utils/dom'
-import { filterSlot, findVNode, flattenFragment, isValidElement } from '../utils/render'
+import { defineComponent, cloneVNode, PropType } from 'vue'
+import { offset, flip, shift, arrow, autoPlacement, hide, Placement, Strategy, Middleware, Platform } from '@floating-ui/dom'
 import { useFloat } from '../composables/useFloat'
 import { useFloatContent } from '../composables/useFloatContent'
 import { useArrow } from '../composables/useArrow'
+import { defaultPlacementClassResolver } from '../placement-class-resolvers'
+import { filterSlot, findVNode, flattenFragment, isValidElement } from '../utils/render'
 import { PlacementClassResolver } from '../types'
 
 export default defineComponent({

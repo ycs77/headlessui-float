@@ -1,4 +1,4 @@
-import { defineComponent, inject, onMounted, cloneVNode, getCurrentInstance } from 'vue'
+import { defineComponent, inject, cloneVNode } from 'vue'
 import { floatApiKey, referenceElKey } from '../composables/useFloat'
 
 export default defineComponent({
@@ -11,10 +11,6 @@ export default defineComponent({
     }
 
     const referenceEl = inject(referenceElKey)!
-
-    onMounted(() => {
-      referenceEl.value = getCurrentInstance()!.vnode.el as HTMLElement
-    })
 
     return () => {
       if (slots.default) {

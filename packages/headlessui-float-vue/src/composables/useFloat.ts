@@ -1,4 +1,4 @@
-import { reactive, ref, InjectionKey, provide, Ref } from 'vue'
+import { reactive, ref, InjectionKey, provide, Ref, watch } from 'vue'
 import { computePosition, Middleware } from '@floating-ui/dom'
 import { ComputePositionConfig } from '@floating-ui/core'
 import { ArrowEl } from './useArrow'
@@ -36,53 +36,54 @@ export function useFloat(options: UseFloatOptions) {
   const floatingEl = ref<HTMLElement | null>(null)
 
   const floatApi = reactive({
-    update: updateFloating,
-    hide: hideFloating,
-    computePositionConfig: computePositionConfig,
-    rootProps: rootProps,
+    update,
+    hide,
+    computePositionConfig,
+    rootProps,
   }) as FloatApi
 
-  provide(floatApiKey, floatApi)
-  provide(referenceElKey, referenceEl)
-  provide(floatingElKey, floatingEl)
-
-  function updateFloating() {
+  function update() {
     floatApi.computePositionConfig.middleware = updateMiddleware()
 
-    Object.assign(dom(floatingEl)!.style, {
-      position: floatApi.computePositionConfig.strategy,
-      zIndex,
-    })
+    const referenceDom = dom(referenceEl)
+    const floatingDom = dom(floatingEl)
 
-    computePosition(dom(referenceEl)!, dom(floatingEl)!, floatApi.computePositionConfig)
-      .then(({ x, y, placement, middlewareData }) => {
-        Object.assign(dom(floatingEl)!.style, {
-          left: `${x}px`,
-          top: `${y}px`,
-        })
-
-        if (arrowEl?.value) {
-          const { x: arrowX, y: arrowY } = middlewareData.arrow as { x?: number, y?: number }
-
-          const staticSide = {
-            top: 'bottom',
-            right: 'left',
-            bottom: 'top',
-            left: 'right',
-          }[placement.split('-')[0]]!
-
-          Object.assign(arrowEl.value.style, {
-            left: typeof arrowX === 'number' ? `${arrowX}px` : '',
-            top: typeof arrowY === 'number' ? `${arrowY}px` : '',
-            right: '',
-            bottom: '',
-            [staticSide]: '-4px',
-          })
-        }
+    if (referenceDom && floatingDom?.style) {
+      Object.assign(floatingDom.style, {
+        position: floatApi.computePositionConfig.strategy,
+        zIndex,
       })
+
+      computePosition(referenceDom, floatingDom, floatApi.computePositionConfig)
+        .then(({ x, y, placement, middlewareData }) => {
+          Object.assign(floatingDom.style, {
+            left: `${x}px`,
+            top: `${y}px`,
+          })
+
+          if (arrowEl?.value && middlewareData.arrow) {
+            const { x: arrowX, y: arrowY } = middlewareData.arrow as { x?: number, y?: number }
+
+            const staticSide = {
+              top: 'bottom',
+              right: 'left',
+              bottom: 'top',
+              left: 'right',
+            }[placement.split('-')[0]]!
+
+            Object.assign(arrowEl.value.style, {
+              left: typeof arrowX === 'number' ? `${arrowX}px` : '',
+              top: typeof arrowY === 'number' ? `${arrowY}px` : '',
+              right: '',
+              bottom: '',
+              [staticSide]: '-4px',
+            })
+          }
+        })
+    }
   }
 
-  function hideFloating() {
+  function hide() {
     if (dom(floatingEl)?.style) {
       Object.assign(dom(floatingEl)!.style, {
         position: null,
@@ -93,5 +94,9 @@ export function useFloat(options: UseFloatOptions) {
     }
   }
 
-  return { floatApi, referenceEl, floatingEl, updateFloating, hideFloating }
+  provide(floatApiKey, floatApi)
+  provide(referenceElKey, referenceEl)
+  provide(floatingElKey, floatingEl)
+
+  return { floatApi, referenceEl, floatingEl }
 }

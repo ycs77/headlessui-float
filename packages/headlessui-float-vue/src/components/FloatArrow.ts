@@ -1,4 +1,4 @@
-import { cloneVNode, defineComponent, h, inject, onMounted, getCurrentInstance } from 'vue'
+import { cloneVNode, defineComponent, h, inject, onMounted } from 'vue'
 import { arrowElKey } from '../composables/useArrow'
 
 export default defineComponent({
@@ -10,13 +10,11 @@ export default defineComponent({
       return
     }
 
-    onMounted(() => {
-      arrowEl.value = getCurrentInstance()!.vnode.el as HTMLElement
-    })
-
     return () => {
       const node = slots.default?.()[0]
-      return node ? cloneVNode(node) : h('div', attrs)
+      return node
+        ? cloneVNode(node, { ref: arrowEl })
+        : h('div', Object.assign({}, attrs, { ref: arrowEl }))
     }
   },
 })
