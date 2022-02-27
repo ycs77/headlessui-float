@@ -159,7 +159,7 @@ export function useFloat(options: UseFloatOptions) {
     if (onHide) await onHide()
   }
 
-  const updateCallback = throttle(floatApi.update, 20)
+  const updateCallback = throttle(floatApi.update, 16)
 
   const getScrollParentsSafe = (el: Ref<HTMLElement | null> | HTMLElement | null) =>
     dom(el) ? getScrollParents(dom(el)!) : []
