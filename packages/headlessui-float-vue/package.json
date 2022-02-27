@@ -31,7 +31,8 @@
     "watch": "vue-tsc --noEmit && vite build --watch"
   },
   "dependencies": {
-    "@floating-ui/dom": "^0.2.0",
+    "@floating-ui/core": "^0.5.0",
+    "@floating-ui/dom": "^0.3.1",
     "vue": "^3.2.25"
   },
   "devDependencies": {

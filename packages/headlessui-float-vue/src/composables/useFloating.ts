@@ -1,4 +1,4 @@
-import { reactive, ref, unref, toRefs, Ref, ToRefs } from 'vue'
+import { ref, unref, Ref } from 'vue'
 import { computePosition, arrow as arrowCore, Placement, Strategy, Middleware } from '@floating-ui/dom'
 import { ComputePositionReturn, SideObject } from '@floating-ui/core'
 import { dom } from '../utils/dom'
@@ -8,61 +8,60 @@ export type Data = Omit<ComputePositionReturn, 'x' | 'y'> & {
   y: number | null
 }
 
+export interface AuthUpdateOptions {
+  ancestorScroll: boolean
+  ancestorResize: boolean
+  elementResize: boolean
+  animationFrame: boolean
+}
+
 export type UseFloatingOptions = {
   placement?: Placement
   strategy?: Strategy
   middleware?: Ref<Middleware[] | undefined> | Middleware[] | undefined
 }
 
-export type UseFloatingReturn = ToRefs<Data> & FloatingElements & {
+export type UseFloatingReturn = Data & {
+  reference: Ref<HTMLElement | null>
+  floating: Ref<HTMLElement | null>
   update: () => Promise<Data>
 }
 
-export type FloatingElements = {
-  reference: Ref<HTMLElement | null>
-  floating: Ref<HTMLElement | null>
-}
-
-export function useFloating({
-  middleware,
-  placement = 'bottom',
-  strategy = 'absolute',
-}: UseFloatingOptions = {}): UseFloatingReturn {
+export function useFloating(options: UseFloatingOptions = {}): UseFloatingReturn {
   const reference = ref<HTMLElement | null>(null)
   const floating = ref<HTMLElement | null>(null)
-  const data = reactive({
+
+  const placement = options.placement || 'bottom'
+  const strategy = options.strategy || 'absolute'
+
+  const data = ref<Data>({
     x: null,
     y: null,
     placement,
     strategy,
     middlewareData: {},
-  }) as Data
+  })
 
   const update = () => new Promise<Data>((resolve, reject) => {
     const referenceDom = dom(reference)
     const floatingDom = dom(floating)
 
     if (!referenceDom || !floatingDom) {
-      console.warn(`[headlessui-float]: Not found reference DOM & floating DOM.`)
       reject()
       return
     }
 
     computePosition(referenceDom, floatingDom, {
-      middleware: unref(middleware),
       placement,
       strategy,
-    }).then(({ x, y, placement, strategy, middlewareData }) => {
-      data.x = x
-      data.y = y
-      data.placement = placement
-      data.strategy = strategy
-      data.middlewareData = middlewareData
-      resolve(data)
+      middleware: unref(options.middleware),
+    }).then(computedData => {
+      data.value = computedData
+      resolve(data.value)
     })
   })
 
-  return { ...toRefs(data), update, reference, floating }
+  return { ...data.value, update, reference, floating }
 }
 
 export const arrow = (options: {

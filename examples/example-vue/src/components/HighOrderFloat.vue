@@ -4,12 +4,12 @@
     flip
     teleport
     transition
-    enter-active-class="transition duration-200 ease-out"
-    enter-from-class="scale-95 opacity-0"
-    enter-to-class="scale-100 opacity-100"
-    leave-active-class="transition duration-150 ease-in"
-    leave-from-class="scale-100 opacity-100"
-    leave-to-class="scale-95 opacity-0"
+    enter="transition duration-200 ease-out"
+    enter-from="scale-95 opacity-0"
+    enter-to="scale-100 opacity-100"
+    leave="transition duration-150 ease-in"
+    leave-from="scale-100 opacity-100"
+    leave-to="scale-95 opacity-0"
     :placement-class-resolver="tailwindcssPlacementClassResolver"
   >
     <slot></slot>

@@ -1,7 +1,2 @@
-export { default as Float } from './components/Float'
-export { default as FloatArrow } from './components/FloatArrow'
-export { default as FloatReference } from './components/FloatReference'
-export { default as FloatContent } from './components/FloatContent'
-export { useArrow } from './composables/useArrow'
-export { useFloat } from './composables/useFloat'
+export { Float, FloatReference, FloatContent, FloatArrow, useArrow } from './components/float'
 export * from './placement-class-resolvers'

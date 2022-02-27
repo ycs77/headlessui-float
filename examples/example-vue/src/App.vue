@@ -65,12 +65,12 @@
       <Menu>
         <HighOrderFloat
           placement="bottom-end"
-          enter-active-class="transition duration-100 ease-out"
-          enter-from-class="scale-50 opacity-0"
-          enter-to-class="scale-100 opacity-100"
-          leave-active-class="transition duration-75 ease-in"
-          leave-from-class="scale-100 opacity-100"
-          leave-to-class="scale-50 opacity-0"
+          enter="transition duration-100 ease-out"
+          enter-from="scale-50 opacity-0"
+          enter-to="scale-100 opacity-100"
+          leave="transition duration-75 ease-in"
+          leave-from="scale-100 opacity-100"
+          leave-to="scale-50 opacity-0"
         >
           <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
@@ -211,9 +211,9 @@
         <Float
           placement="bottom"
           :offset="4"
-          leave-active-class="transition ease-in duration-100"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
+          leave="transition ease-in duration-100"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
           @hide="query = ''"
         >
           <div class="relative w-64 text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
@@ -273,10 +273,10 @@
           placement="bottom-start"
           :offset="15"
           arrow
-          enter-from-class="opacity-0 -translate-y-1"
-          enter-to-class="opacity-100 translate-y-0"
-          leave-from-class="opacity-100 translate-y-0"
-          leave-to-class="opacity-0 -translate-y-1"
+          enter-from="opacity-0 -translate-y-1"
+          enter-to="opacity-100 translate-y-0"
+          leave-from="opacity-100 translate-y-0"
+          leave-to="opacity-0 -translate-y-1"
         >
           <PopoverButton class="w-8 h-8 flex justify-center items-center bg-rose-50 hover:bg-rose-100 text-rose-500 rounded">
             <HeroiconsOutlineMenuAlt2 class="w-5 h-5" aria-hidden="true" />
