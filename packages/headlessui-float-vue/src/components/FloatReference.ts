@@ -2,11 +2,11 @@ import { defineComponent, inject, cloneVNode } from 'vue'
 import { floatApiKey, referenceKey } from '../composables/useFloat'
 
 export default defineComponent({
-  name: 'FloatButton',
+  name: 'FloatReference',
   setup(props, { slots }) {
     const floatApi = inject(floatApiKey)
     if (!floatApi) {
-      console.error(`[headlessui-float]: <FloatButton> must be move in <Float> component.`)
+      console.error(`[headlessui-float]: <FloatReference> must be move in <Float> component.`)
       return
     }
 

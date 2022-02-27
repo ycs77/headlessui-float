@@ -1,6 +1,6 @@
 export { default as Float } from './components/Float'
 export { default as FloatArrow } from './components/FloatArrow'
-export { default as FloatButton } from './components/FloatButton'
+export { default as FloatReference } from './components/FloatReference'
 export { default as FloatContent } from './components/FloatContent'
 export { useArrow } from './composables/useArrow'
 export { useFloat } from './composables/useFloat'

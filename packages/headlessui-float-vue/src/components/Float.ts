@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from 'vue'
 import { offset, flip, shift, autoPlacement, hide, Placement, Strategy, Middleware } from '@floating-ui/dom'
-import FloatButton from './FloatButton'
+import FloatReference from './FloatReference'
 import FloatContent from './FloatContent'
 import { useFloat } from '../composables/useFloat'
 import { arrow, Data } from '../composables/useFloating'
@@ -128,7 +128,7 @@ export default defineComponent({
         const defaultSlotNodes = filterSlot(flattenFragment(slots.default() || []))
 
         const hasFloatComponent = typeof findVNodeComponent(
-          defaultSlotNodes, ['FloatButton', 'FloatContent']
+          defaultSlotNodes, ['FloatReference', 'FloatContent']
         ) !== 'undefined'
 
         if (hasFloatComponent) {
@@ -143,7 +143,7 @@ export default defineComponent({
         }
 
         return [
-          h(FloatButton, () => referenceNode),
+          h(FloatReference, () => referenceNode),
           h(FloatContent, () => floatingNode),
         ]
       }

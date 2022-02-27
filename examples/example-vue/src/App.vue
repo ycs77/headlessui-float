@@ -6,11 +6,11 @@
     <Block title="Menu (Dropdown) with original Float" title-class="text-indigo-400">
       <Menu>
         <Float placement="bottom-start" :offset="4">
-          <FloatButton>
+          <FloatReference>
             <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
               Options
             </MenuButton>
-          </FloatButton>
+          </FloatReference>
 
           <FloatContent>
             <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
@@ -130,15 +130,15 @@
       </Menu>
     </Block>
 
-    <Block title="Explicit use FloatButton & FloatContent" title-class="text-indigo-400">
+    <Block title="Explicit use FloatReference & FloatContent" title-class="text-indigo-400">
       <Menu>
         <Float placement="bottom-end">
           <div class="px-8 bg-purple-50">
-            <FloatButton>
+            <FloatReference>
               <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
                 Options
               </MenuButton>
-            </FloatButton>
+            </FloatReference>
           </div>
 
           <div>
@@ -239,7 +239,7 @@ import {
   Popover, PopoverButton, PopoverPanel,
   Listbox, ListboxButton, ListboxOptions, ListboxOption,
 } from '@headlessui/vue'
-import { Float, FloatButton, FloatContent, FloatArrow } from 'headlessui-float-vue'
+import { Float, FloatReference, FloatContent, FloatArrow } from 'headlessui-float-vue'
 import HighOrderFloat from '@/components/HighOrderFloat.vue'
 import Block from '@/components/Block.vue'
 import HeroiconsOutlineMenuAlt2 from '~icons/heroicons-outline/menu-alt-2'
