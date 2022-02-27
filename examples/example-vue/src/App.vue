@@ -1,5 +1,7 @@
 <template>
-  <h1 class="mt-4 text-center text-gray-700 text-2xl tracking-wide">Headless UI Float - Vue Example</h1>
+  <h1 class="mt-4 text-center text-gray-800 text-2xl font-bold">
+    Headless UI Float - Vue Example
+  </h1>
 
   <div class="p-6 grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
 
