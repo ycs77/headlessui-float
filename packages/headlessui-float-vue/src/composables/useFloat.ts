@@ -4,8 +4,8 @@ import { Placement, Strategy } from '@floating-ui/dom'
 import throttle from 'lodash.throttle'
 import { useFloating, Data, FloatingElements } from './useFloating'
 import { ArrowEl } from './useArrow'
+import { PlacementClassResolver } from '../placement-class-resolvers'
 import { dom } from '../utils/dom'
-import { PlacementClassResolver } from '../types'
 
 export interface FloatProps {
   placement: Placement

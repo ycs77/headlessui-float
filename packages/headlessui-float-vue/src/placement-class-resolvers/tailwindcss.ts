@@ -1,4 +1,4 @@
-import { PlacementClassResolver } from '../types'
+import { PlacementClassResolver } from './type'
 
 export const tailwindcssPlacementClassResolver: PlacementClassResolver = placement => {
   switch (placement) {

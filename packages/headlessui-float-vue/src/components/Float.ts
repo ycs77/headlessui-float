@@ -5,9 +5,8 @@ import FloatContent from './FloatContent'
 import { useFloat } from '../composables/useFloat'
 import { arrow, Data } from '../composables/useFloating'
 import { useArrow } from '../composables/useArrow'
-import { defaultPlacementClassResolver } from '../placement-class-resolvers'
+import { PlacementClassResolver, defaultPlacementClassResolver } from '../placement-class-resolvers'
 import { filterSlot, findVNodeComponent, flattenFragment, isValidElement } from '../utils/render'
-import { PlacementClassResolver } from '../types'
 
 export default defineComponent({
   name: 'Float',

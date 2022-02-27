@@ -1,3 +1,3 @@
-import { PlacementClassResolver } from '../types'
+import { PlacementClassResolver } from './type'
 
 export const defaultPlacementClassResolver: PlacementClassResolver = () => ''
