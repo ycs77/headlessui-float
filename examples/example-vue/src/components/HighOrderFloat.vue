@@ -13,10 +13,6 @@
     :placement-class-resolver="tailwindcssPlacementClassResolver"
   >
     <slot></slot>
-
-    <template #content>
-      <slot name="content"></slot>
-    </template>
   </Float>
 </template>
 
