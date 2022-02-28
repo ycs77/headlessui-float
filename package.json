@@ -2,13 +2,18 @@
   "name": "headlessui-float",
   "version": "0.0.0",
   "description": "Eazy use Headless UI components with Floating UI (Popper.js)",
+  "license": "MIT",
   "private": true,
   "workspaces": [
+    "packages/headlessui-float-react",
     "packages/headlessui-float-vue",
+    "examples/example-react",
     "examples/example-vue"
   ],
   "scripts": {
+    "react": "yarn workspace headlessui-float-react",
+    "react:example": "yarn workspace example-react",
     "vue": "yarn workspace headlessui-float-vue",
-    "example:vue": "yarn workspace example-vue"
+    "vue:example": "yarn workspace example-vue"
   }
 }
