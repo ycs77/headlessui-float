@@ -35,7 +35,9 @@ Basic example using `<Menu>` of Headless UI:
           </button>
         </MenuItem>
         <MenuItem disabled>
-          <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+          <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
+            Invite a friend (coming soon!)
+          </span>
         </MenuItem>
       </MenuItems>
     </Float>

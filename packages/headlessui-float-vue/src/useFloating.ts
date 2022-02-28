@@ -1,12 +1,7 @@
 import { ref, unref, Ref } from 'vue'
 import { computePosition, arrow as arrowCore, Placement, Strategy, Middleware } from '@floating-ui/dom'
-import { ComputePositionReturn, SideObject } from '@floating-ui/core'
+import { SideObject, MiddlewareData } from '@floating-ui/core'
 import { dom } from './utils/dom'
-
-export type Data = Omit<ComputePositionReturn, 'x' | 'y'> & {
-  x: number | null
-  y: number | null
-}
 
 export interface AuthUpdateOptions {
   ancestorScroll: boolean
@@ -21,47 +16,38 @@ export type UseFloatingOptions = {
   middleware?: Ref<Middleware[] | undefined> | Middleware[] | undefined
 }
 
-export type UseFloatingReturn = Data & {
-  reference: Ref<HTMLElement | null>
-  floating: Ref<HTMLElement | null>
-  update: () => Promise<Data>
-}
-
-export function useFloating(options: UseFloatingOptions = {}): UseFloatingReturn {
+export function useFloating(options: UseFloatingOptions = {}) {
   const reference = ref<HTMLElement | null>(null)
   const floating = ref<HTMLElement | null>(null)
 
-  const placement = options.placement || 'bottom'
-  const strategy = options.strategy || 'absolute'
+  const x = ref<number | undefined>(undefined)
+  const y = ref<number | undefined>(undefined)
+  const placement = ref(options.placement || 'bottom')
+  const strategy = ref(options.strategy || 'absolute')
+  const middlewareData = ref({}) as Ref<MiddlewareData>
 
-  const data = ref<Data>({
-    x: null,
-    y: null,
-    placement,
-    strategy,
-    middlewareData: {},
-  })
-
-  const update = () => new Promise<Data>((resolve, reject) => {
+  const update = () => {
     const referenceDom = dom(reference)
     const floatingDom = dom(floating)
 
     if (!referenceDom || !floatingDom) {
-      reject()
       return
     }
 
     computePosition(referenceDom, floatingDom, {
-      placement,
-      strategy,
+      placement: placement.value,
+      strategy: strategy.value,
       middleware: unref(options.middleware),
-    }).then(computedData => {
-      data.value = computedData
-      resolve(data.value)
+    }).then(data => {
+      x.value = data.x
+      y.value = data.y
+      placement.value = data.placement
+      strategy.value = data.strategy
+      middlewareData.value = data.middlewareData
     })
-  })
+  }
 
-  return { ...data.value, update, reference, floating }
+  return { x, y, placement, strategy, middlewareData, update, reference, floating }
 }
 
 export const arrow = (options: {

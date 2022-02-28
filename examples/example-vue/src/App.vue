@@ -24,7 +24,9 @@
               </button>
             </MenuItem>
             <MenuItem disabled>
-              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
+                Invite a friend (coming soon!)
+              </span>
             </MenuItem>
           </MenuItems>
         </Float>
@@ -50,7 +52,9 @@
               </button>
             </MenuItem>
             <MenuItem disabled>
-              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
+                Invite a friend (coming soon!)
+              </span>
             </MenuItem>
           </MenuItems>
         </HighOrderFloat>
@@ -84,7 +88,9 @@
               </button>
             </MenuItem>
             <MenuItem disabled>
-              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+              <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
+                Invite a friend (coming soon!)
+              </span>
             </MenuItem>
           </MenuItems>
         </HighOrderFloat>
@@ -120,7 +126,9 @@
                 </button>
               </MenuItem>
               <MenuItem disabled>
-                <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+                <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
+                  Invite a friend (coming soon!)
+                </span>
               </MenuItem>
             </div>
           </MenuItems>
@@ -153,7 +161,9 @@
                   </button>
                 </MenuItem>
                 <MenuItem disabled>
-                  <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">Invite a friend (coming soon!)</span>
+                  <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
+                    Invite a friend (coming soon!)
+                  </span>
                 </MenuItem>
               </MenuItems>
             </FloatContent>

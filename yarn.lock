@@ -287,12 +287,25 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.5.0.tgz#d3d378412c525e663f41ced012e4e13049b31908"
   integrity sha512-Ouka4Ck1mnPFZhgpfyFb+YBflGdk0o/SW8uSwByoRC6VqRzCHpW/7mJbFt/TWjl1lDcRbImJ2ZWOqwlIP71LDg==
 
-"@floating-ui/dom@^0.3.1":
+"@floating-ui/dom@^0.3.0", "@floating-ui/dom@^0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.3.1.tgz#d5608b9f16a17054c66f9e7b7e6bc289d65b64ec"
   integrity sha512-HJX/2xgGPt01YHQNAya2taqg5HDnY6ipF0B0Bk/Th2s4FD9R89Ecw3TEegLLO+VrQnPEGbuHOGJ6Fr3BPM0DYg==
   dependencies:
     "@floating-ui/core" "^0.5.0"
+
+"@floating-ui/react-dom@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-0.5.0.tgz#e3747850c45889bd0cd197f5fe434f1d813b0917"
+  integrity sha512-nb9PlHPX1dXoJAJK5YGnwJjU64DscL/ec+j6C8UiCY2dUeknyaBpabOg/wr87FRwnk5v0v5jQZ0pbmK2qNvw7g==
+  dependencies:
+    "@floating-ui/dom" "^0.3.0"
+    use-isomorphic-layout-effect "^1.1.1"
+
+"@headlessui/react@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.5.0.tgz#483b44ba2c8b8d4391e1d2c863898d7dd0cc0296"
+  integrity sha512-aaRnYxBb3MU2FNJf3Ut9RMTUqqU3as0aI1lQhgo2n9Fa67wRu14iOGqx93xB+uMNVfNwZ5B3y/Ndm7qZGuFeMQ==
 
 "@headlessui/vue@^1.5.0":
   version "1.5.0"
@@ -1910,6 +1923,11 @@ upath@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/upath/-/upath-2.0.1.tgz#50c73dea68d6f6b990f51d279ce6081665d61a8b"
   integrity sha512-1uEe95xksV1O0CYKXo8vQvN1JEbtJp7lb7C5U9HMsIp6IVwntkH/oNUzyVNQSd4S1sYk2FpSSW44FqMc8qee5w==
+
+use-isomorphic-layout-effect@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.1.tgz#7bb6589170cd2987a152042f9084f9effb75c225"
+  integrity sha512-L7Evj8FGcwo/wpbv/qvSfrkHFtOpCzvM5yl2KVyDJoylVuSvzphiiasmjgQPttIGBAy2WKiBNR98q8w7PiNgKQ==
 
 util-deprecate@^1.0.2:
   version "1.0.2"

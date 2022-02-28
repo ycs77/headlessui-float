@@ -12,8 +12,8 @@
   ],
   "scripts": {
     "react": "yarn workspace headlessui-float-react",
-    "react:example": "yarn workspace example-react",
+    "react:example": "yarn workspace headlessui-float-example-react",
     "vue": "yarn workspace headlessui-float-vue",
-    "vue:example": "yarn workspace example-vue"
+    "vue:example": "yarn workspace headlessui-float-example-vue"
   }
 }

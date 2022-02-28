@@ -16,7 +16,12 @@ export function filterSlot(nodes: VNode[]): VNode[] {
 
 export function findVNode(nodes: VNode[], callback: (node: VNode) => boolean): VNode | undefined {
   for (const node of nodes) {
-    if (callback(node)) return node
+    if (callback(node)) {
+      return node
+    } else if (node.children && Array.isArray(node.children)) {
+      const newNode = findVNode(node.children as VNode[], callback)
+      if (newNode) return newNode
+    }
   }
   return
 }
