@@ -38,6 +38,7 @@ function useFloatContext(component: string) {
 
   if (context === null) {
     let err = new Error(`<${component} /> is missing a parent <Float /> component.`)
+    // @ts-ignore
     if (Error.captureStackTrace) Error.captureStackTrace(err, useFloatContext)
     throw err
   }
@@ -268,6 +269,7 @@ export const Float = defineComponent({
 
         if (!isValidElement(referenceNode) || !isValidElement(floatingNode)) {
           let err = new Error('default slot must contains the Button & Items Components of the Headless UI.')
+          // @ts-ignore
           if (Error.captureStackTrace) Error.captureStackTrace(err, Float)
           throw err
         }
@@ -351,6 +353,7 @@ export const FloatArrow = defineComponent({
 
     if (arrowEl === null) {
       let err = new Error(`<FloatArrow /> must be in the Items component of the Headless UI.`)
+      // @ts-ignore
       if (Error.captureStackTrace) Error.captureStackTrace(err, FloatArrow)
       throw err
     }

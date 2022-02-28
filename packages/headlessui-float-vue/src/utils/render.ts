@@ -18,6 +18,7 @@ export function findVNode(nodes: VNode[], callback: (node: VNode) => boolean): V
   for (const node of nodes) {
     if (callback(node)) return node
   }
+  return
 }
 
 export function findVNodeComponent(nodes: VNode[], components: string | string[]): VNode | undefined {

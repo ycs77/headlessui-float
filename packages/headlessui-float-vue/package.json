@@ -2,11 +2,10 @@
   "name": "headlessui-float-vue",
   "version": "0.0.0",
   "description": "Eazy use Headless UI for Vue 3 with Floating UI (Popper.js)",
+  "license": "MIT",
   "keywords": [
     "floating",
-    "floating-ui",
     "popper",
-    "popperjs",
     "popover",
     "tooltip",
     "dropdown",
@@ -18,22 +17,32 @@
     "dist",
     "types"
   ],
-  "main": "./dist/headlessui-float-vue.es.js",
-  "module": "./dist/headlessui-float-vue.es.js",
+  "main": "./dist/headlessui-float.es.js",
+  "module": "./dist/headlessui-float.es.js",
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/headlessui-float-vue.es.js"
+      "import": "./dist/headlessui-float.es.js"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ycs77/headlessui-float.git",
+    "directory": "packages/headlessui-float-vue"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build && vue-tsc --emitDeclarationOnly",
-    "watch": "vue-tsc --noEmit && vite build --watch"
+    "build": "vue-tsc --noEmit && vite build && vue-tsc --emitDeclarationOnly --outDir ./dist",
+    "watch": "vite build --watch"
   },
   "dependencies": {
     "@floating-ui/core": "^0.5.0",
-    "@floating-ui/dom": "^0.3.1",
-    "vue": "^3.2.0"
+    "@floating-ui/dom": "^0.3.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "@types/lodash.throttle": "^4.1.6",
@@ -42,6 +51,7 @@
     "lodash.throttle": "^4.1.1",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
+    "vue": "^3.2.0",
     "vue-tsc": "^0.29.8"
   }
 }
