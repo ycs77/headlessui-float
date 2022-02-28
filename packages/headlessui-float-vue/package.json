@@ -1,7 +1,7 @@
 {
   "name": "headlessui-float-vue",
   "version": "0.0.0",
-  "description": "Using Floating UI (Popper.js) in Headless UI",
+  "description": "Eazy use Headless UI for Vue 3 with Floating UI (Popper.js)",
   "keywords": [
     "floating",
     "floating-ui",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@floating-ui/core": "^0.5.0",
     "@floating-ui/dom": "^0.3.1",
-    "vue": "^3.2.25"
+    "vue": "^3.2.0"
   },
   "devDependencies": {
     "@types/lodash.throttle": "^4.1.6",

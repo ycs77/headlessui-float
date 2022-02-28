@@ -1,7 +1,7 @@
 import { ref, unref, Ref } from 'vue'
 import { computePosition, arrow as arrowCore, Placement, Strategy, Middleware } from '@floating-ui/dom'
 import { ComputePositionReturn, SideObject } from '@floating-ui/core'
-import { dom } from '../utils/dom'
+import { dom } from './utils/dom'
 
 export type Data = Omit<ComputePositionReturn, 'x' | 'y'> & {
   x: number | null

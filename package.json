@@ -1,7 +1,7 @@
 {
   "name": "headlessui-float",
   "version": "0.0.0",
-  "description": "Using Floating UI (Popper.js) in Headless UI",
+  "description": "Eazy use Headless UI components with Floating UI (Popper.js)",
   "private": true,
   "workspaces": [
     "packages/headlessui-float-vue",

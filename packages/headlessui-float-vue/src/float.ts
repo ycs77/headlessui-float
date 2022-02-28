@@ -1,11 +1,11 @@
 import { defineComponent, ref, computed, nextTick, provide, inject, h, cloneVNode, Teleport, Transition, Ref, PropType, InjectionKey, VNode } from 'vue'
 import { offset, flip, shift, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware } from '@floating-ui/dom'
 import throttle from 'lodash.throttle'
-import { useFloating, arrow, AuthUpdateOptions } from '../composables/useFloating'
-import { PlacementClassResolver, defaultPlacementClassResolver } from '../placement-class-resolvers'
-import { filterSlot, findVNodeComponent, flattenFragment, isValidElement } from '../utils/render'
-import { dom } from '../utils/dom'
-import { injectOrCreate } from '../utils/injection'
+import { useFloating, arrow, AuthUpdateOptions } from './useFloating'
+import { PlacementClassResolver, defaultPlacementClassResolver } from './placement-class-resolvers'
+import { filterSlot, findVNodeComponent, flattenFragment, isValidElement } from './utils/render'
+import { dom } from './utils/dom'
+import { injectOrCreate } from './utils/injection'
 
 interface FloatState {
   reference: Ref<HTMLElement | null>

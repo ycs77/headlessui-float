@@ -1,5 +1,5 @@
 <h2 align="center">Headless UI Float</h2>
-<p align="center">Using <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) in <a href="https://headlessui.dev/">Headless UI</a>.</p>
+<p align="center">Eazy use <a href="https://headlessui.dev/">Headless UI</a> components with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js).</p>
 <hr>
 
 > Adapted from [headlessui#154](https://github.com/tailwindlabs/headlessui/issues/154) example

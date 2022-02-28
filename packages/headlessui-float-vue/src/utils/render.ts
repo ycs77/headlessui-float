@@ -1,6 +1,5 @@
 import { VNode, Fragment } from 'vue'
 
-// Flatten Fragments in slots.
 export function flattenFragment(nodes: VNode[]): VNode[] {
   return nodes
     .reduce<VNode[]>((carry, node) => {
