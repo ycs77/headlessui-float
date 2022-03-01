@@ -1,10 +1,12 @@
 import {
   defineComponent,
   ref,
+  shallowRef,
   computed,
-  nextTick,
+  watch,
   provide,
   inject,
+  onMounted,
   h,
   cloneVNode,
   Teleport,
@@ -12,10 +14,10 @@ import {
 
   // types
   Ref,
+  ShallowRef,
   PropType,
   InjectionKey,
   VNode,
-watch,
 } from 'vue'
 import { offset, flip, shift, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware, MiddlewareData } from '@floating-ui/dom'
 import throttle from 'lodash.throttle'
@@ -23,7 +25,6 @@ import { useFloating, arrow, AuthUpdateOptions } from './useFloating'
 import { PlacementClassResolver, defaultPlacementClassResolver } from './placement-class-resolvers'
 import { filterSlot, findVNodeComponent, flattenFragment, isValidElement } from './utils/render'
 import { dom } from './utils/dom'
-import { injectOrCreate } from './utils/injection'
 
 interface FloatState {
   open: Ref<boolean>
@@ -33,8 +34,8 @@ interface FloatState {
   floatingY: Ref<number | undefined>
   arrowX: Ref<number | undefined>
   arrowY: Ref<number | undefined>
-  placement: Placement
-  strategy: Strategy
+  placement: Ref<Placement>
+  strategy: Ref<Strategy>
   middleware: Ref<Middleware[]>
   middlewareData: Ref<MiddlewareData>
   zIndex: number
@@ -69,7 +70,7 @@ function useFloatContext(component: string) {
 }
 
 export function useArrow() {
-  const arrowEl = injectOrCreate(ArrowElContext, () => ref(null))
+  const arrowEl = inject(ArrowElContext, ref(null))
 
   provide(ArrowElContext, arrowEl)
 
@@ -143,7 +144,8 @@ export const Float = defineComponent({
   emits: ['update', 'show', 'hide'],
   setup(props, { slots, emit }) {
     const open = ref(false)
-    const middleware = ref(undefined) as Ref<Middleware[] | undefined>
+    const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
+
     const arrowEl = useArrow()
     const arrowX = ref<number | undefined>(undefined)
     const arrowY = ref<number | undefined>(undefined)
@@ -151,7 +153,7 @@ export const Float = defineComponent({
     const { x, y, placement, strategy, reference, floating, middlewareData, update } = useFloating({
       placement: props.placement,
       strategy: props.strategy,
-      middleware: middleware,
+      middleware,
     })
 
     function buildMiddleware() {
@@ -192,8 +194,8 @@ export const Float = defineComponent({
       floatingY: y,
       arrowX,
       arrowY,
-      placement: placement.value,
-      strategy: strategy.value,
+      placement,
+      strategy,
       middleware,
       middlewareData,
       zIndex: props.zIndex,
@@ -211,33 +213,43 @@ export const Float = defineComponent({
 
     provide(FloatContext, api)
 
-    watch([open, x, y], () => {
-      if (open.value) {
-        if (middleware.value === undefined) {
-          middleware.value = buildMiddleware()
-        }
+    const showFloating = () => {
+      if (middleware.value === undefined) {
+        middleware.value = buildMiddleware()
+      }
 
-        update()
-
-        if (dom(reference) &&
-            dom(floating) &&
-            props.autoUpdate !== false &&
-            !cleanAutoUpdate
-        ) {
-          cleanAutoUpdate = autoUpdate(
-            dom(reference)!,
-            dom(floating)!,
-            throttle(update, 16),
-            props.autoUpdate === true ? undefined : props.autoUpdate
-          )
-        }
-
-        emit('update')
+      if (dom(reference) &&
+          dom(floating) &&
+          props.autoUpdate !== false &&
+          !cleanAutoUpdate
+      ) {
+        cleanAutoUpdate = autoUpdate(
+          dom(reference)!,
+          dom(floating)!,
+          throttle(update, 16),
+          props.autoUpdate === true ? undefined : props.autoUpdate
+        )
         emit('show')
-      } else {
-        if (cleanAutoUpdate) cleanAutoUpdate()
+      }
+    }
 
-        emit('hide')
+    const hideFloating = () => {
+      if (cleanAutoUpdate) cleanAutoUpdate()
+      cleanAutoUpdate = undefined
+      emit('hide')
+    }
+
+    onMounted(() => {
+      if (dom(floating)?.nodeType !== Node.COMMENT_NODE) {
+        showFloating()
+      }
+    })
+
+    watch(open, () => {
+      if (open.value) {
+        showFloating()
+      } else {
+        hideFloating()
       }
     })
 
@@ -245,6 +257,10 @@ export const Float = defineComponent({
       const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
       arrowX.value = arrowData?.x
       arrowY.value = arrowData?.y
+    })
+
+    watch([x, y, placement, strategy, middlewareData], () => {
+      emit('update')
     })
 
     return () => {
@@ -299,7 +315,7 @@ export const FloatContent = defineComponent({
     const api = useFloatContext('FloatReference')
 
     const placementOriginClass = computed(() => {
-      return api.originClass || api.placementClassResolver(api.placement)
+      return api.originClass || api.placementClassResolver(api.placement.value)
     })
 
     const transitionProps = {
@@ -310,9 +326,7 @@ export const FloatContent = defineComponent({
       leaveFromClass: api.transition ? api.leaveFrom : undefined,
       leaveToClass: api.transition ? api.leaveTo : undefined,
       onBeforeEnter() {
-        nextTick().then(() => {
-          api.open.value = true
-        })
+        api.open.value = true
       },
       onAfterLeave() {
         api.open.value = false
@@ -329,7 +343,7 @@ export const FloatContent = defineComponent({
     return () => {
       if (slots.default) {
         const style = {
-          position: api.strategy,
+          position: api.strategy.value,
           zIndex: api.zIndex,
           top: typeof api.floatingY.value === 'number' ? `${api.floatingY.value}px` : '',
           left: typeof api.floatingX.value === 'number' ? `${api.floatingX.value}px` : '',
@@ -365,7 +379,7 @@ export const FloatArrow = defineComponent({
         right: 'left',
         bottom: 'top',
         left: 'right',
-      }[api.placement.split('-')[0]]!
+      }[api.placement.value.split('-')[0]]!
 
       const style = {
         left: typeof api.arrowX.value === 'number' ? `${api.arrowX.value}px` : '',

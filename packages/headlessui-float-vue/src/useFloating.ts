@@ -1,4 +1,4 @@
-import { ref, unref, Ref } from 'vue'
+import { ref, unref, Ref, shallowRef, ShallowRef } from 'vue'
 import { computePosition, arrow as arrowCore, Placement, Strategy, Middleware } from '@floating-ui/dom'
 import { SideObject, MiddlewareData } from '@floating-ui/core'
 import { dom } from './utils/dom'
@@ -24,7 +24,7 @@ export function useFloating(options: UseFloatingOptions = {}) {
   const y = ref<number | undefined>(undefined)
   const placement = ref(options.placement || 'bottom')
   const strategy = ref(options.strategy || 'absolute')
-  const middlewareData = ref({}) as Ref<MiddlewareData>
+  const middlewareData = shallowRef({}) as ShallowRef<MiddlewareData>
 
   const update = () => {
     const referenceDom = dom(reference)
@@ -35,8 +35,8 @@ export function useFloating(options: UseFloatingOptions = {}) {
     }
 
     computePosition(referenceDom, floatingDom, {
-      placement: placement.value,
-      strategy: strategy.value,
+      placement: options.placement,
+      strategy: options.strategy,
       middleware: unref(options.middleware),
     }).then(data => {
       x.value = data.x
