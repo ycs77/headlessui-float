@@ -10,7 +10,7 @@
     leave="transition duration-150 ease-in"
     leave-from="scale-100 opacity-100"
     leave-to="scale-95 opacity-0"
-    :placement-class-resolver="tailwindcssPlacementClassResolver"
+    :placement-class="tailwindcssPlacementClassResolver"
   >
     <slot></slot>
   </Float>

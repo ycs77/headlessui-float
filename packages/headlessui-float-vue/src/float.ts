@@ -47,9 +47,8 @@ interface FloatState {
   leave?: string
   leaveFrom?: string
   leaveTo?: string
-  originClass?: string
   teleport: boolean | string
-  placementClassResolver: PlacementClassResolver
+  placementClass: string | PlacementClassResolver
 }
 
 type ArrowEl = Ref<HTMLElement | null>
@@ -128,13 +127,12 @@ export const Float = defineComponent({
     leave: String,
     leaveFrom: String,
     leaveTo: String,
-    originClass: String,
     teleport: {
       type: [Boolean, String],
       default: false,
     },
-    placementClassResolver: {
-      type: Function as PropType<PlacementClassResolver>,
+    placementClass: {
+      type: [String, Function] as PropType<string | PlacementClassResolver>,
       default: defaultPlacementClassResolver,
     },
     middleware: {
@@ -209,9 +207,8 @@ export const Float = defineComponent({
       leave: props.leave,
       leaveFrom: props.leaveFrom,
       leaveTo: props.leaveTo,
-      originClass: props.originClass,
       teleport: props.teleport,
-      placementClassResolver: props.placementClassResolver,
+      placementClass: props.placementClass,
     } as FloatState
 
     provide(FloatContext, api)
@@ -274,15 +271,18 @@ export const Float = defineComponent({
           return
         }
 
-        const placementOriginClass = computed(() => {
-          return api.originClass || api.placementClassResolver(api.placement.value)
+        const placementClassValue = computed(() => {
+          if (typeof api.placementClass === 'function') {
+            return api.placementClass(api.placement.value)
+          }
+          return api.placementClass
         })
 
         const transitionProps = {
-          enterActiveClass: api.transition ? `${api.enter} ${placementOriginClass.value}` : undefined,
+          enterActiveClass: api.transition ? `${api.enter} ${placementClassValue.value}` : undefined,
           enterFromClass: api.transition ? api.enterFrom : undefined,
           enterToClass: api.transition ? api.enterTo : undefined,
-          leaveActiveClass: api.transition ? `${api.leave} ${placementOriginClass.value}` : undefined,
+          leaveActiveClass: api.transition ? `${api.leave} ${placementClassValue.value}` : undefined,
           leaveFromClass: api.transition ? api.leaveFrom : undefined,
           leaveToClass: api.transition ? api.leaveTo : undefined,
           onBeforeEnter() {
