@@ -1,4 +1,4 @@
 export { defaultPlacementClassResolver } from './default'
-export { tailwindcssPlacementClassResolver } from './tailwindcss'
+export { tailwindcssPlacementClassResolver, tailwindcssPlacementSafelist } from './tailwindcss'
 
 export type { PlacementClassResolver } from './type'

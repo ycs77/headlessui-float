@@ -55,6 +55,11 @@ export default {
 
 Anyway you can use for `<Menu>`, `<Listbox>`, `<Popover>` and `<Combobox>`, you can use `<Float>` whenever you need to floating elements.
 
+## Placement Class
+
+* Placement Class Resolver
+* Placement Safelist
+
 ## z-index
 
 ## Floating UI Options

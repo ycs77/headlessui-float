@@ -1,5 +1,16 @@
 import { PlacementClassResolver } from './type'
 
+export const tailwindcssPlacementSafelist = [
+  'origin-bottom',
+  'origin-top',
+  'origin-right',
+  'origin-left',
+  'origin-bottom-left',
+  'origin-bottom-right',
+  'origin-top-left',
+  'origin-top-right',
+]
+
 export const tailwindcssPlacementClassResolver: PlacementClassResolver = placement => {
   switch (placement) {
     case 'top':

@@ -216,6 +216,8 @@ export const Float = defineComponent({
     let cleanAutoUpdate: (() => void) | undefined
 
     const showFloating = () => {
+      emit('show')
+
       if (dom(reference) &&
           dom(floating) &&
           props.autoUpdate !== false &&
@@ -227,14 +229,14 @@ export const Float = defineComponent({
           throttle(update, 16),
           props.autoUpdate === true ? undefined : props.autoUpdate
         )
-        emit('show')
       }
     }
 
     const hideFloating = () => {
+      emit('hide')
+
       if (cleanAutoUpdate) cleanAutoUpdate()
       cleanAutoUpdate = undefined
-      emit('hide')
     }
 
     onMounted(() => {
@@ -265,18 +267,17 @@ export const Float = defineComponent({
 
     return () => {
       if (slots.default) {
-        const [referenceNode, floatingNode, ...otherNodes] = filterSlot(flattenFragment(slots.default() || []))
+        const [referenceNode, floatingNode] = filterSlot(flattenFragment(slots.default() || []))
 
         if (!isValidElement(referenceNode)) {
           return
         }
 
-        const placementClassValue = computed(() => {
-          if (typeof api.placementClass === 'function') {
-            return api.placementClass(api.placement.value)
-          }
-          return api.placementClass
-        })
+        const placementClassValue = computed(() =>
+          typeof api.placementClass === 'function'
+            ? api.placementClass(api.placement.value)
+            : api.placementClass
+        )
 
         const transitionProps = {
           enterActiveClass: api.transition ? `${api.enter} ${placementClassValue.value}` : undefined,
@@ -315,8 +316,6 @@ export const Float = defineComponent({
               ? cloneVNode(floatingNode, { ref: api.floatingRef, style: floatingStyle })
               : createCommentVNode()
           )),
-
-          ...otherNodes,
         ]
       }
     }
