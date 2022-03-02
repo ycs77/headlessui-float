@@ -2,7 +2,7 @@
   <Float
     :offset="8"
     flip
-    teleport
+    portal
     transition
     enter="transition duration-200 ease-out"
     enter-from="scale-95 opacity-0"

@@ -77,7 +77,7 @@ Anyway you can use for `<Menu>`, `<Listbox>`, `<Popover>` and `<Combobox>`, you 
 
 ## Transition
 
-## Teleport
+## Portal (Teleport)
 
 ## Explicit use `<FloatReference>` & `<FloatContent>`
 

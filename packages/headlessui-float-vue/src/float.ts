@@ -47,7 +47,7 @@ interface FloatState {
   leave?: string
   leaveFrom?: string
   leaveTo?: string
-  teleport: boolean | string
+  portal: boolean | string
   placementClass: string | PlacementClassResolver
 }
 
@@ -127,7 +127,7 @@ export const Float = defineComponent({
     leave: String,
     leaveFrom: String,
     leaveTo: String,
-    teleport: {
+    portal: {
       type: [Boolean, String],
       default: false,
     },
@@ -207,7 +207,7 @@ export const Float = defineComponent({
       leave: props.leave,
       leaveFrom: props.leaveFrom,
       leaveTo: props.leaveTo,
-      teleport: props.teleport,
+      portal: props.portal,
       placementClass: props.placementClass,
     } as FloatState
 
@@ -302,10 +302,10 @@ export const Float = defineComponent({
         }
 
         const wrapTeleport = (node: VNode) => {
-          if (api.teleport === false) {
+          if (api.portal === false) {
             return node
           }
-          return h(Teleport, { to: api.teleport === true ? 'body' : api.teleport }, [node])
+          return h(Teleport, { to: api.portal === true ? 'body' : api.portal }, [node])
         }
 
         return [
