@@ -1,6 +1,6 @@
 <template>
   <Block title="Combobox (Autocomplete)" title-class="text-teal-400">
-    <Combobox v-model="selectedPerson">
+    <Combobox v-model="selected">
       <Float
         placement="bottom"
         :offset="4"
@@ -12,7 +12,7 @@
         <div class="relative w-64 text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
           <ComboboxInput
             class="w-64 border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
-            :display-value="(person) => person.name"
+            :display-value="person => person.name"
             @change="query = $event.target.value"
           />
 
@@ -40,10 +40,7 @@
               class="relative py-2 pl-10 pr-4 cursor-default select-none"
               :class="active ? 'text-white bg-teal-600' : 'text-gray-900'"
             >
-              <span
-                class="block truncate"
-                :class="{ 'font-medium': selected, 'font-normal': !selected }"
-              >
+              <span class="block truncate" :class="selected ? 'font-medium' : 'font-normal'">
                 {{ person.name }}
               </span>
               <span
@@ -77,13 +74,13 @@ const people = [
   { id: 5, name: 'Tanya Fox', unavailable: true },
   { id: 6, name: 'Hellen Schmidt', unavailable: false },
 ]
-const selectedPerson = ref(people[0])
+const selected = ref(people[0])
 const query = ref('')
 
 const filteredPeople = computed(() =>
   query.value === ''
     ? people
-    : people.filter((person) =>
+    : people.filter(person =>
         person.name
           .toLowerCase()
           .replace(/\s+/g, '')

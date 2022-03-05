@@ -6,6 +6,7 @@ import {
   watch,
   provide,
   inject,
+  nextTick,
   onMounted,
   h,
   Teleport,
@@ -20,61 +21,33 @@ import {
   InjectionKey,
   VNode,
 } from 'vue'
-import { offset, flip, shift, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware, MiddlewareData } from '@floating-ui/dom'
+import { offset, flip, shift, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware } from '@floating-ui/dom'
 import throttle from 'lodash.throttle'
 import { useFloating, arrow, AuthUpdateOptions } from './useFloating'
-import { PlacementClassResolver, defaultPlacementClassResolver } from './placement-class-resolvers'
+import { OriginClassResolver } from './origin-class-resolvers'
 import { filterSlot, flattenFragment, isValidElement } from './utils/render'
 import { dom } from './utils/dom'
 
-interface FloatState {
-  open: Ref<boolean>
-  referenceRef: Ref<HTMLElement | null>
-  floatingRef: Ref<HTMLElement | null>
-  floatingX: Ref<number | undefined>
-  floatingY: Ref<number | undefined>
-  arrowX: Ref<number | undefined>
-  arrowY: Ref<number | undefined>
+interface ArrowState {
+  ref: Ref<HTMLElement | null>
   placement: Ref<Placement>
-  strategy: Ref<Strategy>
-  middleware: Ref<Middleware[]>
-  middlewareData: Ref<MiddlewareData>
-  zIndex: number
-  transition: boolean
-  enter?: string
-  enterFrom?: string
-  enterTo?: string
-  leave?: string
-  leaveFrom?: string
-  leaveTo?: string
-  portal: boolean | string
-  placementClass: string | PlacementClassResolver
+  x: Ref<number | undefined>
+  y: Ref<number | undefined>
 }
 
-type ArrowEl = Ref<HTMLElement | null>
+const ArrowContext = Symbol() as InjectionKey<ArrowState>
 
-const FloatContext = Symbol() as InjectionKey<FloatState>
-const ArrowElContext = Symbol() as InjectionKey<ArrowEl>
-
-function useFloatContext(component: string) {
-  let context = inject(FloatContext, null)
+export function useArrowContext(component: string) {
+  let context = inject(ArrowContext, null)
 
   if (context === null) {
-    let err = new Error(`<${component} /> is missing a parent <Float /> component.`)
+    let err = new Error(`<${component} /> must be in the <Float /> component.`)
     // @ts-ignore
-    if (Error.captureStackTrace) Error.captureStackTrace(err, useFloatContext)
+    if (Error.captureStackTrace) Error.captureStackTrace(err, FloatArrow)
     throw err
   }
 
   return context
-}
-
-export function useArrow() {
-  const arrowEl = inject(ArrowElContext, ref(null))
-
-  provide(ArrowElContext, arrowEl)
-
-  return arrowEl
 }
 
 export const Float = defineComponent({
@@ -132,20 +105,19 @@ export const Float = defineComponent({
       default: false,
     },
     placementClass: {
-      type: [String, Function] as PropType<string | PlacementClassResolver>,
-      default: defaultPlacementClassResolver,
+      type: [String, Function] as PropType<string | OriginClassResolver>,
+      default: '',
     },
     middleware: {
       type: Array as PropType<Middleware[]>,
       default: () => [],
     },
   },
-  emits: ['update', 'show', 'hide'],
+  emits: ['show', 'hide'],
   setup(props, { slots, emit }) {
-    const open = ref(false)
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
 
-    const arrowEl = useArrow()
+    const arrowRef = ref<HTMLElement | null>(null)
     const arrowX = ref<number | undefined>(undefined)
     const arrowY = ref<number | undefined>(undefined)
 
@@ -156,103 +128,76 @@ export const Float = defineComponent({
     })
 
     function buildMiddleware() {
-      middleware.value = []
+      const middleware = []
       if (typeof props.offset === 'number') {
-        middleware.value.push(offset(props.offset))
+        middleware.push(offset(props.offset))
       }
       if (props.shift === true || typeof props.shift === 'number') {
-        middleware.value.push(shift({
+        middleware.push(shift({
           padding: props.shift === true ? 6 : props.shift,
         }))
       }
       if (props.flip) {
-        middleware.value.push(flip())
+        middleware.push(flip())
       }
       if (props.arrow === true || typeof props.arrow === 'number') {
-        middleware.value.push(arrow({
-          element: arrowEl,
+        middleware.push(arrow({
+          element: arrowRef,
           padding: props.arrow === true ? 0 : props.arrow,
         }))
       }
       if (props.autoPlacement !== false) {
-        middleware.value.push(autoPlacement(
+        middleware.push(autoPlacement(
           typeof props.autoPlacement === 'object'
             ? props.autoPlacement
             : undefined
         ))
       }
       if (props.hide) {
-        middleware.value.push(hide())
+        middleware.push(hide())
       }
-      return middleware.value.concat(props.middleware)
+      return middleware.concat(props.middleware)
     }
 
-    const api = {
-      open,
-      referenceRef: reference,
-      floatingRef: floating,
-      floatingX: x,
-      floatingY: y,
-      arrowX,
-      arrowY,
+    const arrowApi = {
+      ref: arrowRef,
       placement,
-      strategy,
-      middleware,
-      middlewareData,
-      zIndex: props.zIndex,
-      transition: props.transition,
-      enter: props.enter,
-      enterFrom: props.enterFrom,
-      enterTo: props.enterTo,
-      leave: props.leave,
-      leaveFrom: props.leaveFrom,
-      leaveTo: props.leaveTo,
-      portal: props.portal,
-      placementClass: props.placementClass,
-    } as FloatState
+      x: arrowX,
+      y: arrowY,
+    } as ArrowState
 
-    provide(FloatContext, api)
+    let disposeAutoUpdate: (() => void) | undefined
 
-    let cleanAutoUpdate: (() => void) | undefined
-
-    const showFloating = () => {
-      emit('show')
+    const startAutoUpdate = () => {
+      if (disposeAutoUpdate) disposeAutoUpdate()
 
       if (dom(reference) &&
           dom(floating) &&
-          props.autoUpdate !== false &&
-          !cleanAutoUpdate
+          props.autoUpdate !== false
       ) {
-        cleanAutoUpdate = autoUpdate(
+        disposeAutoUpdate = autoUpdate(
           dom(reference)!,
           dom(floating)!,
           throttle(update, 16),
-          props.autoUpdate === true ? undefined : props.autoUpdate
+          typeof props.autoUpdate === 'object'
+            ? props.autoUpdate
+            : undefined
         )
       }
     }
 
-    const hideFloating = () => {
-      emit('hide')
-
-      if (cleanAutoUpdate) cleanAutoUpdate()
-      cleanAutoUpdate = undefined
+    const clearAutoUpdate = () => {
+      if (disposeAutoUpdate) disposeAutoUpdate()
+      disposeAutoUpdate = undefined
     }
 
     onMounted(() => {
       middleware.value = buildMiddleware()
 
-      if (dom(floating) && dom(floating)?.nodeType !== Node.COMMENT_NODE) {
-        showFloating()
-      }
-    })
-
-    watch(open, () => {
-      if (open.value) {
-        showFloating()
-      } else {
-        hideFloating()
-      }
+      // if (dom(floating) && dom(floating)?.nodeType !== Node.COMMENT_NODE) {
+      //   emit('show')
+      //   startAutoUpdate()
+      // }
     })
 
     watch(middlewareData, () => {
@@ -261,9 +206,7 @@ export const Float = defineComponent({
       arrowY.value = arrowData?.y
     })
 
-    watch([x, y, placement, strategy, middlewareData], () => {
-      emit('update')
-    })
+    provide(ArrowContext, arrowApi)
 
     return () => {
       if (slots.default) {
@@ -273,47 +216,52 @@ export const Float = defineComponent({
           return
         }
 
-        const placementClassValue = computed(() =>
-          typeof api.placementClass === 'function'
-            ? api.placementClass(api.placement.value)
-            : api.placementClass
-        )
+        const placementClassValue = computed(() => {
+          return typeof props.placementClass === 'function'
+            ? props.placementClass(placement.value)
+            : props.placementClass
+        })
 
         const transitionProps = {
-          enterActiveClass: api.transition ? `${api.enter} ${placementClassValue.value}` : undefined,
-          enterFromClass: api.transition ? api.enterFrom : undefined,
-          enterToClass: api.transition ? api.enterTo : undefined,
-          leaveActiveClass: api.transition ? `${api.leave} ${placementClassValue.value}` : undefined,
-          leaveFromClass: api.transition ? api.leaveFrom : undefined,
-          leaveToClass: api.transition ? api.leaveTo : undefined,
+          enterActiveClass: props.transition ? `${props.enter} ${placementClassValue.value}` : '',
+          enterFromClass: props.transition ? props.enterFrom : '',
+          enterToClass: props.transition ? props.enterTo : '',
+          leaveActiveClass: props.transition ? `${props.leave} ${placementClassValue.value}` : '',
+          leaveFromClass: props.transition ? props.leaveFrom : '',
+          leaveToClass: props.transition ? props.leaveTo : '',
           onBeforeEnter() {
-            api.open.value = true
+            nextTick(() => {
+              emit('show')
+              startAutoUpdate()
+            })
           },
           onAfterLeave() {
-            api.open.value = false
+            clearAutoUpdate()
+            emit('hide')
           },
         }
 
-        const floatingStyle = {
-          position: api.strategy.value,
-          zIndex: api.zIndex,
-          top: typeof api.floatingY.value === 'number' ? `${api.floatingY.value}px` : '',
-          left: typeof api.floatingX.value === 'number' ? `${api.floatingX.value}px` : '',
-        }
-
-        const wrapTeleport = (node: VNode) => {
-          if (api.portal === false) {
-            return node
+        const wrapPortal = (node: VNode) => {
+          if (props.portal !== false) {
+            return h(Teleport, { to: props.portal === true ? 'body' : props.portal }, [node])
           }
-          return h(Teleport, { to: api.portal === true ? 'body' : api.portal }, [node])
+          return node
         }
 
         return [
-          cloneVNode(referenceNode, { ref: api.referenceRef }),
+          cloneVNode(referenceNode, { ref: reference }),
 
-          wrapTeleport(h(Transition, transitionProps, () =>
+          wrapPortal(h(Transition, transitionProps, () =>
             floatingNode
-              ? cloneVNode(floatingNode, { ref: api.floatingRef, style: floatingStyle })
+              ? cloneVNode(floatingNode, {
+                ref: floating,
+                style: {
+                  position: strategy.value,
+                  zIndex: props.zIndex,
+                  top: typeof y.value === 'number' ? `${y.value}px` : '0',
+                  left: typeof x.value === 'number' ? `${x.value}px` : '0',
+                },
+              })
               : createCommentVNode()
           )),
         ]
@@ -325,15 +273,7 @@ export const Float = defineComponent({
 export const FloatArrow = defineComponent({
   name: 'FloatArrow',
   setup(props, { slots, attrs }) {
-    const api = useFloatContext('FloatArrow')
-    const arrowEl = inject(ArrowElContext, null)
-
-    if (arrowEl === null) {
-      let err = new Error(`<FloatArrow /> must be in the Items component of the Headless UI.`)
-      // @ts-ignore
-      if (Error.captureStackTrace) Error.captureStackTrace(err, FloatArrow)
-      throw err
-    }
+    const { ref, placement, x, y } = useArrowContext('FloatArrow')
 
     return () => {
       const staticSide = {
@@ -341,22 +281,20 @@ export const FloatArrow = defineComponent({
         right: 'left',
         bottom: 'top',
         left: 'right',
-      }[api.placement.value.split('-')[0]]!
+      }[placement.value.split('-')[0]]!
 
       const style = {
-        left: typeof api.arrowX.value === 'number' ? `${api.arrowX.value}px` : '',
-        top: typeof api.arrowY.value === 'number' ? `${api.arrowY.value}px` : '',
+        left: typeof x.value === 'number' ? `${x.value}px` : '',
+        top: typeof y.value === 'number' ? `${y.value}px` : '',
         right: '',
         bottom: '',
         [staticSide]: '-4px',
       }
 
-      const props = { ref: arrowEl, style }
-
       const node = slots.default?.()[0]
       return node
-        ? cloneVNode(node, props)
-        : h('div', Object.assign({}, attrs, props))
+        ? cloneVNode(node, { ref, style })
+        : h('div', Object.assign({}, attrs, { ref, style }))
     }
   },
 })

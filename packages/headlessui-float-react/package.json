@@ -14,15 +14,15 @@
     "react"
   ],
   "files": [
-    "dist",
-    "types"
+    "dist"
   ],
-  "main": "./dist/headlessui-float.es.js",
+  "main": "./dist/headlessui-float.cjs.js",
   "module": "./dist/headlessui-float.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/headlessui-float.es.js"
+      "import": "./dist/headlessui-float.es.js",
+      "require": "./dist/headlessui-float.cjs.js"
     }
   },
   "repository": {

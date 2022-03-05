@@ -122,6 +122,6 @@ const menuEnter = key => {
   openMapping.value[key] = true
 }
 const menuLeave = key => {
-  delete openMapping.value[key]
+  openMapping.value[key] = false
 }
 </script>

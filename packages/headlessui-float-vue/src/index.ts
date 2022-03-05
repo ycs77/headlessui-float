@@ -1,2 +1,3 @@
 export { Float, FloatArrow } from './float'
-export * from './placement-class-resolvers'
+export { useFloating } from './useFloating'
+export * from './origin-class-resolvers'

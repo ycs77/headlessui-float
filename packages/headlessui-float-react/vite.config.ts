@@ -9,7 +9,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      formats: ['es'],
+      formats: ['es', 'cjs'],
       fileName: format => `headlessui-float.${format}.js`,
     },
     rollupOptions: {

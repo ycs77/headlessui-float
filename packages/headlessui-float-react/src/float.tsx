@@ -1,78 +1,37 @@
 import {
-  createContext,
+  useState,
+  useRef,
   useEffect,
-  useLayoutEffect,
+  useMemo,
   useContext,
-  useReducer,
+  createContext,
+  ReactElement,
   isValidElement,
+  Fragment,
 
   // types
-  Dispatch,
+  RefObject,
 } from 'react'
-import { useFloating, flip, autoUpdate, Placement, Strategy } from '@floating-ui/react-dom'
-import { VirtualElement } from '@floating-ui/core'
+import { createPortal } from 'react-dom'
+import { useFloating, offset, flip, shift, arrow, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware } from '@floating-ui/react-dom'
 import { Transition } from '@headlessui/react'
 import throttle from 'lodash.throttle'
-import { match } from './utils/match'
+import { OriginClassResolver } from './origin-class-resolvers'
 
-interface FloatState {
-  open: boolean
-  referenceRef: (node: Element | VirtualElement | null) => void
-  floatingRef: (node: HTMLElement | null) => void
-  floatingX: number | null
-  floatingY: number | null
+interface ArrowState {
+  arrowRef: RefObject<HTMLElement>
   placement: Placement
-  strategy: Strategy
-//   middleware: Ref<Middleware[]>
-//   transition: boolean
-//   enter?: string
-//   enterFrom?: string
-//   enterTo?: string
-//   leave?: string
-//   leaveFrom?: string
-//   leaveTo?: string
-//   originClass?: string
-//   teleport: boolean | string
-//   placementClassResolver: PlacementClassResolver
+  x: number | undefined
+  y: number | undefined
 }
 
-enum ActionTypes {
-  UpdateFloatContent,
-  ShowFloatContent,
-  HideFloatContent,
-}
+const ArrowContext = createContext<ArrowState | null>(null)
+ArrowContext.displayName = 'ArrowContext'
 
-type Actions =
-  | { type: ActionTypes.UpdateFloatContent, x: number | null, y: number | null }
-  | { type: ActionTypes.ShowFloatContent }
-  | { type: ActionTypes.HideFloatContent }
-
-const reducers: {
-  [P in ActionTypes]: (
-    state: FloatState,
-    action: Extract<Actions, { type: P }>
-  ) => FloatState
-} = {
-  [ActionTypes.UpdateFloatContent](state, action) {
-    state.floatingX = action.x
-    state.floatingY = action.y
-    return state
-  },
-  [ActionTypes.ShowFloatContent](state) {
-    return state
-  },
-  [ActionTypes.HideFloatContent](state) {
-    return state
-  },
-}
-
-const FloatContext = createContext<[FloatState, Dispatch<Actions>] | null>(null)
-FloatContext.displayName = 'FloatContext'
-
-function useFloatContext(component: string) {
-  let context = useContext(FloatContext)
+export function useArrowContext(component: string) {
+  let context = useContext(ArrowContext)
   if (context === null) {
-    let err = new Error(`<${component} /> is missing a parent <Menu /> component.`)
+    let err = new Error(`<${component} /> is missing a parent <Float /> component.`)
     // @ts-ignore
     if (Error.captureStackTrace) Error.captureStackTrace(err, useFloatContext)
     throw err
@@ -80,98 +39,191 @@ function useFloatContext(component: string) {
   return context
 }
 
-function stateReducer(state: FloatState, action: Actions) {
-  return match(action.type, reducers, state, action)
-}
-
 function FloatRoot(props: {
-  open: boolean,
-  placement: Placement,
-  strategy: Strategy,
-  update: () => void
-  show: () => void
-  hide: () => void
-  children: any,
+  open?: boolean,
+  placement?: Placement,
+  strategy?: Strategy,
+  offset?: number,
+  shift?: boolean | number,
+  flip?: boolean,
+  arrow?: boolean | number,
+  autoPlacement?: boolean | object,
+  hide?: boolean,
+  autoUpdate?: boolean | object,
+  zIndex?: number,
+  transition?: boolean,
+  enter?: string,
+  enterFrom?: string,
+  enterTo?: string,
+  leave?: string,
+  leaveFrom?: string,
+  leaveTo?: string,
+  portal?: boolean | string,
+  placementClass?: string | OriginClassResolver,
+  middleware?: Middleware[],
+  onUpdate?: () => void,
+  onShow?: () => void,
+  onHide?: () => void,
+  children: ReactElement[],
 }) {
+  const [middleware, setMiddleware] = useState<Middleware[]>()
+
+  const arrowRef = useRef<HTMLElement>(null)
+
   const events = {
-    update: props.update || (() => {}),
-    show: props.show || (() => {}),
-    hide: props.hide || (() => {}),
+    update: props.onUpdate || (() => {}),
+    show: props.onShow || (() => {}),
+    hide: props.onHide || (() => {}),
   }
 
-  const { x, y, reference, floating, update, refs } = useFloating({
+  const { x, y, placement, strategy, reference, floating, update, refs, middlewareData } = useFloating({
     placement: props.placement || 'bottom-start',
-    strategy: props.strategy || 'absolute',
-    // middleware: middleware,
+    strategy: props.strategy,
+    middleware,
   })
 
-  const reducerBag = useReducer(stateReducer, {
-    open: props.open,
-    referenceRef: reference,
-    floatingRef: floating,
-    placement: props.placement || 'bottom-start',
-    strategy: props.strategy || 'absolute',
-  } as FloatState)
-  const [{}, dispatch] = reducerBag
+  function buildMiddleware() {
+    const middleware = []
+    if (typeof props.offset === 'number') {
+      middleware.push(offset(props.offset))
+    }
+    if (props.shift !== false) {
+      middleware.push(shift({
+        padding: props.shift === true || props.shift === undefined ? 6 : props.shift,
+      }))
+    }
+    if (props.flip) {
+      middleware.push(flip())
+    }
+    if (props.arrow === true || typeof props.arrow === 'number') {
+      middleware.push(arrow({
+        element: arrowRef,
+        padding: props.arrow === true ? 0 : props.arrow,
+      }))
+    }
+    if (props.autoPlacement) {
+      middleware.push(autoPlacement(
+        typeof props.autoPlacement === 'object'
+          ? props.autoPlacement
+          : undefined
+      ))
+    }
+    if (props.hide) {
+      middleware.push(hide())
+    }
+    return middleware.concat(props.middleware || [])
+  }
 
-  let cleanAutoUpdate: (() => void) | undefined
+  const arrowApi = {
+    arrowRef,
+    placement,
+    x: middlewareData.arrow?.x,
+    y: middlewareData.arrow?.y,
+  } as ArrowState
 
   useEffect(() => {
-    if (props.open) {
-      dispatch({ type: ActionTypes.UpdateFloatContent, x, y })
-      update()
+    setMiddleware(buildMiddleware())
+  }, [])
 
-      if (refs.reference.current && refs.floating.current && !cleanAutoUpdate) {
-        cleanAutoUpdate = autoUpdate(
-          refs.reference.current,
-          refs.floating.current,
-          throttle(update, 16)
-        )
-      }
-
-      events.update()
-      events.show()
-    } else {
-      if (cleanAutoUpdate) cleanAutoUpdate()
-
-      events.hide()
+  useEffect(() => {
+    if (refs.reference.current &&
+        refs.floating.current &&
+        props.autoUpdate !== false
+    ) {
+      return autoUpdate(
+        refs.reference.current,
+        refs.floating.current,
+        throttle(update, 16),
+        typeof props.autoUpdate === 'object'
+          ? props.autoUpdate
+          : undefined
+      )
     }
-  }, [props.open, x, y])
+  }, [refs.reference, refs.floating, update])
 
-  // hasFloatComponent...
+  const [ReferenceNode, FloatingNode] = props.children
 
-  const [referenceNode, floatingNode] = Array.isArray(props.children) ? props.children : [props.children]
+  if (!isValidElement(ReferenceNode)) {
+    return
+  }
+
+  const placementClassValue = useMemo(() => {
+    return typeof props.placementClass === 'function'
+      ? props.placementClass(placement)
+      : props.placementClass
+  }, [props.placementClass])
+
+  const transitionProps = {
+    show: props.open,
+    enter: props.transition ? `${props.enter || ''} ${placementClassValue || ''}` : '',
+    enterFrom: props.transition ? `${props.enterFrom || ''}` : '',
+    enterTo: props.transition ? `${props.enterTo || ''}` : '',
+    leave: props.transition ? `${props.leave || ''} ${placementClassValue || ''}` : '',
+    leaveFrom: props.transition ? `${props.leaveFrom || ''}` : '',
+    leaveTo: props.transition ? `${props.leaveTo || ''}` : '',
+    beforeEnter: () => events.show(),
+    afterLeave: () => events.hide(),
+  }
+
+  const wrapPortal = (children: ReactElement) => {
+    if (props.portal) {
+      const root = document?.querySelector(props.portal === true ? 'body' : props.portal)
+      if (root) {
+        return createPortal(children, root)
+      }
+    }
+    return children
+  }
 
   return (
-    <FloatContext.Provider value={reducerBag}>
-      <Reference>{referenceNode}</Reference>
-      <Content>{floatingNode}</Content>
-    </FloatContext.Provider>
+    <>
+      <ReferenceNode.type {...ReferenceNode.props} ref={reference} />
+      <ArrowContext.Provider value={arrowApi}>
+        {wrapPortal(
+          <div ref={floating} style={{
+            position: strategy,
+            zIndex: props.zIndex || 9999,
+            top: y || 0,
+            left: x || 0,
+          }}>
+            <Transition as={Fragment} {...transitionProps}>
+              <FloatingNode.type {...FloatingNode.props} />
+            </Transition>
+          </div>
+        )}
+      </ArrowContext.Provider>
+    </>
   )
 }
 
-function Reference(props: { children: any }) {
-  const [state, dispatch] = useFloatContext('Float.Reference')
+function Arrow(props: { children: any }) {
+  const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
 
-  const Child = isValidElement(props.children[0]) ? props.children[0] : props.children
+  const staticSide = {
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right',
+  }[placement.split('-')[0]]!
 
-  return (<Child.type {...Child.props} ref={state.referenceRef} />)
+  const style = {
+    left: typeof x === 'number' ? `${x}px` : '',
+    top: typeof y === 'number' ? `${y}px` : '',
+    right: '',
+    bottom: '',
+    [staticSide]: '-4px',
+  }
+
+  const applyProps = (props: { [key: string]: any }) => {
+    const nodeProps = { ...props }
+    delete nodeProps.children
+    return nodeProps
+  }
+
+  const [ArrowNode] = Array.isArray(props.children) ? props.children : [props.children]
+  return ArrowNode
+    ? (<ArrowNode.type {...applyProps(props)} ref={arrowRef} style={style} />)
+    : (<div {...applyProps(props)} ref={arrowRef as RefObject<HTMLDivElement>} style={style} />)
 }
 
-function Content(props: { children: any }) {
-  const [state, dispatch] = useFloatContext('Float.Content')
-
-  const Child = isValidElement(props.children[0]) ? props.children[0] : props.children
-
-  return (
-    // <Transition show={state.show}>
-      <Child.type {...Child.props} ref={state.floatingRef} style={{
-        position: state.strategy,
-        top: state.floatingY || '',
-        left: state.floatingX || '',
-      }} />
-    // </Transition>
-  )
-}
-
-export const Float = Object.assign(FloatRoot, { Reference, Content })
+export const Float = Object.assign(FloatRoot, { Arrow })

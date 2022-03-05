@@ -15,8 +15,8 @@
     "tailwindcss": "^3.0.23"
   },
   "devDependencies": {
-    "@headlessui/react": "^1.5.0",
     "@iconify-json/heroicons-outline": "^1.1.1",
+    "@svgr/core": "^6.2.1",
     "@vitejs/plugin-react": "^1.0.7",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.6",

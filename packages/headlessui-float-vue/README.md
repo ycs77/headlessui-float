@@ -55,10 +55,10 @@ export default {
 
 Anyway you can use for `<Menu>`, `<Listbox>`, `<Popover>` and `<Combobox>`, you can use `<Float>` whenever you need to floating elements.
 
-## Placement Class
+## Origin Class
 
-* Placement Class Resolver
-* Placement Safelist
+* Origin Class Resolver
+* Origin Safelist
 
 ## z-index
 
@@ -79,15 +79,12 @@ Anyway you can use for `<Menu>`, `<Listbox>`, `<Popover>` and `<Combobox>`, you 
 
 ## Portal (Teleport)
 
-## Explicit use `<FloatReference>` & `<FloatContent>`
-
 ## Placement Origin Class
 
 ## Arrow
 
 ## Event
 
-* update
 * show
 * hide
 
