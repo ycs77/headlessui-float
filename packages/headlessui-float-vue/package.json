@@ -1,6 +1,6 @@
 {
   "name": "headlessui-float-vue",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Eazy use Headless UI for Vue 3 with Floating UI (Popper.js)",
   "license": "MIT",
   "keywords": [
