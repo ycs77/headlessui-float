@@ -53,7 +53,7 @@ export default {
 </script>
 ```
 
-Anyway you can use for `<Menu>`, `<Listbox>`, `<Popover>` and `<Combobox>`, you can use `<Float>` whenever you need to floating elements.
+Of course you can use for `<Menu>`, `<Listbox>`, `<Popover>` and `<Combobox>`. Use `<Float>` whenever you need to floating elements.
 
 ## Origin Class
 
