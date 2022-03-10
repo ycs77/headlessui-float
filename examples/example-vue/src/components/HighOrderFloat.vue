@@ -3,7 +3,6 @@
     :offset="8"
     flip
     portal
-    transition
     enter="transition duration-200 ease-out"
     enter-from="scale-95 opacity-0"
     enter-to="scale-100 opacity-100"

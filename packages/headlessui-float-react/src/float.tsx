@@ -50,7 +50,6 @@ function FloatRoot(props: {
   hide?: boolean,
   autoUpdate?: boolean | object,
   zIndex?: number,
-  transition?: boolean,
   enter?: string,
   enterFrom?: string,
   enterTo?: string,
@@ -160,12 +159,12 @@ function FloatRoot(props: {
 
   const transitionProps = {
     show: props.open,
-    enter: props.transition ? `${props.enter || ''} ${originClassValue}` : '',
-    enterFrom: props.transition ? `${props.enterFrom || ''}` : '',
-    enterTo: props.transition ? `${props.enterTo || ''}` : '',
-    leave: props.transition ? `${props.leave || ''} ${originClassValue}` : '',
-    leaveFrom: props.transition ? `${props.leaveFrom || ''}` : '',
-    leaveTo: props.transition ? `${props.leaveTo || ''}` : '',
+    enter: `${props.enter || ''} ${originClassValue}`,
+    enterFrom: `${props.enterFrom || ''}`,
+    enterTo: `${props.enterTo || ''}`,
+    leave: `${props.leave || ''} ${originClassValue}`,
+    leaveFrom: `${props.leaveFrom || ''}`,
+    leaveTo: `${props.leaveTo || ''}`,
     beforeEnter: () => events.show(),
     afterLeave: () => events.hide(),
   }

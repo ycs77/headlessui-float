@@ -6,7 +6,6 @@ export default function HighOrderFloat(props) {
       offset={8}
       flip
       portal
-      transition
       enter="transition duration-200 ease-out"
       enterFrom="scale-95 opacity-0"
       enterTo="scale-100 opacity-100"

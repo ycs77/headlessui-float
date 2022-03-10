@@ -89,10 +89,6 @@ export const Float = defineComponent({
       type: Number,
       default: 9999,
     },
-    transition: {
-      type: Boolean,
-      default: false,
-    },
     enter: String,
     enterFrom: String,
     enterTo: String,
@@ -228,12 +224,12 @@ export const Float = defineComponent({
         })
 
         const transitionProps = {
-          enterActiveClass: props.transition ? `${props.enter} ${originClassValue.value}` : '',
-          enterFromClass: props.transition ? props.enterFrom : '',
-          enterToClass: props.transition ? props.enterTo : '',
-          leaveActiveClass: props.transition ? `${props.leave} ${originClassValue.value}` : '',
-          leaveFromClass: props.transition ? props.leaveFrom : '',
-          leaveToClass: props.transition ? props.leaveTo : '',
+          enterActiveClass: `${props.enter} ${originClassValue.value}`,
+          enterFromClass: props.enterFrom,
+          enterToClass: props.enterTo,
+          leaveActiveClass: `${props.leave} ${originClassValue.value}`,
+          leaveFromClass: props.leaveFrom,
+          leaveToClass: props.leaveTo,
           onBeforeEnter() {
             nextTick(() => {
               emit('show')
