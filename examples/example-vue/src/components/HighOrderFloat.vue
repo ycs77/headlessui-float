@@ -2,6 +2,7 @@
   <Float
     :offset="8"
     flip
+    :shift="6"
     portal
     enter="transition duration-200 ease-out"
     enter-from="scale-95 opacity-0"

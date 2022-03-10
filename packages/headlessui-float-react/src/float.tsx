@@ -86,9 +86,9 @@ function FloatRoot(props: {
     if (typeof props.offset === 'number') {
       middleware.push(offset(props.offset))
     }
-    if (props.shift !== false) {
+    if (props.shift === true || typeof props.shift === 'number') {
       middleware.push(shift({
-        padding: props.shift === true || props.shift === undefined ? 6 : props.shift,
+        padding: typeof props.shift === 'number' ? props.shift : undefined,
       }))
     }
     if (props.flip) {

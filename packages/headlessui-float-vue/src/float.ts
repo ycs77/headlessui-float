@@ -63,7 +63,7 @@ export const Float = defineComponent({
     offset: Number,
     shift: {
       type: [Boolean, Number],
-      default: 6,
+      default: false,
     },
     flip: {
       type: Boolean,
@@ -130,7 +130,7 @@ export const Float = defineComponent({
       }
       if (props.shift === true || typeof props.shift === 'number') {
         middleware.push(shift({
-          padding: props.shift === true ? 6 : props.shift,
+          padding: typeof props.shift === 'number' ? props.shift : undefined,
         }))
       }
       if (props.flip) {
