@@ -39,7 +39,7 @@ export function useArrowContext(component: string) {
 }
 
 function FloatRoot(props: {
-  open?: boolean,
+  show?: boolean,
   placement?: Placement,
   strategy?: Strategy,
   offset?: number,
@@ -158,7 +158,7 @@ function FloatRoot(props: {
   }, [props.originClass, props.tailwindcssOriginClass])
 
   const transitionProps = {
-    show: props.open,
+    show: props.show,
     enter: `${props.enter || ''} ${originClassValue}`,
     enterFrom: `${props.enterFrom || ''}`,
     enterTo: `${props.enterTo || ''}`,

@@ -14,7 +14,7 @@ export default function ExampleNestedMenu() {
 
   return (
     <Block title="Nested Menu (Dropdown) with pure HTML" titleClass="text-indigo-400">
-      <Float open={openMapping['m0'] || false} placement="bottom-start">
+      <Float show={openMapping['m0'] || false} placement="bottom-start">
         <button
           type="button"
           className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md"
@@ -38,7 +38,7 @@ export default function ExampleNestedMenu() {
             </button>
           </li>
           <li>
-            <Float open={openMapping['m1'] || false} placement="right-start">
+            <Float show={openMapping['m1'] || false} placement="right-start">
               <button
                 type="button"
                 className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
@@ -72,7 +72,7 @@ export default function ExampleNestedMenu() {
                   </button>
                 </li>
                 <li>
-                  <Float open={openMapping['m2'] || false} placement="right-start">
+                  <Float show={openMapping['m2'] || false} placement="right-start">
                     <button
                       type="button"
                       className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
