@@ -11,12 +11,21 @@ import {
 
   // types
   RefObject,
+  MutableRefObject,
 } from 'react'
 import { createPortal } from 'react-dom'
-import { useFloating, offset, flip, shift, arrow, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware } from '@floating-ui/react-dom'
+import { useFloating, offset, flip, shift, arrow, autoPlacement, hide, autoUpdate } from '@floating-ui/react-dom'
 import { Transition } from '@headlessui/react'
 import throttle from 'lodash.throttle'
 import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
+import type { VirtualElement } from '@floating-ui/core'
+import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
+import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
+import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/flip'
+import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
+import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
+import type { Placement, Strategy, Middleware, DetectOverflowOptions } from '@floating-ui/dom'
+import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
@@ -42,13 +51,13 @@ function FloatRoot(props: {
   show?: boolean,
   placement?: Placement,
   strategy?: Strategy,
-  offset?: number,
-  shift?: boolean | number,
-  flip?: boolean,
+  offset?: OffsetOptions,
+  shift?: boolean | number | (ShiftOptions & DetectOverflowOptions),
+  flip?: boolean | (FlipOptions & DetectOverflowOptions),
   arrow?: boolean | number,
-  autoPlacement?: boolean | object,
-  hide?: boolean,
-  autoUpdate?: boolean | object,
+  autoPlacement?: boolean | (AutoPlacementOptions & DetectOverflowOptions),
+  hide?: boolean | (HideOptions & DetectOverflowOptions),
+  autoUpdate?: boolean | AutoUpdateOptions,
   zIndex?: number,
   enter?: string,
   enterFrom?: string,
@@ -59,7 +68,10 @@ function FloatRoot(props: {
   portal?: boolean | string,
   originClass?: string | OriginClassResolver,
   tailwindcssOriginClass?: boolean,
-  middleware?: Middleware[],
+  middleware?: Middleware[] | ((refs: {
+    referenceEl: MutableRefObject<Element | VirtualElement | null>;
+    floatingEl: MutableRefObject<HTMLElement | null>;
+}) => Middleware[]),
   onUpdate?: () => void,
   onShow?: () => void,
   onHide?: () => void,
@@ -83,16 +95,25 @@ function FloatRoot(props: {
 
   useEffect(() => {
     const _middleware = []
-    if (typeof props.offset === 'number') {
+    if (typeof props.offset === 'number' ||
+        typeof props.offset === 'object' ||
+        typeof props.offset === 'function'
+    ) {
       _middleware.push(offset(props.offset))
     }
-    if (props.shift === true || typeof props.shift === 'number') {
+    if (props.shift === true ||
+        typeof props.shift === 'number' ||
+        typeof props.shift === 'object'
+    ) {
       _middleware.push(shift({
         padding: typeof props.shift === 'number' ? props.shift : undefined,
+        ...(typeof props.shift === 'object' ? props.shift : {}),
       }))
     }
-    if (props.flip) {
-      _middleware.push(flip())
+    if (props.flip === true || typeof props.flip === 'object') {
+      _middleware.push(flip(
+        typeof props.flip === 'object' ? props.flip : undefined
+      ))
     }
     if (props.arrow === true || typeof props.arrow === 'number') {
       _middleware.push(arrow({
@@ -100,17 +121,27 @@ function FloatRoot(props: {
         padding: props.arrow === true ? 0 : props.arrow,
       }))
     }
-    if (props.autoPlacement) {
+    if (props.autoPlacement === true || typeof props.autoPlacement === 'object') {
       _middleware.push(autoPlacement(
         typeof props.autoPlacement === 'object'
           ? props.autoPlacement
           : undefined
       ))
     }
-    if (props.hide) {
-      _middleware.push(hide())
+    _middleware.push(...(
+      typeof props.middleware === 'function'
+        ? props.middleware({
+          referenceEl: refs.reference,
+          floatingEl: refs.floating,
+        })
+        : props.middleware || []
+    ))
+    if (props.hide === true || typeof props.hide === 'object') {
+      _middleware.push(hide(
+        typeof props.hide === 'object' ? props.hide : undefined
+      ))
     }
-    setMiddleware(_middleware.concat(props.middleware || []))
+    setMiddleware(_middleware)
   }, [
     props.offset,
     props.shift,

@@ -21,12 +21,19 @@ import {
   InjectionKey,
   VNode,
 } from 'vue'
-import { offset, flip, shift, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware } from '@floating-ui/dom'
+import { offset, flip, shift, autoPlacement, hide, autoUpdate } from '@floating-ui/dom'
 import throttle from 'lodash.throttle'
-import { useFloating, arrow, AuthUpdateOptions } from './useFloating'
+import { useFloating, arrow } from './useFloating'
 import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 import { filterSlot, flattenFragment, isVisibleDOMElement, isValidElement } from './utils/render'
 import { dom } from './utils/dom'
+import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
+import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
+import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/flip'
+import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
+import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
+import type { Placement, Strategy, Middleware, DetectOverflowOptions } from '@floating-ui/dom'
+import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 
 interface ArrowState {
   ref: Ref<HTMLElement | null>
@@ -60,13 +67,13 @@ export const Float = defineComponent({
       type: String as PropType<Strategy>,
       default: 'absolute',
     },
-    offset: Number,
+    offset: [Number, Object, Function] as PropType<OffsetOptions>,
     shift: {
-      type: [Boolean, Number],
+      type: [Boolean, Number, Object] as PropType<boolean | number | (ShiftOptions & DetectOverflowOptions)>,
       default: false,
     },
     flip: {
-      type: Boolean,
+      type: [Boolean, Object] as PropType<boolean | (FlipOptions & DetectOverflowOptions)>,
       default: false,
     },
     arrow: {
@@ -74,15 +81,15 @@ export const Float = defineComponent({
       default: false,
     },
     autoPlacement: {
-      type: [Boolean, Object],
+      type: [Boolean, Object] as PropType<boolean | (AutoPlacementOptions & DetectOverflowOptions)>,
       default: false,
     },
     hide: {
-      type: Boolean,
+      type: [Boolean, Object] as PropType<boolean | (HideOptions & DetectOverflowOptions)>,
       default: false,
     },
     autoUpdate: {
-      type: [Boolean, Object] as PropType<boolean | AuthUpdateOptions>,
+      type: [Boolean, Object] as PropType<boolean | AutoUpdateOptions>,
       default: true,
     },
     zIndex: {
@@ -105,7 +112,10 @@ export const Float = defineComponent({
       default: false,
     },
     middleware: {
-      type: Array as PropType<Middleware[]>,
+      type: [Array, Function] as PropType<Middleware[] | ((refs: {
+        referenceEl: Ref<HTMLElement | null>,
+        floatingEl: Ref<HTMLElement | null>,
+      }) => Middleware[])>,
       default: () => [],
     },
   },
@@ -133,16 +143,25 @@ export const Float = defineComponent({
       () => props.middleware,
     ], () => {
       const _middleware = []
-      if (typeof props.offset === 'number') {
+      if (typeof props.offset === 'number' ||
+          typeof props.offset === 'object' ||
+          typeof props.offset === 'function'
+      ) {
         _middleware.push(offset(props.offset))
       }
-      if (props.shift === true || typeof props.shift === 'number') {
+      if (props.shift === true ||
+          typeof props.shift === 'number' ||
+          typeof props.shift === 'object'
+      ) {
         _middleware.push(shift({
           padding: typeof props.shift === 'number' ? props.shift : undefined,
+          ...(typeof props.shift === 'object' ? props.shift : {}),
         }))
       }
-      if (props.flip) {
-        _middleware.push(flip())
+      if (props.flip === true || typeof props.flip === 'object') {
+        _middleware.push(flip(
+          typeof props.flip === 'object' ? props.flip : undefined
+        ))
       }
       if (props.arrow === true || typeof props.arrow === 'number') {
         _middleware.push(arrow({
@@ -150,17 +169,27 @@ export const Float = defineComponent({
           padding: props.arrow === true ? 0 : props.arrow,
         }))
       }
-      if (props.autoPlacement !== false) {
+      if (props.autoPlacement === true || typeof props.autoPlacement === 'object') {
         _middleware.push(autoPlacement(
           typeof props.autoPlacement === 'object'
             ? props.autoPlacement
             : undefined
         ))
       }
-      if (props.hide) {
-        _middleware.push(hide())
+      _middleware.push(...(
+        typeof props.middleware === 'function'
+          ? props.middleware({
+            referenceEl: computed(() => dom(reference)),
+            floatingEl: computed(() => dom(floating)),
+          })
+          : props.middleware
+      ))
+      if (props.hide === true || typeof props.hide === 'object') {
+        _middleware.push(hide(
+          typeof props.hide === 'object' ? props.hide : undefined
+        ))
       }
-      middleware.value = _middleware.concat(props.middleware)
+      middleware.value = _middleware
 
       if (isVisibleDOMElement(dom(reference)) &&
           isVisibleDOMElement(dom(floating))

@@ -13,7 +13,14 @@ export default defineConfig({
       fileName: format => `headlessui-float.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@headlessui/react'],
+      external: [
+        'react',
+        'react-dom',
+        '@headlessui/react',
+        '@floating-ui/core',
+        '@floating-ui/dom',
+        '@floating-ui/react-dom',
+      ],
     },
   },
 })

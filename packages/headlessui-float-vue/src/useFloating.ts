@@ -3,13 +3,6 @@ import { computePosition, arrow as arrowCore, Placement, Strategy, Middleware } 
 import { SideObject, MiddlewareData } from '@floating-ui/core'
 import { dom } from './utils/dom'
 
-export interface AuthUpdateOptions {
-  ancestorScroll: boolean
-  ancestorResize: boolean
-  elementResize: boolean
-  animationFrame: boolean
-}
-
 export type UseFloatingOptions = {
   placement?: Placement
   strategy?: Strategy
@@ -64,7 +57,6 @@ export const arrow = (options: {
       if (element) {
         return arrowCore({ element, padding }).fn(args)
       }
-
       return {}
     },
   }

@@ -13,7 +13,11 @@ export default defineConfig({
       fileName: format => `headlessui-float.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue'],
+      external: [
+        'vue',
+        '@floating-ui/core',
+        '@floating-ui/dom',
+      ],
     },
   },
 })
