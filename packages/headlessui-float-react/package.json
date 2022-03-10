@@ -1,6 +1,6 @@
 {
   "name": "headlessui-float-react",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Eazy use Headless UI for React with Floating UI (Popper.js)",
   "license": "MIT",
   "keywords": [
