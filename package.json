@@ -11,6 +11,8 @@
     "examples/example-vue"
   ],
   "scripts": {
+    "build": "yarn react build & yarn vue build",
+    "watch": "yarn react watch & yarn vue watch",
     "react": "yarn workspace headlessui-float-react",
     "react:example": "yarn workspace headlessui-float-example-react",
     "vue": "yarn workspace headlessui-float-vue",
