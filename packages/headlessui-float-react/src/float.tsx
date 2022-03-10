@@ -81,48 +81,45 @@ function FloatRoot(props: {
     middleware,
   })
 
-  function buildMiddleware() {
-    const middleware = []
+  useEffect(() => {
+    const _middleware = []
     if (typeof props.offset === 'number') {
-      middleware.push(offset(props.offset))
+      _middleware.push(offset(props.offset))
     }
     if (props.shift === true || typeof props.shift === 'number') {
-      middleware.push(shift({
+      _middleware.push(shift({
         padding: typeof props.shift === 'number' ? props.shift : undefined,
       }))
     }
     if (props.flip) {
-      middleware.push(flip())
+      _middleware.push(flip())
     }
     if (props.arrow === true || typeof props.arrow === 'number') {
-      middleware.push(arrow({
+      _middleware.push(arrow({
         element: arrowRef,
         padding: props.arrow === true ? 0 : props.arrow,
       }))
     }
     if (props.autoPlacement) {
-      middleware.push(autoPlacement(
+      _middleware.push(autoPlacement(
         typeof props.autoPlacement === 'object'
           ? props.autoPlacement
           : undefined
       ))
     }
     if (props.hide) {
-      middleware.push(hide())
+      _middleware.push(hide())
     }
-    return middleware.concat(props.middleware || [])
-  }
-
-  const arrowApi = {
-    arrowRef,
-    placement,
-    x: middlewareData.arrow?.x,
-    y: middlewareData.arrow?.y,
-  } as ArrowState
-
-  useEffect(() => {
-    setMiddleware(buildMiddleware())
-  }, [])
+    setMiddleware(_middleware.concat(props.middleware || []))
+  }, [
+    props.offset,
+    props.shift,
+    props.flip,
+    props.arrow,
+    props.autoPlacement,
+    props.hide,
+    props.middleware,
+  ])
 
   useEffect(() => {
     if (refs.reference.current &&
@@ -139,6 +136,13 @@ function FloatRoot(props: {
       )
     }
   }, [refs.reference, refs.floating, update])
+
+  const arrowApi = {
+    arrowRef,
+    placement,
+    x: middlewareData.arrow?.x,
+    y: middlewareData.arrow?.y,
+  } as ArrowState
 
   const [ReferenceNode, FloatingNode] = props.children
 

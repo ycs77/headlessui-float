@@ -21,3 +21,7 @@ export function isValidElement(input: any): boolean {
   if (typeof input.type === 'function') return true // Built-ins like Transition
   return false // Comments, strings, ...
 }
+
+export function isVisibleDOMElement(input: any): boolean {
+  return input && input?.nodeType !== Node.COMMENT_NODE
+}

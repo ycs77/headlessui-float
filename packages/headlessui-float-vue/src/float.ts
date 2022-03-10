@@ -25,7 +25,7 @@ import { offset, flip, shift, autoPlacement, hide, autoUpdate, Placement, Strate
 import throttle from 'lodash.throttle'
 import { useFloating, arrow, AuthUpdateOptions } from './useFloating'
 import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
-import { filterSlot, flattenFragment, isValidElement } from './utils/render'
+import { filterSlot, flattenFragment, isVisibleDOMElement, isValidElement } from './utils/render'
 import { dom } from './utils/dom'
 
 interface ArrowState {
@@ -123,52 +123,57 @@ export const Float = defineComponent({
       middleware,
     })
 
-    function buildMiddleware() {
-      const middleware = []
+    watch([
+      () => props.offset,
+      () => props.shift,
+      () => props.flip,
+      () => props.arrow,
+      () => props.autoPlacement,
+      () => props.hide,
+      () => props.middleware,
+    ], () => {
+      const _middleware = []
       if (typeof props.offset === 'number') {
-        middleware.push(offset(props.offset))
+        _middleware.push(offset(props.offset))
       }
       if (props.shift === true || typeof props.shift === 'number') {
-        middleware.push(shift({
+        _middleware.push(shift({
           padding: typeof props.shift === 'number' ? props.shift : undefined,
         }))
       }
       if (props.flip) {
-        middleware.push(flip())
+        _middleware.push(flip())
       }
       if (props.arrow === true || typeof props.arrow === 'number') {
-        middleware.push(arrow({
+        _middleware.push(arrow({
           element: arrowRef,
           padding: props.arrow === true ? 0 : props.arrow,
         }))
       }
       if (props.autoPlacement !== false) {
-        middleware.push(autoPlacement(
+        _middleware.push(autoPlacement(
           typeof props.autoPlacement === 'object'
             ? props.autoPlacement
             : undefined
         ))
       }
       if (props.hide) {
-        middleware.push(hide())
+        _middleware.push(hide())
       }
-      return middleware.concat(props.middleware)
-    }
+      middleware.value = _middleware.concat(props.middleware)
 
-    const arrowApi = {
-      ref: arrowRef,
-      placement,
-      x: arrowX,
-      y: arrowY,
-    } as ArrowState
+      if (isVisibleDOMElement(dom(reference)) &&
+          isVisibleDOMElement(dom(floating))
+      ) {
+        update()
+      }
+    }, { immediate: true })
 
     let disposeAutoUpdate: (() => void) | undefined
 
     const startAutoUpdate = () => {
-      if (disposeAutoUpdate) disposeAutoUpdate()
-
-      if (dom(reference) &&
-          dom(floating) &&
+      if (isVisibleDOMElement(dom(reference)) &&
+          isVisibleDOMElement(dom(floating)) &&
           props.autoUpdate !== false
       ) {
         disposeAutoUpdate = autoUpdate(
@@ -188,12 +193,10 @@ export const Float = defineComponent({
     }
 
     onMounted(() => {
-      middleware.value = buildMiddleware()
-
-      // if (dom(floating) && dom(floating)?.nodeType !== Node.COMMENT_NODE) {
-      //   emit('show')
-      //   startAutoUpdate()
-      // }
+      if (isVisibleDOMElement(dom(floating))) {
+        emit('show')
+        startAutoUpdate()
+      }
     })
 
     watch(middlewareData, () => {
@@ -201,6 +204,13 @@ export const Float = defineComponent({
       arrowX.value = arrowData?.x
       arrowY.value = arrowData?.y
     })
+
+    const arrowApi = {
+      ref: arrowRef,
+      placement,
+      x: arrowX,
+      y: arrowY,
+    } as ArrowState
 
     provide(ArrowContext, arrowApi)
 
