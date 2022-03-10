@@ -24,7 +24,7 @@ import {
 import { offset, flip, shift, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware } from '@floating-ui/dom'
 import throttle from 'lodash.throttle'
 import { useFloating, arrow, AuthUpdateOptions } from './useFloating'
-import { OriginClassResolver } from './origin-class-resolvers'
+import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 import { filterSlot, flattenFragment, isValidElement } from './utils/render'
 import { dom } from './utils/dom'
 
@@ -42,7 +42,7 @@ export function useArrowContext(component: string) {
 
   if (context === null) {
     let err = new Error(`<${component} /> must be in the <Float /> component.`)
-    if (Error.captureStackTrace) Error.captureStackTrace(err, FloatArrow)
+    if (Error.captureStackTrace) Error.captureStackTrace(err, useArrowContext)
     throw err
   }
 
@@ -103,9 +103,10 @@ export const Float = defineComponent({
       type: [Boolean, String],
       default: false,
     },
-    placementClass: {
-      type: [String, Function] as PropType<string | OriginClassResolver>,
-      default: '',
+    originClass: [String, Function] as PropType<string | OriginClassResolver>,
+    tailwindcssOriginClass: {
+      type: Boolean,
+      default: false,
     },
     middleware: {
       type: Array as PropType<Middleware[]>,
@@ -215,17 +216,22 @@ export const Float = defineComponent({
           return
         }
 
-        const placementClassValue = computed(() => {
-          return typeof props.placementClass === 'function'
-            ? props.placementClass(placement.value)
-            : props.placementClass
+        const originClassValue = computed(() => {
+          if (typeof props.originClass === 'function') {
+            return props.originClass(placement.value)
+          } else if (typeof props.originClass === 'string') {
+            return props.originClass
+          } else if (props.tailwindcssOriginClass) {
+            return tailwindcssOriginClassResolver(placement.value)
+          }
+          return ''
         })
 
         const transitionProps = {
-          enterActiveClass: props.transition ? `${props.enter} ${placementClassValue.value}` : '',
+          enterActiveClass: props.transition ? `${props.enter} ${originClassValue.value}` : '',
           enterFromClass: props.transition ? props.enterFrom : '',
           enterToClass: props.transition ? props.enterTo : '',
-          leaveActiveClass: props.transition ? `${props.leave} ${placementClassValue.value}` : '',
+          leaveActiveClass: props.transition ? `${props.leave} ${originClassValue.value}` : '',
           leaveFromClass: props.transition ? props.leaveFrom : '',
           leaveToClass: props.transition ? props.leaveTo : '',
           onBeforeEnter() {

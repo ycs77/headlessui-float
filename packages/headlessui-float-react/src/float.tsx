@@ -16,7 +16,7 @@ import { createPortal } from 'react-dom'
 import { useFloating, offset, flip, shift, arrow, autoPlacement, hide, autoUpdate, Placement, Strategy, Middleware } from '@floating-ui/react-dom'
 import { Transition } from '@headlessui/react'
 import throttle from 'lodash.throttle'
-import { OriginClassResolver } from './origin-class-resolvers'
+import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
@@ -32,7 +32,7 @@ export function useArrowContext(component: string) {
   let context = useContext(ArrowContext)
   if (context === null) {
     let err = new Error(`<${component} /> is missing a parent <Float /> component.`)
-    if (Error.captureStackTrace) Error.captureStackTrace(err, useFloatContext)
+    if (Error.captureStackTrace) Error.captureStackTrace(err, useArrowContext)
     throw err
   }
   return context
@@ -58,7 +58,8 @@ function FloatRoot(props: {
   leaveFrom?: string,
   leaveTo?: string,
   portal?: boolean | string,
-  placementClass?: string | OriginClassResolver,
+  originClass?: string | OriginClassResolver,
+  tailwindcssOriginClass?: boolean,
   middleware?: Middleware[],
   onUpdate?: () => void,
   onShow?: () => void,
@@ -146,18 +147,23 @@ function FloatRoot(props: {
     return
   }
 
-  const placementClassValue = useMemo(() => {
-    return typeof props.placementClass === 'function'
-      ? props.placementClass(placement)
-      : props.placementClass
-  }, [props.placementClass])
+  const originClassValue = useMemo(() => {
+    if (typeof props.originClass === 'function') {
+      return props.originClass(placement)
+    } else if (typeof props.originClass === 'string') {
+      return props.originClass
+    } else if (props.tailwindcssOriginClass) {
+      return tailwindcssOriginClassResolver(placement)
+    }
+    return ''
+  }, [props.originClass, props.tailwindcssOriginClass])
 
   const transitionProps = {
     show: props.open,
-    enter: props.transition ? `${props.enter || ''} ${placementClassValue || ''}` : '',
+    enter: props.transition ? `${props.enter || ''} ${originClassValue}` : '',
     enterFrom: props.transition ? `${props.enterFrom || ''}` : '',
     enterTo: props.transition ? `${props.enterTo || ''}` : '',
-    leave: props.transition ? `${props.leave || ''} ${placementClassValue || ''}` : '',
+    leave: props.transition ? `${props.leave || ''} ${originClassValue}` : '',
     leaveFrom: props.transition ? `${props.leaveFrom || ''}` : '',
     leaveTo: props.transition ? `${props.leaveTo || ''}` : '',
     beforeEnter: () => events.show(),

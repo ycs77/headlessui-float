@@ -10,19 +10,16 @@
     leave="transition duration-150 ease-in"
     leave-from="scale-100 opacity-100"
     leave-to="scale-95 opacity-0"
-    :placement-class="tailwindcssOriginClassResolver"
+    tailwindcss-origin-class
   >
     <slot></slot>
   </Float>
 </template>
 
 <script>
-import { Float, tailwindcssOriginClassResolver } from 'headlessui-float-vue'
+import { Float } from 'headlessui-float-vue'
 
 export default {
   components: { Float },
-  setup() {
-    return { tailwindcssOriginClassResolver }
-  },
 }
 </script>

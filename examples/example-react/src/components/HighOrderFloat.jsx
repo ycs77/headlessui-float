@@ -1,4 +1,4 @@
-import { Float, tailwindcssOriginClassResolver } from 'headlessui-float-react'
+import { Float } from 'headlessui-float-react'
 
 export default function HighOrderFloat(props) {
   return (
@@ -13,7 +13,7 @@ export default function HighOrderFloat(props) {
       leave="transition duration-150 ease-in"
       leaveFrom="scale-100 opacity-100"
       leaveTo="scale-95 opacity-0"
-      placementClass={tailwindcssOriginClassResolver}
+      tailwindcssOriginClass
       {...props}
     >
       {props.children}

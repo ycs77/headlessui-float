@@ -51,12 +51,11 @@ import HeroiconsOutlineCheck from '~icons/heroicons-outline/check'
 import HeroiconsOutlineSelector from '~icons/heroicons-outline/selector'
 
 const people = [
-  { id: 1, name: 'Wade Cooper', unavailable: false },
-  { id: 2, name: 'Arlene Mccoy', unavailable: false },
-  { id: 3, name: 'Devon Webb', unavailable: false },
-  { id: 4, name: 'Tom Cook', unavailable: false },
-  { id: 5, name: 'Tanya Fox', unavailable: true },
-  { id: 6, name: 'Hellen Schmidt', unavailable: false },
+  { id: 1, name: 'Durward Reynolds', unavailable: false },
+  { id: 2, name: 'Kenton Towne', unavailable: false },
+  { id: 3, name: 'Therese Wunsch', unavailable: false },
+  { id: 4, name: 'Benedict Kessler', unavailable: true },
+  { id: 5, name: 'Katelyn Rohan', unavailable: false },
 ]
 const selected = ref(people[0])
 </script>
