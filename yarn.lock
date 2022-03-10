@@ -282,24 +282,24 @@
   resolved "https://registry.yarnpkg.com/@emmetio/scanner/-/scanner-1.0.0.tgz#065b2af6233fe7474d44823e3deb89724af42b5f"
   integrity sha512-8HqW8EVqjnCmWXVpqAOZf+EGESdkR27odcMMMGefgKXtar00SoYNSryGv//TELI4T3QFsECo78p+0lmalk/CFA==
 
-"@floating-ui/core@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.5.0.tgz#d3d378412c525e663f41ced012e4e13049b31908"
-  integrity sha512-Ouka4Ck1mnPFZhgpfyFb+YBflGdk0o/SW8uSwByoRC6VqRzCHpW/7mJbFt/TWjl1lDcRbImJ2ZWOqwlIP71LDg==
+"@floating-ui/core@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.6.0.tgz#bbefe8eaeaa0608509eb863189e37eef930c4204"
+  integrity sha512-chJj27Tj4q6EUgRaR5m5Va+h+N5yFMP/s3CagVMS9Ug3482jsjZMvS2kuwQQAdLV+/1zCf5uZiN1mksaLerQoA==
 
-"@floating-ui/dom@^0.3.0", "@floating-ui/dom@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.3.1.tgz#d5608b9f16a17054c66f9e7b7e6bc289d65b64ec"
-  integrity sha512-HJX/2xgGPt01YHQNAya2taqg5HDnY6ipF0B0Bk/Th2s4FD9R89Ecw3TEegLLO+VrQnPEGbuHOGJ6Fr3BPM0DYg==
+"@floating-ui/dom@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.4.0.tgz#9f81632b7c0cc7ae3a12b2b9990de14752083a36"
+  integrity sha512-sfbZCY30r2u9f6h2wBtFtvhlSLP2nUuwsj7feTvZLtxhbrVd+/43jrW1d2OHWfeqx8oUTbCQdO5Z7td9DffOkg==
   dependencies:
-    "@floating-ui/core" "^0.5.0"
+    "@floating-ui/core" "^0.6.0"
 
-"@floating-ui/react-dom@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-0.5.0.tgz#e3747850c45889bd0cd197f5fe434f1d813b0917"
-  integrity sha512-nb9PlHPX1dXoJAJK5YGnwJjU64DscL/ec+j6C8UiCY2dUeknyaBpabOg/wr87FRwnk5v0v5jQZ0pbmK2qNvw7g==
+"@floating-ui/react-dom@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/react-dom/-/react-dom-0.6.0.tgz#e58abf75bec1eac01f0adfff1454106bf9d3dd50"
+  integrity sha512-/dF+jpAUtoonjs2lO0F+miqEQlzA9XJGOxWBiJsq/COhK2kz7XzryyJdxfaNEH+RN63vRs9osDolOJXlst50hg==
   dependencies:
-    "@floating-ui/dom" "^0.3.0"
+    "@floating-ui/dom" "^0.4.0"
     use-isomorphic-layout-effect "^1.1.1"
 
 "@headlessui/react@^1.5.0":
