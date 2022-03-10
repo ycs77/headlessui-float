@@ -2,6 +2,8 @@
 <p align="center">Eazy use <a href="https://headlessui.dev/">Headless UI</a> components with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js).</p>
 <hr>
 
+This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154).
+
 ## Packages
 
 | Name                                                                                                            | Version                                                                       | Downloads                                                                       |
@@ -16,10 +18,6 @@
 
 [headlessui-float-react-link]: https://www.npmjs.com/package/headlessui-float-react
 [headlessui-float-vue-link]: https://www.npmjs.com/package/headlessui-float-vue
-
-## Credit
-
-* Example from [headlessui#154](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
 Under the [MIT LICENSE](LICENSE.md)
