@@ -32,7 +32,6 @@ export function useArrowContext(component: string) {
   let context = useContext(ArrowContext)
   if (context === null) {
     let err = new Error(`<${component} /> is missing a parent <Float /> component.`)
-    // @ts-ignore
     if (Error.captureStackTrace) Error.captureStackTrace(err, useFloatContext)
     throw err
   }

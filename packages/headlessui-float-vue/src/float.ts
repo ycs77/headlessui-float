@@ -42,7 +42,6 @@ export function useArrowContext(component: string) {
 
   if (context === null) {
     let err = new Error(`<${component} /> must be in the <Float /> component.`)
-    // @ts-ignore
     if (Error.captureStackTrace) Error.captureStackTrace(err, FloatArrow)
     throw err
   }

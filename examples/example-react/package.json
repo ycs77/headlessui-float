@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",
-    "headlessui-float-react": "^0.0.0",
+    "headlessui-float-react": "*",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "tailwindcss": "^3.0.23"
