@@ -16,7 +16,7 @@
 
         <PopoverPanel class="w-[240px] h-[70px] bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
           <FloatArrow class="absolute bg-white w-5 h-5 rotate-45 border border-gray-200" />
-          <div class="relative z-[1] h-full bg-white p-3 text-rose-500 rounded-md">
+          <div class="relative h-full bg-white p-3 text-rose-500 rounded-md">
             Popover & arrow, content...
           </div>
         </PopoverPanel>
