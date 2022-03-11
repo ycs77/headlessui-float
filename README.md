@@ -6,12 +6,12 @@ This package is adapted from [headlessui#154 example](https://github.com/tailwin
 
 ## Features
 
-* Eazy use Headless UI & Tailwind CSS
-* Floating UI (New version Popper.js) position floating elements
-* Auto-update floating elements
-* Support Transition
-* Support Portal
-* Support Arrow
+* 💙 Eazy use Headless UI & Tailwind CSS
+* 💬 Floating UI (New version Popper.js) position floating elements
+* 🔔 Auto-update floating elements
+* ♾️ Support Transition
+* 🚪 Support Portal
+* ➡️ Support Arrow
 
 ## Packages
 

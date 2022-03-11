@@ -6,12 +6,12 @@
 
 此套件是修改自 [headlessui#154 範例](https://github.com/tailwindlabs/headlessui/issues/154)。
 
-* 輕鬆整合 Headless UI & Tailwind CSS
-* Floating UI (新版 Popper.js) 定位浮動元素
-* 自動更新浮動元素
-* 支持 Transition
-* 支持 Portal
-* 支持箭頭 (Arrow)
+* 💙 輕鬆整合 Headless UI & Tailwind CSS
+* 💬 Floating UI (新版 Popper.js) 定位浮動元素
+* 🔔 自動更新浮動元素
+* ♾️ 支持 Transition
+* 🚪 支持 Portal
+* ➡️ 支持箭頭 (Arrow)
 
 [**範例專案**](../../examples/example-react)
 

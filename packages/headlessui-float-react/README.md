@@ -6,12 +6,12 @@ Eazy use [Headless UI](https://headlessui.dev/) for React with [Floating UI](htt
 
 This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154).
 
-* Eazy use Headless UI & Tailwind CSS
-* Floating UI (New version Popper.js) position floating elements
-* Auto-update floating elements
-* Support Transition
-* Support Portal
-* Support Arrow
+* 💙 Eazy use Headless UI & Tailwind CSS
+* 💬 Floating UI (New version Popper.js) position floating elements
+* 🔔 Auto-update floating elements
+* ♾️ Support Transition
+* 🚪 Support Portal
+* ➡️ Support Arrow
 
 [**Example repository**](../../examples/example-react)
 
