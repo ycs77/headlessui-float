@@ -121,6 +121,8 @@ export const Float = defineComponent({
   },
   emits: ['show', 'hide'],
   setup(props, { slots, emit }) {
+    const propPlacement = ref(props.placement)
+    const propStrategy = ref(props.strategy)
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
 
     const arrowRef = ref<HTMLElement | null>(null)
@@ -128,9 +130,23 @@ export const Float = defineComponent({
     const arrowY = ref<number | undefined>(undefined)
 
     const { x, y, placement, strategy, reference, floating, middlewareData, update } = useFloating({
-      placement: props.placement,
-      strategy: props.strategy,
+      placement: propPlacement,
+      strategy: propStrategy,
       middleware,
+    })
+
+    watch(() => props.placement, () => {
+      propPlacement.value = props.placement
+      if (isVisibleDOMElement(dom(reference)) && isVisibleDOMElement(dom(floating))) {
+        update()
+      }
+    })
+
+    watch(() => props.strategy, () => {
+      propStrategy.value = props.strategy
+      if (isVisibleDOMElement(dom(reference)) && isVisibleDOMElement(dom(floating))) {
+        update()
+      }
     })
 
     watch([
@@ -191,9 +207,7 @@ export const Float = defineComponent({
       }
       middleware.value = _middleware
 
-      if (isVisibleDOMElement(dom(reference)) &&
-          isVisibleDOMElement(dom(floating))
-      ) {
+      if (isVisibleDOMElement(dom(reference)) && isVisibleDOMElement(dom(floating))) {
         update()
       }
     }, { immediate: true })

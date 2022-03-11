@@ -1,12 +1,14 @@
-import { ref, unref, Ref, shallowRef, ShallowRef } from 'vue'
-import { computePosition, arrow as arrowCore, Placement, Strategy, Middleware } from '@floating-ui/dom'
-import { SideObject, MiddlewareData } from '@floating-ui/core'
+import { ref, unref, shallowRef } from 'vue'
+import { computePosition, arrow as arrowCore } from '@floating-ui/dom'
 import { dom } from './utils/dom'
+import type { Ref, ShallowRef } from 'vue'
+import type { Placement, Strategy, Middleware } from '@floating-ui/dom'
+import type { SideObject, MiddlewareData } from '@floating-ui/core'
 
 export type UseFloatingOptions = {
-  placement?: Placement
-  strategy?: Strategy
-  middleware?: Ref<Middleware[] | undefined> | Middleware[] | undefined
+  placement?: Ref<Placement> | Placement
+  strategy?: Ref<Strategy> | Strategy
+  middleware?: Ref<Middleware[] | undefined> | Middleware[]
 }
 
 export function useFloating(options: UseFloatingOptions = {}) {
@@ -15,8 +17,8 @@ export function useFloating(options: UseFloatingOptions = {}) {
 
   const x = ref<number | undefined>(undefined)
   const y = ref<number | undefined>(undefined)
-  const placement = ref(options.placement || 'bottom')
-  const strategy = ref(options.strategy || 'absolute')
+  const placement = ref(unref(options.placement || 'bottom'))
+  const strategy = ref(unref(options.strategy || 'absolute'))
   const middlewareData = shallowRef({}) as ShallowRef<MiddlewareData>
 
   const update = () => {
@@ -28,8 +30,8 @@ export function useFloating(options: UseFloatingOptions = {}) {
     }
 
     computePosition(referenceDom, floatingDom, {
-      placement: options.placement,
-      strategy: options.strategy,
+      placement: unref(options.placement),
+      strategy: unref(options.strategy),
       middleware: unref(options.middleware),
     }).then(data => {
       x.value = data.x
