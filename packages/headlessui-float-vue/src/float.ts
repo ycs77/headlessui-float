@@ -305,19 +305,24 @@ export const Float = defineComponent({
         return [
           cloneVNode(referenceNode, { ref: reference }),
 
-          wrapPortal(h(Transition, transitionProps, () =>
-            floatingNode
-              ? cloneVNode(floatingNode, {
-                ref: floating,
-                style: {
-                  position: strategy.value,
-                  zIndex: props.zIndex,
-                  top: typeof y.value === 'number' ? `${y.value}px` : '0',
-                  left: typeof x.value === 'number' ? `${x.value}px` : '0',
-                },
-              })
-              : createCommentVNode()
-          )),
+          wrapPortal(
+            h('div', {
+              ref: floating,
+              style: {
+                position: strategy.value,
+                zIndex: props.zIndex,
+                top: '0',
+                left: '0',
+                right: 'auto',
+                bottom: 'auto',
+                transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
+              },
+            }, h(Transition, transitionProps, () =>
+              floatingNode
+                ? cloneVNode(floatingNode)
+                : createCommentVNode()
+            ))
+          ),
         ]
       }
     }

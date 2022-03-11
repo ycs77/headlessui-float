@@ -71,7 +71,7 @@ function FloatRoot(props: {
   middleware?: Middleware[] | ((refs: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>;
     floatingEl: MutableRefObject<HTMLElement | null>;
-}) => Middleware[]),
+  }) => Middleware[]),
   onShow?: () => void,
   onHide?: () => void,
   children: ReactElement[],
@@ -220,8 +220,11 @@ function FloatRoot(props: {
           <div ref={floating} style={{
             position: strategy,
             zIndex: props.zIndex || 9999,
-            top: y || 0,
-            left: x || 0,
+            top: 0,
+            left: 0,
+            right: 'auto',
+            bottom: 'auto',
+            transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
           }}>
             <Transition as={Fragment} {...transitionProps}>
               <FloatingNode.type {...FloatingNode.props} />

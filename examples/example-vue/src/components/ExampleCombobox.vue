@@ -2,7 +2,7 @@
   <Block title="Combobox (Autocomplete)" title-class="text-teal-400">
     <Combobox v-model="selected">
       <Float
-        placement="bottom"
+        placement="bottom-start"
         :offset="4"
         leave="transition ease-in duration-100"
         leave-from="opacity-100"
