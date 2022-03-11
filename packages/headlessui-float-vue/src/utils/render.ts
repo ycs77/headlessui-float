@@ -1,4 +1,4 @@
-import { VNode, Fragment } from 'vue'
+import { unref, VNode, Fragment } from 'vue'
 
 export function flattenFragment(nodes: VNode[]): VNode[] {
   return nodes.reduce<VNode[]>((carry, node) => {
@@ -23,5 +23,6 @@ export function isValidElement(input: any): boolean {
 }
 
 export function isVisibleDOMElement(input: any): boolean {
+  input = unref(input)
   return input && input?.nodeType !== Node.COMMENT_NODE
 }

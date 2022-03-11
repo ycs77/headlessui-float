@@ -74,6 +74,7 @@ function FloatRoot(props: {
   }) => Middleware[]),
   onShow?: () => void,
   onHide?: () => void,
+  onUpdate?: () => void,
   children: ReactElement[],
 }) {
   const [middleware, setMiddleware] = useState<Middleware[]>()
@@ -83,6 +84,7 @@ function FloatRoot(props: {
   const events = {
     show: props.onShow || (() => {}),
     hide: props.onHide || (() => {}),
+    update: props.onUpdate || (() => {}),
   }
 
   const { x, y, placement, strategy, reference, floating, update, refs, middlewareData } = useFloating({
@@ -90,6 +92,11 @@ function FloatRoot(props: {
     strategy: props.strategy,
     middleware,
   })
+
+  const updateFloating = () => {
+    update()
+    events.update()
+  }
 
   useEffect(() => {
     const _middleware = []
@@ -158,7 +165,7 @@ function FloatRoot(props: {
       return autoUpdate(
         refs.reference.current,
         refs.floating.current,
-        throttle(update, 16),
+        throttle(updateFloating, 16),
         typeof props.autoUpdate === 'object'
           ? props.autoUpdate
           : undefined

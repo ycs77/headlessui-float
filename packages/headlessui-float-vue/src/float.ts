@@ -119,7 +119,7 @@ export const Float = defineComponent({
       default: () => [],
     },
   },
-  emits: ['show', 'hide'],
+  emits: ['show', 'hide', 'update'],
   setup(props, { slots, emit }) {
     const propPlacement = ref(props.placement)
     const propStrategy = ref(props.strategy)
@@ -135,17 +135,31 @@ export const Float = defineComponent({
       middleware,
     })
 
+    const referenceEl = ref(dom(reference))
+    const floatingEl = ref(dom(floating))
+    const updateEl = () => {
+      referenceEl.value = dom(reference)
+      floatingEl.value = dom(floating)
+    }
+
+    const updateFloating = () => {
+      update()
+      emit('update')
+    }
+
     watch(() => props.placement, () => {
       propPlacement.value = props.placement
-      if (isVisibleDOMElement(dom(reference)) && isVisibleDOMElement(dom(floating))) {
-        update()
+      updateEl()
+      if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
+        updateFloating()
       }
     })
 
     watch(() => props.strategy, () => {
       propStrategy.value = props.strategy
-      if (isVisibleDOMElement(dom(reference)) && isVisibleDOMElement(dom(floating))) {
-        update()
+      updateEl()
+      if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
+        updateFloating()
       }
     })
 
@@ -158,6 +172,7 @@ export const Float = defineComponent({
       () => props.hide,
       () => props.middleware,
     ], () => {
+      updateEl()
       const _middleware = []
       if (typeof props.offset === 'number' ||
           typeof props.offset === 'object' ||
@@ -195,8 +210,8 @@ export const Float = defineComponent({
       _middleware.push(...(
         typeof props.middleware === 'function'
           ? props.middleware({
-            referenceEl: computed(() => dom(reference)),
-            floatingEl: computed(() => dom(floating)),
+            referenceEl,
+            floatingEl,
           })
           : props.middleware
       ))
@@ -207,22 +222,23 @@ export const Float = defineComponent({
       }
       middleware.value = _middleware
 
-      if (isVisibleDOMElement(dom(reference)) && isVisibleDOMElement(dom(floating))) {
-        update()
+      if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
+        updateFloating()
       }
     }, { immediate: true })
 
     let disposeAutoUpdate: (() => void) | undefined
 
     const startAutoUpdate = () => {
-      if (isVisibleDOMElement(dom(reference)) &&
-          isVisibleDOMElement(dom(floating)) &&
+      updateEl()
+      if (isVisibleDOMElement(referenceEl) &&
+          isVisibleDOMElement(floatingEl) &&
           props.autoUpdate !== false
       ) {
         disposeAutoUpdate = autoUpdate(
-          dom(reference)!,
-          dom(floating)!,
-          throttle(update, 16),
+          referenceEl.value!,
+          floatingEl.value!,
+          throttle(updateFloating, 16),
           typeof props.autoUpdate === 'object'
             ? props.autoUpdate
             : undefined
