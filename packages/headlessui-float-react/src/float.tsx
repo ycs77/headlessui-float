@@ -72,7 +72,6 @@ function FloatRoot(props: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>;
     floatingEl: MutableRefObject<HTMLElement | null>;
 }) => Middleware[]),
-  onUpdate?: () => void,
   onShow?: () => void,
   onHide?: () => void,
   children: ReactElement[],
@@ -82,7 +81,6 @@ function FloatRoot(props: {
   const arrowRef = useRef<HTMLElement>(null)
 
   const events = {
-    update: props.onUpdate || (() => {}),
     show: props.onShow || (() => {}),
     hide: props.onHide || (() => {}),
   }
