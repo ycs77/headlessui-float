@@ -288,13 +288,13 @@ export default function ArrowExample() {
 
 ## z-index
 
-為浮動元素設定 `z-index`，預設值是 9999，也可以設定其他數值：
+為浮動元素設定 z-index，預設值是 9999，也可以設定其他數值：
 
 ```jsx
 <Float zIndex={100}>
 ```
 
-## Portal (Teleport)
+## Portal
 
 將浮動元素傳送到 `<body>` 的底部：
 

@@ -319,7 +319,7 @@ Or can select other elements that already exist:
 
 ## High-Order Component
 
-High-order component, can be easily applied in projects after custom of `<Float>` component:
+The high-order component, can be easily applied in projects after custom of `<Float>` component:
 
 *HighOrderFloat.vue*
 ```vue

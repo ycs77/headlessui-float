@@ -288,13 +288,13 @@ export default function ArrowExample() {
 
 ## z-index
 
-Set `z-index` CSS property for the floating element, the default value is 9999, and other numbers can be set:
+Set z-index CSS property for the floating element, the default value is 9999, and other numbers can be set:
 
 ```jsx
 <Float zIndex={100}>
 ```
 
-## Portal (Teleport)
+## Portal
 
 Append the floating element to `<body>`:
 
@@ -310,7 +310,7 @@ Or can select other elements that already exist:
 
 ## High-Order Component
 
-High-order component, can be easily applied in projects after custom of `<Float>` component:
+The high-order component, can be easily applied in projects after custom of `<Float>` component:
 
 *HighOrderFloat.jsx*
 ```jsx
