@@ -102,14 +102,22 @@ export const Float = defineComponent({
     leave: String,
     leaveFrom: String,
     leaveTo: String,
-    portal: {
-      type: [Boolean, String],
-      default: false,
-    },
     originClass: [String, Function] as PropType<string | OriginClassResolver>,
     tailwindcssOriginClass: {
       type: Boolean,
       default: false,
+    },
+    portal: {
+      type: [Boolean, String],
+      default: false,
+    },
+    wrapFloating: {
+      type: Boolean,
+      default: true,
+    },
+    transform: {
+      type: Boolean,
+      default: true,
     },
     middleware: {
       type: [Array, Function] as PropType<Middleware[] | ((refs: {
@@ -275,7 +283,9 @@ export const Float = defineComponent({
 
     return () => {
       if (slots.default) {
-        const [referenceNode, floatingNode] = filterSlot(flattenFragment(slots.default() || []))
+        const [referenceNode, floatingNode] = filterSlot(
+          flattenFragment(slots.default() || [])
+        )
 
         if (!isValidElement(referenceNode)) {
           return
@@ -311,9 +321,34 @@ export const Float = defineComponent({
           },
         }
 
+        const floatingProps = {
+          ref: floating,
+          style: props.transform ? {
+            position: strategy.value,
+            zIndex: props.zIndex,
+            top: '0',
+            left: '0',
+            right: 'auto',
+            bottom: 'auto',
+            transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
+          } :  {
+            position: strategy.value,
+            zIndex: props.zIndex,
+            top: `${y.value || 0}px`,
+            left: `${x.value || 0}px`,
+          },
+        }
+
         const wrapPortal = (node: VNode) => {
-          if (props.portal !== false) {
+          if (props.portal === true || typeof props.portal === 'string') {
             return h(Teleport, { to: props.portal === true ? 'body' : props.portal }, [node])
+          }
+          return node
+        }
+
+        const wrapFloating = (node: VNode) => {
+          if (props.wrapFloating) {
+            return h('div', floatingProps, node)
           }
           return node
         }
@@ -322,22 +357,13 @@ export const Float = defineComponent({
           cloneVNode(referenceNode, { ref: reference }),
 
           wrapPortal(
-            h('div', {
-              ref: floating,
-              style: {
-                position: strategy.value,
-                zIndex: props.zIndex,
-                top: '0',
-                left: '0',
-                right: 'auto',
-                bottom: 'auto',
-                transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
-              },
-            }, h(Transition, transitionProps, () =>
-              floatingNode
-                ? cloneVNode(floatingNode)
-                : createCommentVNode()
-            ))
+            wrapFloating(
+              h(Transition, transitionProps, () =>
+                floatingNode
+                  ? cloneVNode(floatingNode, props.wrapFloating ? null : floatingProps)
+                  : createCommentVNode()
+              )
+            )
           ),
         ]
       }

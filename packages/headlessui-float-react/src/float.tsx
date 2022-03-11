@@ -65,9 +65,11 @@ function FloatRoot(props: {
   leave?: string,
   leaveFrom?: string,
   leaveTo?: string,
-  portal?: boolean | string,
   originClass?: string | OriginClassResolver,
   tailwindcssOriginClass?: boolean,
+  portal?: boolean | string,
+  // wrapFloating?: boolean,
+  transform?: boolean,
   middleware?: Middleware[] | ((refs: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>;
     floatingEl: MutableRefObject<HTMLElement | null>;
@@ -209,6 +211,24 @@ function FloatRoot(props: {
     afterLeave: () => events.hide(),
   }
 
+  const floatingProps = {
+    ref: floating,
+    style: props.transform || props.transform === undefined ? {
+      position: strategy,
+      zIndex: props.zIndex || 9999,
+      top: 0,
+      left: 0,
+      right: 'auto',
+      bottom: 'auto',
+      transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
+    } :  {
+      position: strategy,
+      zIndex: props.zIndex,
+      top: `${y || 0}px`,
+      left: `${x || 0}px`,
+    },
+  }
+
   const wrapPortal = (children: ReactElement) => {
     if (props.portal) {
       const root = document?.querySelector(props.portal === true ? 'body' : props.portal)
@@ -224,15 +244,7 @@ function FloatRoot(props: {
       <ReferenceNode.type {...ReferenceNode.props} ref={reference} />
       <ArrowContext.Provider value={arrowApi}>
         {wrapPortal(
-          <div ref={floating} style={{
-            position: strategy,
-            zIndex: props.zIndex || 9999,
-            top: 0,
-            left: 0,
-            right: 'auto',
-            bottom: 'auto',
-            transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
-          }}>
+          <div {...floatingProps}>
             <Transition as={Fragment} {...transitionProps}>
               <FloatingNode.type {...FloatingNode.props} />
             </Transition>
