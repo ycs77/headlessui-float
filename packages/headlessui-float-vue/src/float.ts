@@ -392,10 +392,13 @@ export const FloatArrow = defineComponent({
         [staticSide]: '-4px',
       }
 
-      const node = slots.default?.()[0]
-      return node
-        ? cloneVNode(node, { ref, style })
-        : h('div', Object.assign({}, attrs, { ref, style }))
+      const slot = { placement: placement.value }
+      const children = slots.default?.(slot)
+      const [node] = Array.isArray(children) ? children : [children]
+      if (node) {
+        return cloneVNode(node, { ref, style })
+      }
+      return h('div', Object.assign({}, attrs, { ref, style }))
     }
   },
 })

@@ -279,10 +279,22 @@ function Arrow(props: { children: any }) {
     return nodeProps
   }
 
-  const [ArrowNode] = Array.isArray(props.children) ? props.children : [props.children]
-  return ArrowNode
-    ? (<ArrowNode.type {...applyProps(props)} ref={arrowRef} style={style} />)
-    : (<div {...applyProps(props)} ref={arrowRef as RefObject<HTMLDivElement>} style={style} />)
+  const slot = { placement }
+  const resolvedChildren = typeof props.children === 'function'
+    ? props.children(slot)
+    : props.children
+
+  const [ArrowNode] = Array.isArray(resolvedChildren) ? resolvedChildren : [resolvedChildren]
+  if (ArrowNode) {
+    return <ArrowNode.type {...ArrowNode.props} ref={arrowRef} style={style} />
+  }
+  return (
+    <div
+      {...applyProps(props)}
+      ref={arrowRef as RefObject<HTMLDivElement>}
+      style={style}
+    />
+  )
 }
 
 export const Float = Object.assign(FloatRoot, { Arrow })
