@@ -16,10 +16,6 @@
   </Float>
 </template>
 
-<script>
+<script setup>
 import { Float } from 'headlessui-float-vue'
-
-export default {
-  components: { Float },
-}
 </script>
