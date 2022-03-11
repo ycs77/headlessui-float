@@ -10,7 +10,7 @@
 * Floating UI (新版 Popper.js) 定位浮動元素
 * 自動更新浮動元素
 * 支持 Transition
-* 支持 Portal (Teleport)
+* 支持 Portal
 * 支持箭頭 (Arrow)
 
 [**範例專案**](../../examples/example-react)

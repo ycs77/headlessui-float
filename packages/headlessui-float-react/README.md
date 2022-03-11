@@ -10,7 +10,7 @@ This package is adapted from [headlessui#154 example](https://github.com/tailwin
 * Floating UI (New version Popper.js) position floating elements
 * Auto-update floating elements
 * Support Transition
-* Support Portal (Teleport)
+* Support Portal
 * Support Arrow
 
 [**Example repository**](../../examples/example-react)
