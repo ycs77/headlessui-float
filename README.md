@@ -1,12 +1,12 @@
 <h2 align="center">Headless UI Float</h2>
-<p align="center">Eazy use <a href="https://headlessui.dev/">Headless UI</a> with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) to position floating elements.</p>
+<p align="center">Easy use <a href="https://headlessui.dev/">Headless UI</a> with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) to position floating elements.</p>
 <hr>
 
 This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154).
 
 ## Features
 
-* 💙 Eazy use Headless UI & Tailwind CSS
+* 💙 Easy use Headless UI & Tailwind CSS
 * 💬 Floating UI (New version Popper.js) position floating elements
 * 🔔 Auto-update floating elements
 * ♾️ Support Transition

@@ -2,11 +2,11 @@
 
 English | [繁體中文](README-zh-TW.md)
 
-Eazy use [Headless UI](https://headlessui.dev/) for Vue 3 with [Floating UI](https://floating-ui.com/) (Popper.js) to position floating elements.
+Easy use [Headless UI](https://headlessui.dev/) for Vue 3 with [Floating UI](https://floating-ui.com/) (Popper.js) to position floating elements.
 
 This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154).
 
-* 💙 Eazy use Headless UI & Tailwind CSS
+* 💙 Easy use Headless UI & Tailwind CSS
 * 💬 Floating UI (New version Popper.js) position floating elements
 * 🔔 Auto-update floating elements
 * ♾️ Support Transition
@@ -26,7 +26,7 @@ yarn add headlessui-float-vue
 
 ## Usage
 
-First finding a Headless UI component that needs to positioning element, such as the `<Menu>` component here. Import `<Float>` component:
+Start by finding a Headless UI component that needs to position the element, such as the `<Menu>` component for this example. Import `<Float>` component:
 
 ```html
 <script setup>
@@ -50,7 +50,7 @@ Then wrap `<Float>` around `<MenuButton>` and `<MenuItems>`:
 </Menu>
 ```
 
-Note that `<Float>` must contain 2 child elements, the first being a reference element, either a Headless UI component or an HTML element, and the second being a float element.
+Note that `<Float>` must contain 2 child elements, the first being a reference element, either a Headless UI component or an HTML element, and the second being a floating element.
 
 Then remove the `"absolute"`, `"right-0"` and other positioning class from `<MenuItems>`, and add the `placement="bottom-end"` attribute:
 
@@ -72,7 +72,7 @@ Remove the `"mt-2"` class from `<MenuItems>`, and add the `:offset="4"` attribut
 </Menu>
 ```
 
-Then `<Menu>` can be automatically position the inner `<MenuItems>`.
+Then `<Menu>` can automatically position the inner `<MenuItems>`.
 
 In addition to `<Menu>`, the same can be used on `<Listbox>`, `<Popover>` or `<Combobox>` components, and you can use `<Float>` on any element that requires floating positioning.
 
@@ -111,7 +111,7 @@ The type of CSS position property, `absolute` or `fixed`：
 
 ### offset
 
-Offset of the floating element from the reference element (px)：
+The offset of the floating element from the reference element (px)：
 
 ```html
 <Float :offset="8">
@@ -149,7 +149,7 @@ Change to the opposite placement to keep it in view:
 
 ### autoPlacement
 
-Floating elements chooses the placement with more space left:
+Floating elements choose the placement with more space left:
 
 > `autoPlacement` cannot be used with `flip`
 
@@ -218,7 +218,7 @@ const middleware = ({ referenceEl, floatingEl }) => [
 
 When `tailwindcss-origin-class` is enabled, the corresponding Tailwind CSS `origin` class will be automatically added according to the placement (e.g. `top` corresponds to `origin-bottom` class, `bottom-start` corresponds to `origin-top-left` class).
 
-If use the `tailwindcss-origin-class`, also need to add the `origin` class to the safelist:
+If using the `tailwindcss-origin-class`, also need to add the `origin` class to the safelist:
 
 *tailwind.config.js*
 ```js
@@ -237,7 +237,7 @@ If need to override the `origin` class, can use `origin-class`.
 
 ## Arrow
 
-First import the `<FloatArrow>` component, and palce it inside the floating element, then add the class:
+First import the `<FloatArrow>` component, and put it inside the floating element, then add the class:
 
 ```html
 <Popover>
@@ -265,7 +265,7 @@ Then add the `arrow` prop in `<Float>`, and add `:offset="15"` to keep the arrow
 <Float arrow :offset="15">
 ```
 
-Full example of arrow:
+Full example of the arrow:
 
 ```vue
 <template>
@@ -319,7 +319,7 @@ Or can select other elements that already exist:
 
 ## High-Order Component
 
-The high-order component, can be easily applied in projects after custom of `<Float>` component:
+The high-order component can be easily applied in projects after customizing the `<Float>` component:
 
 *HighOrderFloat.vue*
 ```vue
