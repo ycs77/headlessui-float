@@ -13,7 +13,7 @@ This package is adapted from [headlessui#154 example](https://github.com/tailwin
 * 🚪 Support Portal (Teleport)
 * ➡️ Support Arrow
 
-[**Example repository**](../../examples/example-vue)
+[**Live demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-vue?file=src%2FApp.vue)
 
 ## Installation
 

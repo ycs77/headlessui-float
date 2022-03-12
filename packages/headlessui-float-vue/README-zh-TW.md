@@ -13,7 +13,7 @@
 * 🚪 支持 Portal (Teleport)
 * ➡️ 支持箭頭 (Arrow)
 
-[**範例專案**](../../examples/example-vue)
+[**在線演示**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-vue?file=src%2FApp.vue)
 
 ## 安裝
 

@@ -13,7 +13,7 @@ This package is adapted from [headlessui#154 example](https://github.com/tailwin
 * 🚪 Support Portal
 * ➡️ Support Arrow
 
-[**Example repository**](../../examples/example-react)
+[**Live demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-react?file=src%2FApp.jsx)
 
 ## Installation
 

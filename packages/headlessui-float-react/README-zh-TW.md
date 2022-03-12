@@ -13,7 +13,7 @@
 * 🚪 支持 Portal
 * ➡️ 支持箭頭 (Arrow)
 
-[**範例專案**](../../examples/example-react)
+[**在線演示**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-react?file=src%2FApp.jsx)
 
 ## 安裝
 
