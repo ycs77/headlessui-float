@@ -26,7 +26,11 @@
           </button>
         </li>
         <li>
-          <Float placement="right-start">
+          <Float
+            placement="right-start"
+            :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
+            shift
+          >
             <button
               type="button"
               class="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
@@ -61,7 +65,11 @@
                 </button>
               </li>
               <li>
-                <Float placement="right-start">
+                <Float
+                  placement="right-start"
+                  :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
+                  shift
+                >
                   <button
                     type="button"
                     class="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"

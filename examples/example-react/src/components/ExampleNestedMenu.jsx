@@ -38,7 +38,12 @@ export default function ExampleNestedMenu() {
             </button>
           </li>
           <li>
-            <Float show={openMapping['m1'] || false} placement="right-start">
+            <Float
+              show={openMapping['m1'] || false}
+              placement="right-start"
+              flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
+              shift
+            >
               <button
                 type="button"
                 className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
@@ -72,7 +77,12 @@ export default function ExampleNestedMenu() {
                   </button>
                 </li>
                 <li>
-                  <Float show={openMapping['m2'] || false} placement="right-start">
+                  <Float
+                    show={openMapping['m2'] || false}
+                    placement="right-start"
+                    flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
+                    shift
+                  >
                     <button
                       type="button"
                       className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
