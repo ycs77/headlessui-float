@@ -1,12 +1,16 @@
 <template>
   <Block title="Popover" title-class="text-rose-400">
     <Popover>
-      <HighOrderFloat
+      <Float
         placement="bottom-start"
-        :offset="15"
         arrow
+        portal
+        :offset="15"
+        :shift="6"
+        enter="transition duration-200 ease-out"
         enter-from="opacity-0 -translate-y-1"
         enter-to="opacity-100 translate-y-0"
+        leave="transition duration-150 ease-in"
         leave-from="opacity-100 translate-y-0"
         leave-to="opacity-0 -translate-y-1"
       >
@@ -20,15 +24,14 @@
             Popover & arrow, content...
           </div>
         </PopoverPanel>
-      </HighOrderFloat>
+      </Float>
     </Popover>
   </Block>
 </template>
 
 <script setup>
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { FloatArrow } from 'headlessui-float-vue'
-import HighOrderFloat from '@/components/HighOrderFloat.vue'
+import { Float, FloatArrow } from 'headlessui-float-vue'
 import Block from '@/components/Block.vue'
 import HeroiconsOutlineMenuAlt2 from '~icons/heroicons-outline/menu-alt-2'
 </script>

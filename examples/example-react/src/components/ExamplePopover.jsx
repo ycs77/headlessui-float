@@ -1,6 +1,5 @@
 import { Popover } from '@headlessui/react'
 import { Float } from 'headlessui-float-react'
-import HighOrderFloat from '@/components/HighOrderFloat'
 import Block from '@/components/Block'
 import HeroiconsOutlineMenuAlt2 from '~icons/heroicons-outline/menu-alt-2'
 
@@ -8,12 +7,16 @@ export default function ExamplePopover() {
   return (
     <Block title="Popover" titleClass="text-rose-400">
       <Popover>
-        <HighOrderFloat
+        <Float
           placement="bottom-start"
-          offset={15}
           arrow
+          portal
+          offset={15}
+          shift={6}
+          enter="transition duration-200 ease-out"
           enterFrom="opacity-0 -translate-y-1"
           enterTo="opacity-100 translate-y-0"
+          leave="transition duration-150 ease-in"
           leaveFrom="opacity-100 translate-y-0"
           leaveTo="opacity-0 -translate-y-1"
         >
@@ -27,7 +30,7 @@ export default function ExamplePopover() {
               Popover & arrow, content...
             </div>
           </Popover.Panel>
-        </HighOrderFloat>
+        </Float>
       </Popover>
     </Block>
   )

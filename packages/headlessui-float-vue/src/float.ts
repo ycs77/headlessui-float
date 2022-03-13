@@ -173,10 +173,10 @@ export const Float = defineComponent({
 
     watch([
       () => props.offset,
-      () => props.shift,
       () => props.flip,
-      () => props.arrow,
+      () => props.shift,
       () => props.autoPlacement,
+      () => props.arrow,
       () => props.hide,
       () => props.middleware,
     ], () => {
@@ -188,6 +188,11 @@ export const Float = defineComponent({
       ) {
         _middleware.push(offset(props.offset))
       }
+      if (props.flip === true || typeof props.flip === 'object') {
+        _middleware.push(flip(
+          typeof props.flip === 'object' ? props.flip : undefined
+        ))
+      }
       if (props.shift === true ||
           typeof props.shift === 'number' ||
           typeof props.shift === 'object'
@@ -197,9 +202,11 @@ export const Float = defineComponent({
           ...(typeof props.shift === 'object' ? props.shift : {}),
         }))
       }
-      if (props.flip === true || typeof props.flip === 'object') {
-        _middleware.push(flip(
-          typeof props.flip === 'object' ? props.flip : undefined
+      if (props.autoPlacement === true || typeof props.autoPlacement === 'object') {
+        _middleware.push(autoPlacement(
+          typeof props.autoPlacement === 'object'
+            ? props.autoPlacement
+            : undefined
         ))
       }
       if (props.arrow === true || typeof props.arrow === 'number') {
@@ -207,13 +214,6 @@ export const Float = defineComponent({
           element: arrowRef,
           padding: props.arrow === true ? 0 : props.arrow,
         }))
-      }
-      if (props.autoPlacement === true || typeof props.autoPlacement === 'object') {
-        _middleware.push(autoPlacement(
-          typeof props.autoPlacement === 'object'
-            ? props.autoPlacement
-            : undefined
-        ))
       }
       _middleware.push(...(
         typeof props.middleware === 'function'
