@@ -224,7 +224,7 @@ function FloatRoot(props: {
       transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
     } :  {
       position: strategy,
-      zIndex: props.zIndex,
+      zIndex: props.zIndex || 9999,
       top: `${y || 0}px`,
       left: `${x || 0}px`,
     },
