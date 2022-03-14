@@ -61,7 +61,7 @@ export const Float = defineComponent({
   name: 'Float',
   props: {
     as: {
-      type: String,
+      type: [String, Object],
       default: 'div',
     },
     placement: {
@@ -339,8 +339,12 @@ export const Float = defineComponent({
         }
 
         const renderPortal = (node: VNode) => {
-          if (props.portal === true || typeof props.portal === 'string') {
-            return h(Teleport, { to: props.portal === true ? 'body' : props.portal }, [node])
+          if (props.portal === true ||
+              typeof props.portal === 'string'
+          ) {
+            return h(Teleport, {
+              to: props.portal === true ? 'body' : props.portal,
+            }, [node])
           }
           return node
         }
@@ -374,7 +378,7 @@ export const FloatArrow = defineComponent({
   name: 'FloatArrow',
   props: {
     as: {
-      type: String,
+      type: [String, Object],
       default: 'div',
     },
     offset: {
