@@ -2,6 +2,7 @@ import {
   defineComponent,
   ref,
   shallowRef,
+  toRef,
   computed,
   watch,
   provide,
@@ -129,8 +130,8 @@ export const Float = defineComponent({
   },
   emits: ['show', 'hide', 'update'],
   setup(props, { slots, emit }) {
-    const propPlacement = ref(props.placement)
-    const propStrategy = ref(props.strategy)
+    const propPlacement = toRef(props, 'placement')
+    const propStrategy = toRef(props, 'strategy')
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
 
     const arrowRef = ref<HTMLElement | null>(null)
@@ -155,16 +156,14 @@ export const Float = defineComponent({
       emit('update')
     }
 
-    watch(() => props.placement, () => {
-      propPlacement.value = props.placement
+    watch(propPlacement, () => {
       updateEl()
       if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
         updateFloating()
       }
     })
 
-    watch(() => props.strategy, () => {
-      propStrategy.value = props.strategy
+    watch(propStrategy, () => {
       updateEl()
       if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
         updateFloating()
