@@ -59,6 +59,10 @@ export function useArrowContext(component: string) {
 export const Float = defineComponent({
   name: 'Float',
   props: {
+    as: {
+      type: String,
+      default: 'div',
+    },
     placement: {
       type: String as PropType<Placement>,
       default: 'bottom-start',
@@ -110,10 +114,6 @@ export const Float = defineComponent({
     portal: {
       type: [Boolean, String],
       default: false,
-    },
-    wrapFloating: {
-      type: Boolean,
-      default: true,
     },
     transform: {
       type: Boolean,
@@ -339,28 +339,28 @@ export const Float = defineComponent({
           },
         }
 
-        const wrapPortal = (node: VNode) => {
+        const renderPortal = (node: VNode) => {
           if (props.portal === true || typeof props.portal === 'string') {
             return h(Teleport, { to: props.portal === true ? 'body' : props.portal }, [node])
           }
           return node
         }
 
-        const wrapFloating = (node: VNode) => {
-          if (props.wrapFloating) {
-            return h('div', floatingProps, node)
+        const renderFloating = (node: VNode) => {
+          if (props.as === 'template') {
+            return node
           }
-          return node
+          return h(props.as, floatingProps, node)
         }
 
         return [
           cloneVNode(referenceNode, { ref: reference }),
 
-          wrapPortal(
-            wrapFloating(
+          renderPortal(
+            renderFloating(
               h(Transition, transitionProps, () =>
                 floatingNode
-                  ? cloneVNode(floatingNode, props.wrapFloating ? null : floatingProps)
+                  ? cloneVNode(floatingNode, props.as === 'template' ? floatingProps : null)
                   : createCommentVNode()
               )
             )
@@ -374,6 +374,10 @@ export const Float = defineComponent({
 export const FloatArrow = defineComponent({
   name: 'FloatArrow',
   props: {
+    as: {
+      type: String,
+      default: 'div',
+    },
     offset: {
       type: Number,
       default: 4,
@@ -395,16 +399,20 @@ export const FloatArrow = defineComponent({
         top: typeof y.value === 'number' ? `${y.value}px` : '',
         right: '',
         bottom: '',
-        [staticSide]: `${parseInt(String(props.offset)) * -1}px`,
+        [staticSide]: `${props.offset * -1}px`,
       }
 
-      const slot = { placement: placement.value }
-      const children = slots.default?.(slot)
-      const [node] = Array.isArray(children) ? children : [children]
-      if (node) {
+      if (props.as === 'template') {
+        const slot = { placement: placement.value }
+        const children = slots.default?.(slot)
+        const [node] = Array.isArray(children) ? children : [children]
+        if (!node || !isValidElement(node)) {
+          throw new Error('When the prop `as` of <FloatArrow /> is \'template\', there must be contains 1 child element.')
+        }
         return cloneVNode(node, { ref, style })
       }
-      return h('div', Object.assign({}, attrs, { ref, style }))
+
+      return h(props.as, Object.assign({}, attrs, { ref, style }))
     }
   },
 })

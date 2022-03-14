@@ -5,11 +5,12 @@ import {
   useMemo,
   useContext,
   createContext,
-  ReactElement,
   isValidElement,
   Fragment,
 
   // types
+  ElementType,
+  ReactElement,
   RefObject,
   MutableRefObject,
 } from 'react'
@@ -48,6 +49,7 @@ export function useArrowContext(component: string) {
 }
 
 function FloatRoot(props: {
+  // as?: ElementType,
   show?: boolean,
   placement?: Placement,
   strategy?: Strategy,
@@ -68,7 +70,6 @@ function FloatRoot(props: {
   originClass?: string | OriginClassResolver,
   tailwindcssOriginClass?: boolean,
   portal?: boolean | string,
-  // wrapFloating?: boolean,
   transform?: boolean,
   middleware?: Middleware[] | ((refs: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>;
@@ -229,7 +230,7 @@ function FloatRoot(props: {
     },
   }
 
-  const wrapPortal = (children: ReactElement) => {
+  const renderPortal = (children: ReactElement) => {
     if (props.portal) {
       const root = document?.querySelector(props.portal === true ? 'body' : props.portal)
       if (root) {
@@ -239,25 +240,50 @@ function FloatRoot(props: {
     return children
   }
 
+  const renderFloating = (Children: ReactElement) => {
+    // if (props.as === Fragment) {
+    //   return (
+    //     <Children.type
+    //       {...Children.props}
+    //       {...floatingProps}
+    //     />
+    //   )
+    // }
+
+    const FloatingWrapper = 'div' // props.as || 'div'
+    return (
+      <FloatingWrapper {...floatingProps}>
+        <Children.type {...Children.props} />
+      </FloatingWrapper>
+    )
+  }
+
   return (
     <>
       <ReferenceNode.type {...ReferenceNode.props} ref={reference} />
       <ArrowContext.Provider value={arrowApi}>
-        {wrapPortal(
-          <div {...floatingProps}>
+        {renderPortal(
+          renderFloating(
             <Transition as={Fragment} {...transitionProps}>
               <FloatingNode.type {...FloatingNode.props} />
             </Transition>
-          </div>
+          )
         )}
       </ArrowContext.Provider>
     </>
   )
 }
 
+interface ArrowSlot {
+  placement: Placement
+}
+
 function Arrow(props: {
-  children: any,
-  offset: number | string,
+  children:
+    | ReactElement
+    | ReactElement[]
+    | ((slot: ArrowSlot) => ReactElement | ReactElement[]),
+  offset: number,
 }) {
   const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
 
@@ -273,7 +299,7 @@ function Arrow(props: {
     top: typeof y === 'number' ? `${y}px` : '',
     right: '',
     bottom: '',
-    [staticSide]: `${parseInt(String(props.offset)) * -1}px`,
+    [staticSide]: `${(props.offset ?? 4) * -1}px`,
   }
 
   const applyProps = (props: { [key: string]: any }) => {
