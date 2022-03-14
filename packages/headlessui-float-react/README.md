@@ -25,7 +25,7 @@ English | [繁體中文](README-zh-TW.md)
 
 ## Installation
 
-Remember that you need to install React, React DOM and Headless UI React first.
+Need to install React, React DOM and Headless UI React first.
 
 ```bash
 # npm
@@ -416,7 +416,7 @@ Used in the same way as `<Float>`. It can also override the defined prop in high
 
 * [Headless UI](https://headlessui.dev/)
 * [Floating UI](https://floating-ui.com/)
-* This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
+* This package is inspired from the [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
 Under the [MIT LICENSE](LICENSE.md)

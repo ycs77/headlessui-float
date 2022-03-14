@@ -25,7 +25,7 @@
 
 ## 安裝
 
-記得需要先安裝 React、React DOM 和 Headless UI React。
+需要先安裝 React、React DOM 和 Headless UI React。
 
 ```bash
 # npm
@@ -416,7 +416,7 @@ export default function HighOrderFloat(props) {
 
 * [Headless UI](https://headlessui.dev/)
 * [Floating UI](https://floating-ui.com/)
-* 此套件是修改自 [headlessui#154 範例](https://github.com/tailwindlabs/headlessui/issues/154)
+* 此套件的靈感來自 [headlessui#154 範例](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
 Under the [MIT LICENSE](LICENSE.md)

@@ -25,7 +25,7 @@
 
 ## 安裝
 
-記得需要先安裝 Vue 3 和 Headless UI Vue。
+需要先安裝 Vue 3 和 Headless UI Vue。
 
 ```bash
 # npm
@@ -428,7 +428,7 @@ import { Float } from 'headlessui-float-vue'
 
 * [Headless UI](https://headlessui.dev/)
 * [Floating UI](https://floating-ui.com/)
-* 此套件是修改自 [headlessui#154 範例](https://github.com/tailwindlabs/headlessui/issues/154)
+* 此套件的靈感來自 [headlessui#154 範例](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
 Under the [MIT LICENSE](LICENSE.md)
