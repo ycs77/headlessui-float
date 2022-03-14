@@ -76,10 +76,10 @@ function FloatRoot(props: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>;
     floatingEl: MutableRefObject<HTMLElement | null>;
   }) => Middleware[]),
+  children: ReactElement[],
   onShow?: () => void,
   onHide?: () => void,
   onUpdate?: () => void,
-  children: ReactElement[],
 }) {
   const [middleware, setMiddleware] = useState<Middleware[]>()
 
@@ -280,11 +280,12 @@ interface ArrowSlot {
 }
 
 function Arrow(props: {
+  as?: ElementType,
+  offset: number,
   children:
     | ReactElement
     | ReactElement[]
     | ((slot: ArrowSlot) => ReactElement | ReactElement[]),
-  offset: number,
 }) {
   const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
 
@@ -303,24 +304,22 @@ function Arrow(props: {
     [staticSide]: `${(props.offset ?? 4) * -1}px`,
   }
 
-  const applyProps = (props: { [key: string]: any }) => {
-    const nodeProps = { ...props }
-    delete nodeProps.children
-    return nodeProps
-  }
-
-  const slot = { placement }
-  const resolvedChildren = typeof props.children === 'function'
-    ? props.children(slot)
-    : props.children
-
-  const [ArrowNode] = Array.isArray(resolvedChildren) ? resolvedChildren : [resolvedChildren]
-  if (ArrowNode) {
+  if (props.as === Fragment) {
+    const slot = { placement }
+    const children = typeof props.children === 'function'
+      ? props.children(slot)
+      : props.children
+    const [ArrowNode] = Array.isArray(children) ? children : [children]
+    if (!ArrowNode || !isValidElement(ArrowNode)) {
+      throw new Error('When the prop `as` of <Float.Arrow /> is <Fragment />, there must be contains 1 child element.')
+    }
     return <ArrowNode.type {...ArrowNode.props} ref={arrowRef} style={style} />
   }
+
+  const ArrowWrapper = props.as || 'div'
   return (
-    <div
-      {...applyProps(props)}
+    <ArrowWrapper
+      {...props}
       ref={arrowRef as RefObject<HTMLDivElement>}
       style={style}
     />
