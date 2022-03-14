@@ -255,7 +255,10 @@ function FloatRoot(props: {
   )
 }
 
-function Arrow(props: { children: any }) {
+function Arrow(props: {
+  children: any,
+  offset: number | string,
+}) {
   const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
 
   const staticSide = {
@@ -270,7 +273,7 @@ function Arrow(props: { children: any }) {
     top: typeof y === 'number' ? `${y}px` : '',
     right: '',
     bottom: '',
-    [staticSide]: '-4px',
+    [staticSide]: `${parseInt(String(props.offset)) * -1}px`,
   }
 
   const applyProps = (props: { [key: string]: any }) => {

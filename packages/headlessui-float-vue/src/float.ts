@@ -373,6 +373,12 @@ export const Float = defineComponent({
 
 export const FloatArrow = defineComponent({
   name: 'FloatArrow',
+  props: {
+    offset: {
+      type: Number,
+      default: 4,
+    },
+  },
   setup(props, { slots, attrs }) {
     const { ref, placement, x, y } = useArrowContext('FloatArrow')
 
@@ -389,7 +395,7 @@ export const FloatArrow = defineComponent({
         top: typeof y.value === 'number' ? `${y.value}px` : '',
         right: '',
         bottom: '',
-        [staticSide]: '-4px',
+        [staticSide]: `${parseInt(String(props.offset)) * -1}px`,
       }
 
       const slot = { placement: placement.value }
