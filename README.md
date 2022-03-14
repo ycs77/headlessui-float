@@ -1,8 +1,10 @@
 <h2 align="center">Headless UI Float</h2>
-<p align="center">Easy use <a href="https://headlessui.dev/">Headless UI</a> with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) to position floating elements.</p>
-<hr>
 
-This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154).
+<p align="center">
+  Easy use <a href="https://headlessui.dev/">Headless UI</a> with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) to position floating elements.
+</p>
+
+<hr>
 
 ## Features
 
@@ -15,18 +17,26 @@ This package is adapted from [headlessui#154 example](https://github.com/tailwin
 
 ## Packages
 
-| Name                                                                                                            | Version                                                                       | Downloads                                                                       |
-| --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [`headlessui-float-react`](https://github.com/ycs77/headlessui-float/tree/main/packages/headlessui-float-react) | [![npm version][headlessui-float-react-version]][headlessui-float-react-link] | [![npm downloads][headlessui-float-react-downloads]][headlessui-float-react-link] |
-| [`headlessui-float-vue`](https://github.com/ycs77/headlessui-float/tree/main/packages/headlessui-float-vue)     | [![npm version][headlessui-float-vue-version]][headlessui-float-vue-link]     | [![npm downloads][headlessui-float-vue-downloads]][headlessui-float-vue-link]     |
+| Name                                      | Version                                         | Downloads                                           |
+| ----------------------------------------- | ----------------------------------------------- | --------------------------------------------------- |
+| [`headlessui-float-react`][react-link-gh] | [![NPM Version][react-version]][react-link-npm] | [![NPM Downloads][react-downloads]][react-link-npm] |
+| [`headlessui-float-vue`][vue-link-gh]     | [![NPM Version][vue-version]][vue-link-npm]     | [![NPM Downloads][vue-downloads]][vue-link-npm]     |
 
-[headlessui-float-react-version]: https://img.shields.io/npm/v/headlessui-float-react?style=flat-square
-[headlessui-float-react-downloads]: https://img.shields.io/npm/dt/headlessui-float-react?style=flat-square
-[headlessui-float-vue-version]: https://img.shields.io/npm/v/headlessui-float-vue?style=flat-square
-[headlessui-float-vue-downloads]: https://img.shields.io/npm/dt/headlessui-float-vue?style=flat-square
+[react-version]: https://img.shields.io/npm/v/headlessui-float-react?style=flat-square
+[react-downloads]: https://img.shields.io/npm/dt/headlessui-float-react?style=flat-square
+[vue-version]: https://img.shields.io/npm/v/headlessui-float-vue?style=flat-square
+[vue-downloads]: https://img.shields.io/npm/dt/headlessui-float-vue?style=flat-square
 
-[headlessui-float-react-link]: https://www.npmjs.com/package/headlessui-float-react
-[headlessui-float-vue-link]: https://www.npmjs.com/package/headlessui-float-vue
+[react-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/headlessui-float-react
+[react-link-npm]: https://www.npmjs.com/package/headlessui-float-react
+[vue-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/headlessui-float-vue
+[vue-link-npm]: https://www.npmjs.com/package/headlessui-float-vue
+
+## Credits
+
+* [Headless UI](https://headlessui.dev/)
+* [Floating UI](https://floating-ui.com/)
+* This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
 Under the [MIT LICENSE](LICENSE.md)

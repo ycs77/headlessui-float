@@ -1,10 +1,18 @@
-# Headless UI Float React
+<h2 align="center">Headless UI Float React</h2>
+
+<p align="center">
+  Easy use <a href="https://headlessui.dev/">Headless UI</a> for React with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) to position floating elements.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/headlessui-float-react"><img src="https://img.shields.io/npm/v/headlessui-float-react?style=flat-square" alt="NPM Version"></a>
+  <a href="https://github.com/ycs77/headlessui-float/blob/main/packages/headlessui-float-react/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square" alt="Software License"></a>
+  <a href="https://www.npmjs.com/package/headlessui-float-react"><img src="https://img.shields.io/npm/dt/headlessui-float-react?style=flat-square" alt="NPM Downloads"></a>
+</p>
+
+<hr>
 
 English | [繁體中文](README-zh-TW.md)
-
-Easy use [Headless UI](https://headlessui.dev/) for React with [Floating UI](https://floating-ui.com/) (Popper.js) to position floating elements.
-
-This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154).
 
 * 💙 Easy use Headless UI & Tailwind CSS
 * 💬 Floating UI (New version Popper.js) position floating elements
@@ -103,7 +111,7 @@ All 12 placement in the Floating UI can be used:
 
 ### strategy
 
-The type of CSS position property, `absolute` or `fixed`：
+The type of CSS position property, `absolute` or `fixed`:
 
 ```jsx
 <Float strategy="fixed">
@@ -111,7 +119,7 @@ The type of CSS position property, `absolute` or `fixed`：
 
 ### offset
 
-The offset of the floating element from the reference element (px)：
+The offset (px) of the floating element from the reference element:
 
 ```jsx
 <Float offset={8}>
@@ -290,7 +298,7 @@ export default function ArrowExample() {
 
 ## z-index
 
-Set z-index CSS property for the floating element, the default value is 9999, and other numbers can be set:
+CSS `z-index` property for the floating element, the default value is 9999, and other numbers can be set:
 
 ```jsx
 <Float zIndex={100}>
@@ -308,6 +316,14 @@ Or can select other elements that already exist:
 
 ```jsx
 <Float portal="#other-root-element">
+```
+
+## Transform / Position Absolute (top / left)
+
+The default is to use CSS transform to position floating elements. If this causes a conflict in transform properties, can set `false` to use `top` / `left` for positioning:
+
+```jsx
+<Float transform={false}>
 ```
 
 ## High-Order Component
@@ -354,6 +370,53 @@ Used in the same way as `<Float>`. It can also override the defined prop in high
   </HighOrderFloat>
 </Menu>
 ```
+
+## Component API
+
+### Float
+
+| Prop                     | Type                                              | Default        | Description                                                                           |
+| ------------------------ | ------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------- |
+| `placement`              | <code>Placement</code>                            | `bottom-start` | Floating placement.                                                                   |
+| `strategy`               | <code>Strategy</code>                             | `absolute`     | CSS `position` property of the floating element.                                      |
+| `offset`                 | <code>Number &#124; Object &#124; Function</code> | —              | The offset (px) of the floating element from the reference element.                   |
+| `shift`                  | <code>Boolean &#124; Number &#124; Object</code>  | `false`        | Move the reference elements back into the view.                                       |
+| `flip`                   | <code>Boolean &#124; Object</code>                | `false`        | Change to the opposite placement to keep it in view.                                  |
+| `arrow`                  | <code>Boolean &#124; Number</code>                | `false`        | Enable arrow positioning.                                                             |
+| `autoPlacement`          | <code>Boolean &#124; Object</code>                | `false`        | Floating elements choose the placement with more space left.                          |
+| `autoUpdate`             | <code>Boolean &#124; Object</code>                | `true`         | Automatically update floating elements when needed.                                   |
+| `zIndex`                 | <code>Number</code>                               | `9999`         | CSS `z-index` property for the floating element.                                      |
+| `enter`                  | <code>String</code>                               | —              | Classes to add to the transitioning element during the entire enter phase.            |
+| `enterFrom`              | <code>String</code>                               | —              | Classes to add to the transitioning element before the enter phase starts.            |
+| `enterTo`                | <code>String</code>                               | —              | Classes to add to the transitioning element immediately after the enter phase starts. |
+| `leave`                  | <code>String</code>                               | —              | Classes to add to the transitioning element during the entire leave phase.            |
+| `leaveFrom`              | <code>String</code>                               | —              | Classes to add to the transitioning element before the leave phase starts.            |
+| `leaveTo`                | <code>String</code>                               | —              | Classes to add to the transitioning element immediately after the leave phase starts. |
+| `originClass`            | <code>String &#124; Function</code>               | —              | The origin class of transform.                                                        |
+| `tailwindcssOriginClass` | <code>Boolean</code>                              | `false`        | Enable automatically setting Tailwind CSS origin class.                               |
+| `portal`                 | <code>Boolean &#124; String</code>                | `false`        | Render floating element in the other exists element.                                  |
+| `transform`              | <code>Boolean</code>                              | `true`         | Use CSS transform to positioning floating element.                                    |
+| `middleware`             | <code>Array &#124; () => []</code>                | `() => []`     | Floating UI middleware                                                                |
+| `onShow`                 | <code>() => void</code>                           | —              | Triggered when the floating element is show.                                          |
+| `onHide`                 | <code>() => void</code>                           | —              | Triggered when the floating element is hide.                                          |
+| `onUpdate`               | <code>() => void</code>                           | —              | Triggered when the floating element position is update.                               |
+
+### Float.Arrow
+
+| Prop     | Type                                 | Default | Description                                                 |
+| -------- | ------------------------------------ | ------- | ----------------------------------------------------------- |
+| `as`     | <code>String &#124; Component</code> | `div`   | The element or component the arrow should render as.        |
+| `offset` | <code>Number</code>                  | `4`     | Offset of the arrow to the outside of the floating element. |
+
+| Render Prop | Description                         |
+| ----------- | ----------------------------------- |
+| `placement` | Current floating element placement. |
+
+## Credits
+
+* [Headless UI](https://headlessui.dev/)
+* [Floating UI](https://floating-ui.com/)
+* This package is adapted from [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
 Under the [MIT LICENSE](LICENSE.md)
