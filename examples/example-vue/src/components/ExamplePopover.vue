@@ -3,10 +3,11 @@
     <Popover>
       <Float
         placement="bottom-start"
-        arrow
-        portal
         :offset="15"
         :shift="6"
+        flip
+        arrow
+        portal
         enter="transition duration-200 ease-out"
         enter-from="opacity-0 -translate-y-1"
         enter-to="opacity-100 translate-y-0"
