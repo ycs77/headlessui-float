@@ -3,6 +3,7 @@ import {
   useRef,
   useEffect,
   useMemo,
+  useCallback,
   useContext,
   createContext,
   isValidElement,
@@ -96,10 +97,10 @@ function FloatRoot(props: {
     middleware,
   })
 
-  const updateFloating = () => {
+  const updateFloating = useCallback(() => {
     update()
     events.update()
-  }
+  }, [update])
 
   useEffect(() => {
     const _middleware = []
