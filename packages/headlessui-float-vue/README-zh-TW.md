@@ -17,6 +17,8 @@
 
 ## 安裝
 
+記得需要先安裝 Vue 3 和 Headless UI Vue。
+
 ```bash
 # npm
 npm i headlessui-float-vue

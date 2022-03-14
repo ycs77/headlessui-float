@@ -17,6 +17,8 @@
 
 ## 安裝
 
+記得需要先安裝 React、React DOM 和 Headless UI React。
+
 ```bash
 # npm
 npm i headlessui-float-react

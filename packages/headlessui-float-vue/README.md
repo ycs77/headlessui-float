@@ -17,6 +17,8 @@ This package is adapted from [headlessui#154 example](https://github.com/tailwin
 
 ## Installation
 
+Remember that you need to install Vue 3 and Headless UI Vue first.
+
 ```bash
 # npm
 npm i headlessui-float-vue
