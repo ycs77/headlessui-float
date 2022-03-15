@@ -58,7 +58,7 @@ Then wrap `<Float>` around `<Menu.Button>` and `<Menu.Items>`:
 </Menu>
 ```
 
-Note that `<Float>` must contain 2 child elements, the first being a reference element, either a Headless UI component or an HTML element, and the second being a floating element.
+Note that `<Float>` must contain 2 child elements, the first is the reference element, and the second is the floating element. It can be a Headless UI component or an HTML element.
 
 Then remove the `"absolute"`, `"right-0"` and other positioning class from `<Menu.Items>`, and add the `placement="bottom-end"` attribute:
 
@@ -377,6 +377,7 @@ Used in the same way as `<Float>`. It can also override the defined prop in high
 
 | Prop                     | Type                                              | Default        | Description                                                                           |
 | ------------------------ | ------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------- |
+| `show`                   | <code>Boolean</code>                              | —              | Control the floating element is show or not.                                          |
 | `placement`              | <code>Placement</code>                            | `bottom-start` | Floating placement.                                                                   |
 | `strategy`               | <code>Strategy</code>                             | `absolute`     | CSS `position` property of the floating element.                                      |
 | `offset`                 | <code>Number &#124; Object &#124; Function</code> | —              | The offset (px) of the floating element from the reference element.                   |

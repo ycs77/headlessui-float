@@ -25,7 +25,7 @@
 
 ## 安裝
 
-需要先安裝 Vue 3 和 Headless UI Vue。
+套件依賴於 **Vue 3** 和 **Headless UI Vue**，記得需要先安裝。
 
 ```bash
 # npm
@@ -60,7 +60,7 @@ import { Float } from 'headlessui-float-vue'
 </Menu>
 ```
 
-需要注意，`<Float>` 必須包含2個子元素，第1個是參考元素，可以是 Headless UI 組件或 HTML 元素，第2個是浮動元素。
+需要注意，`<Float>` 必須包含2個子元素，第1個是參考元素，第2個是浮動元素。可以使用 Headless UI 組件或 HTML 元素。
 
 然後刪除掉 `<MenuItems>` 的 `"absolute"`、`"right-0"` 等定位 class，並加上 `placement="bottom-end"` 屬性：
 
@@ -386,6 +386,7 @@ import { Float } from 'headlessui-float-vue'
 | Prop                       | Type                                              | Default        | Description                               |
 | -------------------------- | ------------------------------------------------- | -------------- | ----------------------------------------- |
 | `as`                       | <code>String &#124; Component</code>              | `div`          | 包裹了浮動元素的元素或組件                |
+| `show`                     | <code>Boolean</code>                              | —              | 控制是否顯示浮動元素                      |
 | `placement`                | <code>Placement</code>                            | `bottom-start` | 浮動定位方向位置                          |
 | `strategy`                 | <code>Strategy</code>                             | `absolute`     | 浮動元素的 CSS `position` 屬性            |
 | `offset`                   | <code>Number &#124; Object &#124; Function</code> | —              | 浮動元素離參考元素的偏移量                |
