@@ -17,15 +17,15 @@
 * 💙 輕鬆整合 Headless UI & Tailwind CSS
 * 💬 Floating UI (新版 Popper.js) 定位浮動元素
 * 🔔 自動更新浮動元素
-* ♾️ 支持 Transition
-* 🚪 支持 Portal
-* ➡️ 支持箭頭 (Arrow)
+* ♾️ 支援 Transition
+* 🚪 支援 Portal
+* ➡️ 支援箭頭 (Arrow)
 
 [**線上 Demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-react?file=src%2FApp.jsx)
 
 ## 安裝
 
-套件依賴於 **React**、**React DOM** 和 **Headless UI React**，記得需要先安裝。
+套件相依於 **React**、**React DOM** 和 **Headless UI React**，記得需要先安裝。
 
 ```bash
 # npm
@@ -36,7 +36,7 @@ yarn add headlessui-float-react
 
 ## 開始使用
 
-先去找一個需要自動定位元素位置的 Headless UI 組件，比如這裡用 `<Menu>` 組件來示範。引入 `<Float>` 組件：
+先去找一個需要自動定位元素位置的 Headless UI 元件，比如這裡用 `<Menu>` 元件來示範。引入 `<Float>` 元件：
 
 ```js
 import { Float } from 'headlessui-float-react'
@@ -58,7 +58,7 @@ import { Float } from 'headlessui-float-react'
 </Menu>
 ```
 
-需要注意，`<Float>` 必須包含2個子元素，第1個是參考元素，第2個是浮動元素。可以使用 Headless UI 組件或 HTML 元素。
+需要注意，`<Float>` 必須包含2個子元素，第1個是參考元素，第2個是浮動元素。可以使用 Headless UI 元件或 HTML 元素。
 
 然後刪除掉 `<Menu.Items>` 的 `"absolute"`、`"right-0"` 等定位 class，並加上 `placement="bottom-end"` 屬性：
 
@@ -80,13 +80,13 @@ import { Float } from 'headlessui-float-react'
 </Menu>
 ```
 
-然後 `<Menu>` 就可以自動定位內部的 `<Menu.Items>` 組件了。
+然後 `<Menu>` 就可以自動定位內部的 `<Menu.Items>` 元件了。
 
-除了 `<Menu>` 之外，同樣也可以用在 `<Listbox>`、`<Popover>` 或 `<Combobox>` 組件上，你可以使用 `<Float>` 在任何需要浮動定位的元素上。
+除了 `<Menu>` 之外，同樣也可以用在 `<Listbox>`、`<Popover>` 或 `<Combobox>` 元件上，你可以使用 `<Float>` 在任何需要浮動定位的元素上。
 
 ## 顯示/隱藏
 
-如果浮動元素是 Headless UI 組件，因為顯示的控制權在 Headless UI 組件中，可以直接使用。
+如果浮動元素是 Headless UI 元件，因為顯示的控制權在 Headless UI 元件中，可以直接使用。
 
 但如果需要手動控制浮動元素的顯示與否，就需要設定 `show` 了：
 
@@ -96,7 +96,7 @@ const [show, setShow] = useState(false)
 <Float show={show}>
 ```
 
-> 如果浮動元素使用 HTML 元素，而不是 Headless UI 組件的話，就需要設定 `show`。
+> 如果浮動元素使用 HTML 元素，而不是 Headless UI 元件的話，就需要設定 `show`。
 
 ## Floating UI 選項
 
@@ -222,7 +222,7 @@ const middleware = ({ referenceEl, floatingEl }) => [
 
 ## Transition
 
-`<Float>` 自帶 `<Transition>` 組件，只需要加上過渡中需要的 class：
+`<Float>` 自帶 `<Transition>` 元件，只需要加上過場中需要的 class：
 
 ```jsx
 <Float
@@ -257,7 +257,7 @@ module.exports = {
 
 ## Arrow (箭頭)
 
-首先先引入 `<Float.Arrow>` 組件，並放置在浮動元素內部，然後加上 class：
+首先先引入 `<Float.Arrow>` 元件，並放置在浮動元素內部，然後加上 class：
 
 ```jsx
 <Popover>
@@ -342,7 +342,7 @@ export default function ArrowExample() {
 
 ## High-Order Component
 
-高階組件，可以將 `<Float>` 組件客製好包裝之後，輕鬆在專案中套用：
+高階元件，可以將 `<Float>` 元件客製好包裝之後，輕鬆在專案中套用：
 
 *HighOrderFloat.jsx*
 ```jsx
@@ -370,7 +370,7 @@ export default function HighOrderFloat(props) {
 }
 ```
 
-使用方式跟 `<Float>` 的用法一樣。也可以覆蓋在高階組件中已經定義的 prop：
+使用方式跟 `<Float>` 的用法一樣。也可以覆蓋在高階元件中已經定義的 prop：
 
 ```jsx
 <Menu>
@@ -401,12 +401,12 @@ export default function HighOrderFloat(props) {
 | `autoPlacement`          | <code>Boolean &#124; Object</code>                | `false`        | 浮動元素自動選擇剩餘空間最多的方向        |
 | `autoUpdate`             | <code>Boolean &#124; Object</code>                | `true`         | 自動在需要的時候更新浮動元素              |
 | `zIndex`                 | <code>Number</code>                               | `9999`         | 浮動元素的 CSS `z-index` 屬性             |
-| `enter`                  | <code>String</code>                               | —              | `<Transition>` 過渡進入時增加的 class     |
-| `enterFrom`              | <code>String</code>                               | —              | `<Transition>` 過渡進入開始時增加的 class |
-| `enterTo`                | <code>String</code>                               | —              | `<Transition>` 過渡進入結束時增加的 class |
-| `leave`                  | <code>String</code>                               | —              | `<Transition>` 過渡離開時增加的 class     |
-| `leaveFrom`              | <code>String</code>                               | —              | `<Transition>` 過渡離開開始時增加的 class |
-| `leaveTo`                | <code>String</code>                               | —              | `<Transition>` 過渡離開結束時增加的 class |
+| `enter`                  | <code>String</code>                               | —              | `<Transition>` 過場進入時增加的 class     |
+| `enterFrom`              | <code>String</code>                               | —              | `<Transition>` 過場進入開始時增加的 class |
+| `enterTo`                | <code>String</code>                               | —              | `<Transition>` 過場進入結束時增加的 class |
+| `leave`                  | <code>String</code>                               | —              | `<Transition>` 過場離開時增加的 class     |
+| `leaveFrom`              | <code>String</code>                               | —              | `<Transition>` 過場離開開始時增加的 class |
+| `leaveTo`                | <code>String</code>                               | —              | `<Transition>` 過場離開結束時增加的 class |
 | `originClass`            | <code>String &#124; Function</code>               | —              | 設定 transform 的 origin class            |
 | `tailwindcssOriginClass` | <code>Boolean</code>                              | `false`        | 啟用自動設定 Tailwind CSS origin class    |
 | `portal`                 | <code>Boolean &#124; String</code>                | `false`        | 傳送浮動元素到頁面的其他元素之中          |
@@ -420,12 +420,12 @@ export default function HighOrderFloat(props) {
 
 | Prop     | Type                                 | Default | Description                        |
 | -------- | ------------------------------------ | ------- | ---------------------------------- |
-| `as`     | <code>String &#124; Component</code> | `div`   | 顯示箭頭的元素或組件               |
+| `as`     | <code>String &#124; Component</code> | `div`   | 顯示箭頭的元素或元件               |
 | `offset` | <code>Number</code>                  | `4`     | 箭頭元素往浮動元素外面偏移的偏移量 |
 
 | Render Prop | Description                |
 | ----------- | -------------------------- |
-| `placement` | 當前浮動元素顯示的方向位置 |
+| `placement` | 目前浮動元素顯示的方向位置 |
 
 ## Credits
 
