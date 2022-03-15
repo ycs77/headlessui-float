@@ -4,7 +4,11 @@ import Block from '@/components/Block'
 import HeroiconsOutlineChevronRight from '~icons/heroicons-outline/chevron-right'
 
 export default function ExampleNestedMenu() {
-  const [openMapping, setOpenMapping] = useState({})
+  const [openMapping, setOpenMapping] = useState({
+    m0: false,
+    m1: false,
+    m2: false,
+  })
   const menuEnter = key => {
     setOpenMapping(state => ({ ...state, [key]: true }))
   }
@@ -14,7 +18,7 @@ export default function ExampleNestedMenu() {
 
   return (
     <Block title="Nested Menu (Dropdown) with pure HTML" titleClass="text-indigo-400">
-      <Float show={openMapping['m0'] || false} placement="bottom-start">
+      <Float show={openMapping['m0']} placement="bottom-start">
         <button
           type="button"
           className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md"
@@ -39,7 +43,7 @@ export default function ExampleNestedMenu() {
           </li>
           <li>
             <Float
-              show={openMapping['m1'] || false}
+              show={openMapping['m1']}
               placement="right-start"
               flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
               shift
@@ -78,7 +82,7 @@ export default function ExampleNestedMenu() {
                 </li>
                 <li>
                   <Float
-                    show={openMapping['m2'] || false}
+                    show={openMapping['m2']}
                     placement="right-start"
                     flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
                     shift

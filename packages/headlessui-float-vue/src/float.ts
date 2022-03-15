@@ -64,6 +64,7 @@ export const Float = defineComponent({
       type: [String, Object],
       default: 'div',
     },
+    show: Boolean,
     placement: {
       type: String as PropType<Placement>,
       default: 'bottom-start',
@@ -259,7 +260,7 @@ export const Float = defineComponent({
     }
 
     onMounted(() => {
-      if (isVisibleDOMElement(dom(floating))) {
+      if (isVisibleDOMElement(dom(floating)) && props.show) {
         emit('show')
         startAutoUpdate()
       }
@@ -362,7 +363,10 @@ export const Float = defineComponent({
           renderPortal(
             renderFloating(
               h(Transition, transitionProps, () =>
-                floatingNode
+                (typeof props.show === 'boolean'
+                  ? props.show
+                  : floatingNode
+                )
                   ? cloneVNode(floatingNode, props.as === 'template' ? floatingProps : null)
                   : createCommentVNode()
               )
