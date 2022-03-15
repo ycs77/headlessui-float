@@ -1,7 +1,7 @@
 <h2 align="center">Headless UI Float React</h2>
 
 <p align="center">
-  Easy use <a href="https://headlessui.dev/">Headless UI</a> for React with <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) to position floating elements.
+  Easy use <a href="https://headlessui.dev/">Headless UI</a> for React with <a href="https://floating-ui.com/">Floating UI</a> (New version Popper.js) to position floating elements.
 </p>
 
 <p align="center">

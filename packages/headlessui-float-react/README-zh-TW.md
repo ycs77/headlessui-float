@@ -1,7 +1,7 @@
 <h2 align="center">Headless UI Float React</h2>
 
 <p align="center">
-  輕鬆在 React 和 <a href="https://headlessui.dev/">Headless UI</a> 中使用 <a href="https://floating-ui.com/">Floating UI</a> (Popper.js) 來定位浮動元素。
+  輕鬆在 React 和 <a href="https://headlessui.dev/">Headless UI</a> 中使用 <a href="https://floating-ui.com/">Floating UI</a> (新版 Popper.js) 來定位浮動元素。
 </p>
 
 <p align="center">
