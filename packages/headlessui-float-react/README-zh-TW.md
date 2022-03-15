@@ -84,6 +84,20 @@ import { Float } from 'headlessui-float-react'
 
 除了 `<Menu>` 之外，同樣也可以用在 `<Listbox>`、`<Popover>` 或 `<Combobox>` 組件上，你可以使用 `<Float>` 在任何需要浮動定位的元素上。
 
+## 顯示/隱藏
+
+如果浮動元素是 Headless UI 組件，因為顯示的控制權在 Headless UI 組件中，可以直接使用。
+
+但如果需要手動控制浮動元素的顯示與否，就需要設定 `show` 了：
+
+```jsx
+const [show, setShow] = useState(false)
+
+<Float show={show}>
+```
+
+> 如果浮動元素使用 HTML 元素，而不是 Headless UI 組件的話，就需要設定 `show`。
+
 ## Floating UI 選項
 
 ### placement

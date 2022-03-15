@@ -84,6 +84,20 @@ Then `<Menu>` can automatically position the inner `<Menu.Items>`.
 
 In addition to `<Menu>`, the same can be used on `<Listbox>`, `<Popover>` or `<Combobox>` components, and you can use `<Float>` on any element that requires floating positioning.
 
+## Show/Hide
+
+If the floating element is Headless UI component, since the control of display is in the Headless UI component, it can be used directly.
+
+However, if you want to manually control the display of the floating element, need to set `show`:
+
+```jsx
+const [show, setShow] = useState(false)
+
+<Float show={show}>
+```
+
+> If the floating element uses an HTML element instead of the Headless UI component, need to set `show`.
+
 ## Floating UI Options
 
 ### placement

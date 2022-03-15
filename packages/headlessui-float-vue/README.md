@@ -86,6 +86,26 @@ Then `<Menu>` can automatically position the inner `<MenuItems>`.
 
 In addition to `<Menu>`, the same can be used on `<Listbox>`, `<Popover>` or `<Combobox>` components, and you can use `<Float>` on any element that requires floating positioning.
 
+## Show/Hide
+
+If the floating element is Headless UI component, since the control of display is in the Headless UI component, it can be used directly.
+
+However, if you want to manually control the display of the floating element, need to set `show`:
+
+```html
+<template>
+  <Float :show="show">
+    ...
+  </Float>
+</template>
+
+<script setup>
+const show = ref(false)
+</script>
+```
+
+> If the floating element uses an HTML element instead of the Headless UI component, need to set `show`.
+
 ## Floating UI Options
 
 ### placement
@@ -377,6 +397,39 @@ Used in the same way as `<Float>`. It can also override the defined prop in high
     </MenuItems>
   </HighOrderFloat>
 </Menu>
+```
+
+## Auto Importing
+
+Use with [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) to auto-import components:
+
+*vite.config.js*
+```js
+import Vue from '@vitejs/plugin-vue'
+import Components from 'unplugin-vue-components/vite'
+import { HeadlessUiFloatResolver } from 'headlessui-float-vue'
+
+export default {
+  plugins: [
+    Vue(),
+    Components({
+      resolvers: [
+        HeadlessUiFloatResolver(),
+      ]
+    }),
+  ],
+}
+```
+
+Then you can use `<Float>` components as you want without explicit importing:
+
+```vue
+<template>
+  <Float>
+    ...
+    <FloatArrow />
+  </Float>
+</template>
 ```
 
 ## Component API
