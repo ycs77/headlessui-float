@@ -25,7 +25,7 @@ English | [繁體中文](README-zh-TW.md)
 
 ## Installation
 
-Need to install Vue 3 and Headless UI Vue first.
+This package is require **Vue 3** and **Headless UI Vue**, you must be installed them first.
 
 ```bash
 # npm

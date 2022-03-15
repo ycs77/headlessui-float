@@ -25,7 +25,7 @@ English | [繁體中文](README-zh-TW.md)
 
 ## Installation
 
-Need to install React, React DOM and Headless UI React first.
+This package is require **React**, **React DOM** and **Headless UI React**, you must be installed them first.
 
 ```bash
 # npm
