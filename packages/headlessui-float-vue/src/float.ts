@@ -64,7 +64,10 @@ export const Float = defineComponent({
       type: [String, Object],
       default: 'div',
     },
-    show: Boolean,
+    show: {
+      type: Boolean,
+      default: null,
+    },
     placement: {
       type: String as PropType<Placement>,
       default: 'bottom-start',
@@ -365,7 +368,7 @@ export const Float = defineComponent({
               h(Transition, transitionProps, () =>
                 (typeof props.show === 'boolean'
                   ? props.show
-                  : floatingNode
+                  : true
                 )
                   ? cloneVNode(floatingNode, props.as === 'template' ? floatingProps : null)
                   : createCommentVNode()
