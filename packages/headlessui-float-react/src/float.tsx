@@ -61,7 +61,7 @@ function FloatRoot(props: {
   autoPlacement?: boolean | (AutoPlacementOptions & DetectOverflowOptions),
   hide?: boolean | (HideOptions & DetectOverflowOptions),
   autoUpdate?: boolean | AutoUpdateOptions,
-  zIndex?: number,
+  zIndex?: number | string,
   enter?: string,
   enterFrom?: string,
   enterTo?: string,

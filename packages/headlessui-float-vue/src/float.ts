@@ -102,7 +102,7 @@ export const Float = defineComponent({
       default: true,
     },
     zIndex: {
-      type: Number,
+      type: [Number, String],
       default: 9999,
     },
     enter: String,
