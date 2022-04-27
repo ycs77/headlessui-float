@@ -225,7 +225,7 @@ function FloatRoot(props: FloatProps) {
       right: 'auto',
       bottom: 'auto',
       transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
-    } :  {
+    } : {
       position: strategy,
       zIndex: props.zIndex || 9999,
       top: `${y || 0}px`,
@@ -246,10 +246,7 @@ function FloatRoot(props: FloatProps) {
   const renderFloating = (Children: ReactElement) => {
     // if (props.as === Fragment) {
     //   return (
-    //     <Children.type
-    //       {...Children.props}
-    //       {...floatingProps}
-    //     />
+    //     <Children.type {...Children.props} {...floatingProps} />
     //   )
     // }
 
