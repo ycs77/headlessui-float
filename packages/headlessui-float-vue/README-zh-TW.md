@@ -380,7 +380,9 @@ import { Float, FloatArrow } from 'headlessui-float-vue'
 </template>
 
 <script setup>
-import { Float } from 'headlessui-float-vue'
+import { Float, FloatProps } from 'headlessui-float-vue'
+
+defineProps(FloatProps)
 </script>
 ```
 

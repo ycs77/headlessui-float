@@ -57,81 +57,83 @@ export function useArrowContext(component: string) {
   return context
 }
 
+export const FloatProps = {
+  as: {
+    type: [String, Object],
+    default: 'div',
+  },
+  show: {
+    type: Boolean,
+    default: null,
+  },
+  placement: {
+    type: String as PropType<Placement>,
+    default: 'bottom-start',
+  },
+  strategy: {
+    type: String as PropType<Strategy>,
+    default: 'absolute',
+  },
+  offset: [Number, Object, Function] as PropType<OffsetOptions>,
+  shift: {
+    type: [Boolean, Number, Object] as PropType<boolean | number | (ShiftOptions & DetectOverflowOptions)>,
+    default: false,
+  },
+  flip: {
+    type: [Boolean, Object] as PropType<boolean | (FlipOptions & DetectOverflowOptions)>,
+    default: false,
+  },
+  arrow: {
+    type: [Boolean, Number],
+    default: false,
+  },
+  autoPlacement: {
+    type: [Boolean, Object] as PropType<boolean | (AutoPlacementOptions & DetectOverflowOptions)>,
+    default: false,
+  },
+  hide: {
+    type: [Boolean, Object] as PropType<boolean | (HideOptions & DetectOverflowOptions)>,
+    default: false,
+  },
+  autoUpdate: {
+    type: [Boolean, Object] as PropType<boolean | AutoUpdateOptions>,
+    default: true,
+  },
+  zIndex: {
+    type: [Number, String],
+    default: 9999,
+  },
+  enter: String,
+  enterFrom: String,
+  enterTo: String,
+  leave: String,
+  leaveFrom: String,
+  leaveTo: String,
+  originClass: [String, Function] as PropType<string | OriginClassResolver>,
+  tailwindcssOriginClass: {
+    type: Boolean,
+    default: false,
+  },
+  portal: {
+    type: [Boolean, String],
+    default: false,
+  },
+  transform: {
+    type: Boolean,
+    default: true,
+  },
+  middleware: {
+    type: [Array, Function] as PropType<Middleware[] | ((refs: {
+      referenceEl: Ref<HTMLElement | null>,
+      floatingEl: Ref<HTMLElement | null>,
+    }) => Middleware[])>,
+    default: () => [],
+  },
+}
+
 export const Float = defineComponent({
   name: 'Float',
-  props: {
-    as: {
-      type: [String, Object],
-      default: 'div',
-    },
-    show: {
-      type: Boolean,
-      default: null,
-    },
-    placement: {
-      type: String as PropType<Placement>,
-      default: 'bottom-start',
-    },
-    strategy: {
-      type: String as PropType<Strategy>,
-      default: 'absolute',
-    },
-    offset: [Number, Object, Function] as PropType<OffsetOptions>,
-    shift: {
-      type: [Boolean, Number, Object] as PropType<boolean | number | (ShiftOptions & DetectOverflowOptions)>,
-      default: false,
-    },
-    flip: {
-      type: [Boolean, Object] as PropType<boolean | (FlipOptions & DetectOverflowOptions)>,
-      default: false,
-    },
-    arrow: {
-      type: [Boolean, Number],
-      default: false,
-    },
-    autoPlacement: {
-      type: [Boolean, Object] as PropType<boolean | (AutoPlacementOptions & DetectOverflowOptions)>,
-      default: false,
-    },
-    hide: {
-      type: [Boolean, Object] as PropType<boolean | (HideOptions & DetectOverflowOptions)>,
-      default: false,
-    },
-    autoUpdate: {
-      type: [Boolean, Object] as PropType<boolean | AutoUpdateOptions>,
-      default: true,
-    },
-    zIndex: {
-      type: [Number, String],
-      default: 9999,
-    },
-    enter: String,
-    enterFrom: String,
-    enterTo: String,
-    leave: String,
-    leaveFrom: String,
-    leaveTo: String,
-    originClass: [String, Function] as PropType<string | OriginClassResolver>,
-    tailwindcssOriginClass: {
-      type: Boolean,
-      default: false,
-    },
-    portal: {
-      type: [Boolean, String],
-      default: false,
-    },
-    transform: {
-      type: Boolean,
-      default: true,
-    },
-    middleware: {
-      type: [Array, Function] as PropType<Middleware[] | ((refs: {
-        referenceEl: Ref<HTMLElement | null>,
-        floatingEl: Ref<HTMLElement | null>,
-      }) => Middleware[])>,
-      default: () => [],
-    },
-  },
+  props: FloatProps,
   emits: ['show', 'hide', 'update'],
   setup(props, { slots, emit }) {
     const propPlacement = toRef(props, 'placement')

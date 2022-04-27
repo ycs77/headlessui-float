@@ -17,5 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { Float } from 'headlessui-float-vue'
+import { Float, FloatProps } from 'headlessui-float-vue'
+
+defineProps(FloatProps)
 </script>
