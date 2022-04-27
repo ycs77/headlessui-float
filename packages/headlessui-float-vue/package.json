@@ -51,7 +51,7 @@
     "unplugin-vue-components": "^0.17.21",
     "vite": "^2.8.0",
     "vue": "^3.2.0",
-    "vue-tsc": "^0.29.8"
+    "vue-tsc": "^0.34.7"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

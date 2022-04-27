@@ -120,22 +120,22 @@
   </Block>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { Float } from 'headlessui-float-vue'
 import Block from '@/components/Block.vue'
 import HeroiconsOutlineChevronRight from '~icons/heroicons-outline/chevron-right'
 
-const openMapping = ref({
+const openMapping = ref<Record<string, boolean>>({
   m0: false,
   m1: false,
   m2: false,
 })
 
-const menuEnter = key => {
+const menuEnter = (key: string) => {
   openMapping.value[key] = true
 }
-const menuLeave = key => {
+const menuLeave = (key: string) => {
   openMapping.value[key] = false
 }
 </script>

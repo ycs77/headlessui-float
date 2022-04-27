@@ -10,10 +10,10 @@ export default function ExampleNestedMenu() {
     m2: false,
   })
 
-  const menuEnter = key => {
+  const menuEnter = (key: string) => {
     setOpenMapping(state => ({ ...state, [key]: true }))
   }
-  const menuLeave = key => {
+  const menuLeave = (key: string) => {
     setOpenMapping(state => ({ ...state, [key]: false }))
   }
 

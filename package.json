@@ -8,7 +8,9 @@
     "packages/headlessui-float-react",
     "packages/headlessui-float-vue",
     "examples/example-react",
-    "examples/example-vue"
+    "examples/example-react-ts",
+    "examples/example-vue",
+    "examples/example-vue-ts"
   ],
   "scripts": {
     "build": "npm-run-all -p build:*",
@@ -19,11 +21,15 @@
     "watch:vue": "yarn vue watch",
     "watch:example": "npm-run-all -p watch:example:*",
     "watch:example:react": "yarn react:example dev --port=3010",
+    "watch:example:react-ts": "yarn react-ts:example dev --port=3012",
     "watch:example:vue": "yarn vue:example dev --port=3011",
+    "watch:example:vue-ts": "yarn vue-ts:example dev --port=3013",
     "react": "yarn workspace headlessui-float-react",
     "react:example": "yarn workspace headlessui-float-example-react",
+    "react-ts:example": "yarn workspace headlessui-float-example-react-ts",
     "vue": "yarn workspace headlessui-float-vue",
-    "vue:example": "yarn workspace headlessui-float-example-vue"
+    "vue:example": "yarn workspace headlessui-float-example-vue",
+    "vue-ts:example": "yarn workspace headlessui-float-example-vue-ts"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
