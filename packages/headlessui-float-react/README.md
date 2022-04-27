@@ -385,6 +385,17 @@ Used in the same way as `<Float>`. It can also override the defined prop in high
 </Menu>
 ```
 
+If you using the TypeScript, can add `FloatProps` type to props:
+
+*HighOrderFloat.tsx*
+```jsx
+import { Float, FloatProps } from 'headlessui-float-react'
+
+export default function HighOrderFloat(props: FloatProps) {
+  // ...
+}
+```
+
 ## Component API
 
 ### Float

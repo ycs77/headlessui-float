@@ -385,6 +385,17 @@ export default function HighOrderFloat(props) {
 </Menu>
 ```
 
+如果你有使用 TypeScript，可以增加 `FloatProps` type 到 props 上：
+
+*HighOrderFloat.tsx*
+```jsx
+import { Float, FloatProps } from 'headlessui-float-react'
+
+export default function HighOrderFloat(props: FloatProps) {
+  // ...
+}
+```
+
 ## Component API
 
 ### Float

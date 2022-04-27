@@ -49,38 +49,40 @@ export function useArrowContext(component: string) {
   return context
 }
 
-function FloatRoot(props: {
-  // as?: ElementType,
-  show?: boolean,
-  placement?: Placement,
-  strategy?: Strategy,
-  offset?: OffsetOptions,
-  shift?: boolean | number | (ShiftOptions & DetectOverflowOptions),
-  flip?: boolean | (FlipOptions & DetectOverflowOptions),
-  arrow?: boolean | number,
-  autoPlacement?: boolean | (AutoPlacementOptions & DetectOverflowOptions),
-  hide?: boolean | (HideOptions & DetectOverflowOptions),
-  autoUpdate?: boolean | AutoUpdateOptions,
-  zIndex?: number | string,
-  enter?: string,
-  enterFrom?: string,
-  enterTo?: string,
-  leave?: string,
-  leaveFrom?: string,
-  leaveTo?: string,
-  originClass?: string | OriginClassResolver,
-  tailwindcssOriginClass?: boolean,
-  portal?: boolean | string,
-  transform?: boolean,
+export interface FloatProps {
+  // as?: ElementType
+  show?: boolean
+  placement?: Placement
+  strategy?: Strategy
+  offset?: OffsetOptions
+  shift?: boolean | number | (ShiftOptions & DetectOverflowOptions)
+  flip?: boolean | (FlipOptions & DetectOverflowOptions)
+  arrow?: boolean | number
+  autoPlacement?: boolean | (AutoPlacementOptions & DetectOverflowOptions)
+  hide?: boolean | (HideOptions & DetectOverflowOptions)
+  autoUpdate?: boolean | AutoUpdateOptions
+  zIndex?: number | string
+  enter?: string
+  enterFrom?: string
+  enterTo?: string
+  leave?: string
+  leaveFrom?: string
+  leaveTo?: string
+  originClass?: string | OriginClassResolver
+  tailwindcssOriginClass?: boolean
+  portal?: boolean | string
+  transform?: boolean
   middleware?: Middleware[] | ((refs: {
-    referenceEl: MutableRefObject<Element | VirtualElement | null>;
-    floatingEl: MutableRefObject<HTMLElement | null>;
-  }) => Middleware[]),
-  children: ReactElement[],
-  onShow?: () => void,
-  onHide?: () => void,
-  onUpdate?: () => void,
-}) {
+    referenceEl: MutableRefObject<Element | VirtualElement | null>
+    floatingEl: MutableRefObject<HTMLElement | null>
+  }) => Middleware[])
+  children: ReactElement[]
+  onShow?: () => void
+  onHide?: () => void
+  onUpdate?: () => void
+}
+
+function FloatRoot(props: FloatProps) {
   const [middleware, setMiddleware] = useState<Middleware[]>()
 
   const arrowRef = useRef<HTMLElement>(null)
