@@ -76,11 +76,11 @@ export const FloatProps = {
   },
   offset: [Number, Object, Function] as PropType<OffsetOptions>,
   shift: {
-    type: [Boolean, Number, Object] as PropType<boolean | number | (ShiftOptions & DetectOverflowOptions)>,
+    type: [Boolean, Number, Object] as PropType<boolean | number | Partial<ShiftOptions & DetectOverflowOptions>>,
     default: false,
   },
   flip: {
-    type: [Boolean, Object] as PropType<boolean | (FlipOptions & DetectOverflowOptions)>,
+    type: [Boolean, Object] as PropType<boolean | Partial<FlipOptions & DetectOverflowOptions>>,
     default: false,
   },
   arrow: {
@@ -88,15 +88,15 @@ export const FloatProps = {
     default: false,
   },
   autoPlacement: {
-    type: [Boolean, Object] as PropType<boolean | (AutoPlacementOptions & DetectOverflowOptions)>,
+    type: [Boolean, Object] as PropType<boolean | Partial<AutoPlacementOptions & DetectOverflowOptions>>,
     default: false,
   },
   hide: {
-    type: [Boolean, Object] as PropType<boolean | (HideOptions & DetectOverflowOptions)>,
+    type: [Boolean, Object] as PropType<boolean | Partial<HideOptions & DetectOverflowOptions>>,
     default: false,
   },
   autoUpdate: {
-    type: [Boolean, Object] as PropType<boolean | AutoUpdateOptions>,
+    type: [Boolean, Object] as PropType<boolean | Partial<AutoUpdateOptions>>,
     default: true,
   },
   zIndex: {

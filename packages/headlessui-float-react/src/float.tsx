@@ -55,12 +55,12 @@ export interface FloatProps {
   placement?: Placement
   strategy?: Strategy
   offset?: OffsetOptions
-  shift?: boolean | number | (ShiftOptions & DetectOverflowOptions)
-  flip?: boolean | (FlipOptions & DetectOverflowOptions)
+  shift?: boolean | number | Partial<ShiftOptions & DetectOverflowOptions>
+  flip?: boolean | Partial<FlipOptions & DetectOverflowOptions>
   arrow?: boolean | number
-  autoPlacement?: boolean | (AutoPlacementOptions & DetectOverflowOptions)
-  hide?: boolean | (HideOptions & DetectOverflowOptions)
-  autoUpdate?: boolean | AutoUpdateOptions
+  autoPlacement?: boolean | Partial<AutoPlacementOptions & DetectOverflowOptions>
+  hide?: boolean | Partial<HideOptions & DetectOverflowOptions>
+  autoUpdate?: boolean | Partial<AutoUpdateOptions>
   zIndex?: number | string
   enter?: string
   enterFrom?: string
@@ -274,17 +274,15 @@ function FloatRoot(props: FloatProps) {
   )
 }
 
-interface ArrowSlot {
+interface ArrowRenderProp {
   placement: Placement
 }
 
 function Arrow(props: {
-  as?: ElementType,
-  offset: number,
-  children:
-    | ReactElement
-    | ReactElement[]
-    | ((slot: ArrowSlot) => ReactElement | ReactElement[]),
+  as?: ElementType
+  offset?: number
+  className?: string | ((bag: ArrowRenderProp) => string)
+  children?: ReactElement | ((slot: ArrowRenderProp) => ReactElement)
 }) {
   const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
 
@@ -305,10 +303,9 @@ function Arrow(props: {
 
   if (props.as === Fragment) {
     const slot = { placement }
-    const children = typeof props.children === 'function'
+    const ArrowNode = typeof props.children === 'function'
       ? props.children(slot)
       : props.children
-    const [ArrowNode] = Array.isArray(children) ? children : [children]
     if (!ArrowNode || !isValidElement(ArrowNode)) {
       throw new Error('When the prop `as` of <Float.Arrow /> is <Fragment />, there must be contains 1 child element.')
     }
