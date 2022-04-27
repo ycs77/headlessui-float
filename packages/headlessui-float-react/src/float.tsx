@@ -187,7 +187,7 @@ function FloatRoot(props: {
   const [ReferenceNode, FloatingNode] = props.children
 
   if (!isValidElement(ReferenceNode)) {
-    return
+    return <Fragment />
   }
 
   const originClassValue = useMemo(() => {
