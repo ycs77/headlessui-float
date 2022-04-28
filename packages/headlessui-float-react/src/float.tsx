@@ -20,6 +20,8 @@ import { useFloating, offset, flip, shift, arrow, autoPlacement, hide, autoUpdat
 import { Transition } from '@headlessui/react'
 import throttle from 'lodash.throttle'
 import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
+import { useId } from './hooks/use-id'
+import { useIsoMorphicEffect } from './hooks/use-iso-morphic-effect'
 import type { VirtualElement } from '@floating-ui/core'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
 import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
@@ -28,6 +30,9 @@ import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/midd
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Placement, Strategy, Middleware, DetectOverflowOptions } from '@floating-ui/dom'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
+
+let autoUpdateCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
+let showStateMap = new Map<ReturnType<typeof useId>, boolean>()
 
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
@@ -83,8 +88,10 @@ export interface FloatProps {
 }
 
 function FloatRoot(props: FloatProps) {
-  const [middleware, setMiddleware] = useState<Middleware[]>()
+  const id = useId()
 
+  const [show, setShow] = useState(props.show !== undefined ? props.show : false)
+  const [middleware, setMiddleware] = useState<Middleware[]>()
   const arrowRef = useRef<HTMLElement>(null)
 
   const events = {
@@ -163,21 +170,46 @@ function FloatRoot(props: FloatProps) {
     props.middleware,
   ])
 
-  useEffect(() => {
+  const startAutoUpdate = () => {
     if (refs.reference.current &&
         refs.floating.current &&
-        props.autoUpdate !== false
+        props.autoUpdate !== false &&
+        !autoUpdateCleanerMap.get(id)
     ) {
-      return autoUpdate(
+      autoUpdateCleanerMap.set(id, autoUpdate(
         refs.reference.current,
         refs.floating.current,
         throttle(updateFloating, 16),
         typeof props.autoUpdate === 'object'
           ? props.autoUpdate
           : undefined
-      )
+      ))
     }
-  }, [refs.reference, refs.floating, update])
+  }
+
+  const clearAutoUpdate = () => {
+    const disposeAutoUpdate = autoUpdateCleanerMap.get(id)!
+    disposeAutoUpdate()
+
+    autoUpdateCleanerMap.delete(id)
+  }
+
+  useIsoMorphicEffect(() => {
+    if (refs.floating.current && show === true && !showStateMap.get(id)) {
+      showStateMap.set(id, true)
+
+      // show...
+      events.show()
+      startAutoUpdate()
+    } else if (show === false && showStateMap.get(id) && autoUpdateCleanerMap.get(id)) {
+      showStateMap.delete(id)
+
+      // hide...
+      clearAutoUpdate()
+      events.hide()
+    }
+    return autoUpdateCleanerMap.get(id)
+  }, [show])
 
   const arrowApi = {
     arrowRef,
@@ -211,8 +243,12 @@ function FloatRoot(props: FloatProps) {
     leave: `${props.leave || ''} ${originClassValue}`,
     leaveFrom: `${props.leaveFrom || ''}`,
     leaveTo: `${props.leaveTo || ''}`,
-    beforeEnter: () => events.show(),
-    afterLeave: () => events.hide(),
+    beforeEnter: () => {
+      setShow(true)
+    },
+    afterLeave: () => {
+      setShow(false)
+    },
   }
 
   const floatingProps = {
