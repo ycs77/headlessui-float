@@ -61,7 +61,7 @@ export interface FloatProps {
   strategy?: Strategy
   offset?: OffsetOptions
   shift?: boolean | number | Partial<ShiftOptions & DetectOverflowOptions>
-  flip?: boolean | Partial<FlipOptions & DetectOverflowOptions>
+  flip?: boolean | number | Partial<FlipOptions & DetectOverflowOptions>
   arrow?: boolean | number
   autoPlacement?: boolean | Partial<AutoPlacementOptions & DetectOverflowOptions>
   hide?: boolean | Partial<HideOptions & DetectOverflowOptions>
@@ -119,10 +119,14 @@ function FloatRoot(props: FloatProps) {
     ) {
       _middleware.push(offset(props.offset))
     }
-    if (props.flip === true || typeof props.flip === 'object') {
-      _middleware.push(flip(
-        typeof props.flip === 'object' ? props.flip : undefined
-      ))
+    if (props.flip === true ||
+        typeof props.flip === 'number' ||
+        typeof props.flip === 'object'
+    ) {
+      _middleware.push(flip({
+        padding: typeof props.flip === 'number' ? props.flip : undefined,
+        ...(typeof props.flip === 'object' ? props.flip : {}),
+      }))
     }
     if (props.shift === true ||
         typeof props.shift === 'number' ||

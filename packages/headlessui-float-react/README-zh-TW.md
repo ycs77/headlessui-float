@@ -167,6 +167,12 @@ CSS `position` 屬性，`absolute` 或 `fixed`：
 <Float flip>
 ```
 
+設定翻轉時浮動元素最少離視圖邊界的偏移量 (px)：
+
+```jsx
+<Float flip={10}>
+```
+
 > 更多 `flip` 支援的輸入選項，請參考 Floating UI 的 `flip` 說明：https://floating-ui.com/docs/flip
 
 ### autoPlacement
@@ -408,7 +414,7 @@ export default function HighOrderFloat(props: FloatProps) {
 | `strategy`               | <code>Strategy</code>                             | `absolute`     | 浮動元素的 CSS `position` 屬性            |
 | `offset`                 | <code>Number &#124; Object &#124; Function</code> | —              | 浮動元素離參考元素的偏移量                |
 | `shift`                  | <code>Boolean &#124; Number &#124; Object</code>  | `false`        | 將超出界線的參考元素，偏移回至視圖內      |
-| `flip`                   | <code>Boolean &#124; Object</code>                | `false`        | 浮動元素超出邊界時，翻轉至不同的方向      |
+| `flip`                   | <code>Boolean &#124; Number &#124; Object</code>  | `false`        | 浮動元素超出邊界時，翻轉至不同的方向      |
 | `arrow`                  | <code>Boolean &#124; Number</code>                | `false`        | 啟用箭頭定位                              |
 | `autoPlacement`          | <code>Boolean &#124; Object</code>                | `false`        | 浮動元素自動選擇剩餘空間最多的方向        |
 | `autoUpdate`             | <code>Boolean &#124; Object</code>                | `true`         | 自動在需要的時候更新浮動元素              |

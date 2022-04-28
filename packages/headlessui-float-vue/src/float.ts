@@ -80,7 +80,7 @@ export const FloatProps = {
     default: false,
   },
   flip: {
-    type: [Boolean, Object] as PropType<boolean | Partial<FlipOptions & DetectOverflowOptions>>,
+    type: [Boolean, Number, Object] as PropType<boolean | number | Partial<FlipOptions & DetectOverflowOptions>>,
     default: false,
   },
   arrow: {
@@ -193,10 +193,14 @@ export const Float = defineComponent({
       ) {
         _middleware.push(offset(props.offset))
       }
-      if (props.flip === true || typeof props.flip === 'object') {
-        _middleware.push(flip(
-          typeof props.flip === 'object' ? props.flip : undefined
-        ))
+      if (props.flip === true ||
+          typeof props.flip === 'number' ||
+          typeof props.flip === 'object'
+      ) {
+        _middleware.push(flip({
+          padding: typeof props.flip === 'number' ? props.flip : undefined,
+          ...(typeof props.flip === 'object' ? props.flip : {}),
+        }))
       }
       if (props.shift === true ||
           typeof props.shift === 'number' ||

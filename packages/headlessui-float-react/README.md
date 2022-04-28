@@ -167,6 +167,12 @@ Change to the opposite placement to keep it in view:
 <Float flip>
 ```
 
+Sets the minimum offset (px) of the floating element from the view border when flip:
+
+```jsx
+<Float flip={10}>
+```
+
 > More options supported by `flip`, refer to Floating UI's `flip` documentation: https://floating-ui.com/docs/flip
 
 ### autoPlacement
@@ -408,7 +414,7 @@ export default function HighOrderFloat(props: FloatProps) {
 | `strategy`               | <code>Strategy</code>                             | `absolute`     | CSS `position` property of the floating element.                                      |
 | `offset`                 | <code>Number &#124; Object &#124; Function</code> | —              | The offset (px) of the floating element from the reference element.                   |
 | `shift`                  | <code>Boolean &#124; Number &#124; Object</code>  | `false`        | Move the reference elements back into the view.                                       |
-| `flip`                   | <code>Boolean &#124; Object</code>                | `false`        | Change to the opposite placement to keep it in view.                                  |
+| `flip`                   | <code>Boolean &#124; Number &#124; Object</code>  | `false`        | Change to the opposite placement to keep it in view.                                  |
 | `arrow`                  | <code>Boolean &#124; Number</code>                | `false`        | Enable arrow positioning.                                                             |
 | `autoPlacement`          | <code>Boolean &#124; Object</code>                | `false`        | Floating elements choose the placement with more space left.                          |
 | `autoUpdate`             | <code>Boolean &#124; Object</code>                | `true`         | Automatically update floating elements when needed.                                   |

@@ -19,7 +19,7 @@ export default function ExampleListbox() {
   return (
     <Block title="Listbox (Select)" titleClass="text-amber-400">
       <Listbox value={selected} onChange={setSelected}>
-        <Float placement="bottom" offset={4} flip>
+        <Float placement="bottom" offset={4} flip={10}>
           <Listbox.Button className="relative w-56 bg-white pl-3.5 pr-10 py-2 text-left text-amber-500 text-sm leading-5 border border-gray-200 rounded-lg shadow-md">
             {selected.name}
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
