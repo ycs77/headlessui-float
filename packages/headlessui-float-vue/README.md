@@ -175,7 +175,7 @@ Change to the opposite placement to keep it in view:
 <Float flip>
 ```
 
-Sets the minimum offset (px) of the floating element from the view border when flip:
+Sets the minimum padding (px) of the floating element from the view border when flip:
 
 ```html
 <Float :flip="10">

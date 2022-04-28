@@ -167,7 +167,7 @@ CSS `position` 屬性，`absolute` 或 `fixed`：
 <Float flip>
 ```
 
-設定翻轉時浮動元素最少離視圖邊界的偏移量 (px)：
+設定翻轉時浮動元素最少離視圖邊界的距離 (px)：
 
 ```jsx
 <Float flip={10}>
