@@ -55,7 +55,7 @@ export function useArrowContext(component: string) {
 }
 
 export interface FloatProps {
-  // as?: ElementType
+  as?: ElementType
   show?: boolean
   placement?: Placement
   strategy?: Strategy
@@ -280,13 +280,11 @@ function FloatRoot(props: FloatProps) {
   }
 
   const renderFloating = (Children: ReactElement) => {
-    // if (props.as === Fragment) {
-    //   return (
-    //     <Children.type {...Children.props} {...floatingProps} />
-    //   )
-    // }
+    if (props.as === Fragment) {
+      return <Children.type {...Children.props} {...floatingProps} />
+    }
 
-    const FloatingWrapper = 'div' // props.as || 'div'
+    const FloatingWrapper = props.as || 'div'
     return (
       <FloatingWrapper {...floatingProps}>
         <Children.type {...Children.props} />

@@ -402,6 +402,7 @@ export default function HighOrderFloat(props: FloatProps) {
 
 | Prop                     | Type                                              | Default        | Description                               |
 | ------------------------ | ------------------------------------------------- | -------------- | ----------------------------------------- |
+| `as`                     | <code>String &#124; Component</code>              | `div`          | 包裹了浮動元素的元素或元件                |
 | `show`                   | <code>Boolean</code>                              | —              | 控制是否顯示浮動元素                      |
 | `placement`              | <code>Placement</code>                            | `bottom-start` | 浮動定位方向位置                          |
 | `strategy`               | <code>Strategy</code>                             | `absolute`     | 浮動元素的 CSS `position` 屬性            |

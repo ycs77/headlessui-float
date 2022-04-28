@@ -402,6 +402,7 @@ export default function HighOrderFloat(props: FloatProps) {
 
 | Prop                     | Type                                              | Default        | Description                                                                           |
 | ------------------------ | ------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------- |
+| `as`                     | <code>String &#124; Component</code>              | `div`          | The element or component the floating element should render as.                       |
 | `show`                   | <code>Boolean</code>                              | —              | Control the floating element is show or not.                                          |
 | `placement`              | <code>Placement</code>                            | `bottom-start` | Floating placement.                                                                   |
 | `strategy`               | <code>Strategy</code>                             | `absolute`     | CSS `position` property of the floating element.                                      |
