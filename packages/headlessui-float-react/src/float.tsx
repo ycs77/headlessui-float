@@ -89,6 +89,7 @@ export interface FloatProps {
 
 function FloatRoot(props: FloatProps) {
   const id = useId()
+  const [isMounted, setIsMounted] = useState(false)
 
   const [show, setShow] = useState(props.show !== undefined ? props.show : false)
   const [middleware, setMiddleware] = useState<Middleware[]>()
@@ -215,6 +216,10 @@ function FloatRoot(props: FloatProps) {
     return autoUpdateCleanerMap.get(id)
   }, [show])
 
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const arrowApi = {
     arrowRef,
     placement,
@@ -240,7 +245,7 @@ function FloatRoot(props: FloatProps) {
   }, [props.originClass, props.tailwindcssOriginClass])
 
   const transitionProps = {
-    show: props.show,
+    show: isMounted ? props.show : false,
     enter: `${props.enter || ''} ${originClassValue}`,
     enterFrom: `${props.enterFrom || ''}`,
     enterTo: `${props.enterTo || ''}`,
@@ -274,7 +279,7 @@ function FloatRoot(props: FloatProps) {
   }
 
   const renderPortal = (children: ReactElement) => {
-    if (props.portal) {
+    if (isMounted && props.portal) {
       const root = document?.querySelector(props.portal === true ? 'body' : props.portal)
       if (root) {
         return createPortal(children, root)

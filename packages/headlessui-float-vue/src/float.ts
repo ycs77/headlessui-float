@@ -136,6 +136,8 @@ export const Float = defineComponent({
   props: FloatProps,
   emits: ['show', 'hide', 'update'],
   setup(props, { slots, emit }) {
+    const isMounted = ref(false)
+
     const propPlacement = toRef(props, 'placement')
     const propStrategy = toRef(props, 'strategy')
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
@@ -269,6 +271,8 @@ export const Float = defineComponent({
     }
 
     onMounted(() => {
+      isMounted.value = true
+
       if (isVisibleDOMElement(dom(floating)) && props.show) {
         emit('show')
         startAutoUpdate()
@@ -349,8 +353,8 @@ export const Float = defineComponent({
         }
 
         const renderPortal = (node: VNode) => {
-          if (props.portal === true ||
-              typeof props.portal === 'string'
+          if (isMounted.value &&
+              (props.portal === true || typeof props.portal === 'string')
           ) {
             return h(Teleport, {
               to: props.portal === true ? 'body' : props.portal,
