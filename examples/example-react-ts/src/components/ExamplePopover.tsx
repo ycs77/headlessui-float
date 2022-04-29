@@ -11,7 +11,7 @@ export default function ExamplePopover() {
           placement="bottom-start"
           offset={15}
           shift={6}
-          flip
+          flip={10}
           arrow
           portal
           enter="transition duration-200 ease-out"
