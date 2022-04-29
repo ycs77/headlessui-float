@@ -7,7 +7,6 @@ import {
   watch,
   provide,
   inject,
-  nextTick,
   onMounted,
   h,
   Teleport,
@@ -137,6 +136,7 @@ export const Float = defineComponent({
   emits: ['show', 'hide', 'update'],
   setup(props, { slots, emit }) {
     const isMounted = ref(false)
+    const show = ref(props.show !== null ? props.show : false)
 
     const propPlacement = toRef(props, 'placement')
     const propStrategy = toRef(props, 'strategy')
@@ -160,22 +160,22 @@ export const Float = defineComponent({
     }
 
     const updateFloating = () => {
+      if (
+        !isVisibleDOMElement(referenceEl) ||
+        !isVisibleDOMElement(floatingEl)
+      ) return
       update()
       emit('update')
     }
 
     watch(propPlacement, () => {
       updateEl()
-      if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
-        updateFloating()
-      }
+      updateFloating()
     })
 
     watch(propStrategy, () => {
       updateEl()
-      if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
-        updateFloating()
-      }
+      updateFloating()
     })
 
     watch([
@@ -241,15 +241,12 @@ export const Float = defineComponent({
       }
       middleware.value = _middleware
 
-      if (isVisibleDOMElement(referenceEl) && isVisibleDOMElement(floatingEl)) {
-        updateFloating()
-      }
+      updateFloating()
     }, { immediate: true })
 
     let disposeAutoUpdate: (() => void) | undefined
 
     const startAutoUpdate = () => {
-      updateEl()
       if (isVisibleDOMElement(referenceEl) &&
           isVisibleDOMElement(floatingEl) &&
           props.autoUpdate !== false
@@ -270,13 +267,28 @@ export const Float = defineComponent({
       disposeAutoUpdate = undefined
     }
 
-    onMounted(() => {
-      isMounted.value = true
+    const handleShow = () => {
+      updateEl()
 
-      if (isVisibleDOMElement(dom(floating)) && props.show) {
+      if (isVisibleDOMElement(referenceEl) &&
+          isVisibleDOMElement(floatingEl) &&
+          show.value === true
+      ) {
+        // show...
         emit('show')
         startAutoUpdate()
+      } else if (show.value === false && disposeAutoUpdate) {
+        // hide...
+        clearAutoUpdate()
+        emit('hide')
       }
+    }
+
+    watch(show, handleShow, { immediate: true })
+
+    onMounted(() => {
+      isMounted.value = true
+      handleShow()
     })
 
     watch(middlewareData, () => {
@@ -323,14 +335,11 @@ export const Float = defineComponent({
           leaveFromClass: props.leaveFrom,
           leaveToClass: props.leaveTo,
           onBeforeEnter() {
-            nextTick(() => {
-              emit('show')
-              startAutoUpdate()
-            })
+            updateEl()
+            show.value = true
           },
           onAfterLeave() {
-            clearAutoUpdate()
-            emit('hide')
+            show.value = false
           },
         }
 
@@ -344,7 +353,7 @@ export const Float = defineComponent({
             right: 'auto',
             bottom: 'auto',
             transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
-          } :  {
+          } : {
             position: strategy.value,
             zIndex: props.zIndex,
             top: `${y.value || 0}px`,
