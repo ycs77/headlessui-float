@@ -89,9 +89,10 @@ export interface FloatProps {
 
 function FloatRoot(props: FloatProps) {
   const id = useId()
-  const [isMounted, setIsMounted] = useState(false)
 
+  const [isMounted, setIsMounted] = useState(false)
   const [show, setShow] = useState(props.show !== undefined ? props.show : false)
+
   const [middleware, setMiddleware] = useState<Middleware[]>()
   const arrowRef = useRef<HTMLElement>(null)
 
@@ -200,13 +201,21 @@ function FloatRoot(props: FloatProps) {
   }
 
   useIsoMorphicEffect(() => {
-    if (refs.floating.current && show === true && !showStateMap.get(id)) {
+    if (refs.reference.current &&
+        refs.floating.current &&
+        show === true &&
+        !showStateMap.get(id)
+    ) {
       showStateMap.set(id, true)
 
       // show...
       events.show()
       startAutoUpdate()
-    } else if (show === false && showStateMap.get(id) && autoUpdateCleanerMap.get(id)) {
+    } else if (
+      show === false &&
+      showStateMap.get(id) &&
+      autoUpdateCleanerMap.get(id)
+    ) {
       showStateMap.delete(id)
 
       // hide...
