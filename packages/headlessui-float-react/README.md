@@ -270,7 +270,7 @@ First import the `<Float.Arrow>` component, and put it inside the floating eleme
   <Float>
     ...
     <Popover.Panel>
-      {/* 加入箭頭 */}
+      {/* add arrow */}
       <Float.Arrow className="absolute bg-white w-5 h-5 rotate-45 border border-gray-200" />
       <div>
         Popover & arrow, content...
