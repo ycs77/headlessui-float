@@ -1,3 +1,4 @@
+/** @ts-ignore */
 import type { ComponentResolver } from 'unplugin-vue-components'
 
 const components = [
