@@ -386,9 +386,7 @@ import { Float, FloatArrow } from 'headlessui-float-vue'
 </template>
 
 <script setup>
-import { Float, FloatProps } from 'headlessui-float-vue'
-
-defineProps(FloatProps)
+import { Float } from 'headlessui-float-vue'
 </script>
 ```
 
@@ -405,6 +403,17 @@ defineProps(FloatProps)
     </MenuItems>
   </HighOrderFloat>
 </Menu>
+```
+
+如果你有使用 TypeScript，可以定義 `FloatProps` 到 `<HighOrderFloat>` 的 props：
+
+*HighOrderFloat.vue*
+```vue
+<script setup>
+import { Float, FloatProps } from 'headlessui-float-vue'
+
+defineProps(FloatProps)
+</script>
 ```
 
 ## 自動引入元件

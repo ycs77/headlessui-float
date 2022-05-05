@@ -386,9 +386,7 @@ The high-order component can be easily applied in projects after customizing the
 </template>
 
 <script setup>
-import { Float, FloatProps } from 'headlessui-float-vue'
-
-defineProps(FloatProps)
+import { Float } from 'headlessui-float-vue'
 </script>
 ```
 
@@ -405,6 +403,17 @@ Used in the same way as `<Float>`. It can also override the defined prop in high
     </MenuItems>
   </HighOrderFloat>
 </Menu>
+```
+
+If you using the TypeScript, can define `FloatProps` to the props of `<HighOrderFloat>`:
+
+*HighOrderFloat.vue*
+```vue
+<script setup>
+import { Float, FloatProps } from 'headlessui-float-vue'
+
+defineProps(FloatProps)
+</script>
 ```
 
 ## Auto Importing
