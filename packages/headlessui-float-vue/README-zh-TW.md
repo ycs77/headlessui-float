@@ -423,7 +423,7 @@ export default {
     Components({
       resolvers: [
         HeadlessUiFloatResolver(),
-      ]
+      ],
     }),
   ],
 }
