@@ -5,12 +5,8 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "packages/headlessui-float-react",
-    "packages/headlessui-float-vue",
-    "examples/example-react",
-    "examples/example-react-ts",
-    "examples/example-vue",
-    "examples/example-vue-ts"
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
     "build": "npm-run-all -p build:*",
