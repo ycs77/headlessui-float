@@ -13,7 +13,7 @@ export default function ExampleMenuHasArrow() {
 
           <Menu.Items className="w-48 bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
             <Float.Arrow className="absolute bg-white w-5 h-5 rotate-45 border border-gray-200" />
-            <div className="relative z-[1] bg-white rounded-md overflow-hidden">
+            <div className="relative bg-white rounded-md overflow-hidden">
               <Menu.Item>
                 {({ active }) => (
                   <button type="button" className={`block w-full px-4 py-1.5 text-left text-sm ${

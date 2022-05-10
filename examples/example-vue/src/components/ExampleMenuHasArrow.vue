@@ -8,7 +8,7 @@
 
         <MenuItems class="w-48 bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
           <FloatArrow class="absolute bg-white w-5 h-5 rotate-45 border border-gray-200" />
-          <div class="relative z-[1] bg-white rounded-md overflow-hidden">
+          <div class="relative bg-white rounded-md overflow-hidden">
             <MenuItem v-slot="{ active }">
               <button
                 type="button"

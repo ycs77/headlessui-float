@@ -2,6 +2,7 @@ import ExampleMenuOriginalFloat from '@/components/ExampleMenuOriginalFloat'
 import ExampleMenuHighOrderComponent from '@/components/ExampleMenuHighOrderComponent'
 import ExampleMenuOverrideTransition from '@/components/ExampleMenuOverrideTransition'
 import ExampleMenuHasArrow from '@/components/ExampleMenuHasArrow'
+import ExampleHoverArrowMenu from '@/components/ExampleHoverArrowMenu'
 import ExampleNestedMenu from '@/components/ExampleNestedMenu'
 import ExampleListbox from '@/components/ExampleListbox'
 import ExampleCombobox from '@/components/ExampleCombobox'
@@ -19,6 +20,7 @@ export default function App() {
         <ExampleMenuHighOrderComponent />
         <ExampleMenuOverrideTransition />
         <ExampleMenuHasArrow />
+        <ExampleHoverArrowMenu />
         <ExampleNestedMenu />
         <ExampleListbox />
         <ExampleCombobox />

@@ -8,6 +8,7 @@
     <ExampleMenuHighOrderComponent />
     <ExampleMenuOverrideTransition />
     <ExampleMenuHasArrow />
+    <ExampleHoverArrowMenu />
     <ExampleNestedMenu />
     <ExampleListbox />
     <ExampleCombobox />
@@ -20,6 +21,7 @@ import ExampleMenuOriginalFloat from '@/components/ExampleMenuOriginalFloat.vue'
 import ExampleMenuHighOrderComponent from '@/components/ExampleMenuHighOrderComponent.vue'
 import ExampleMenuOverrideTransition from '@/components/ExampleMenuOverrideTransition.vue'
 import ExampleMenuHasArrow from '@/components/ExampleMenuHasArrow.vue'
+import ExampleHoverArrowMenu from '@/components/ExampleHoverArrowMenu.vue'
 import ExampleNestedMenu from '@/components/ExampleNestedMenu.vue'
 import ExampleListbox from '@/components/ExampleListbox.vue'
 import ExampleCombobox from '@/components/ExampleCombobox.vue'
