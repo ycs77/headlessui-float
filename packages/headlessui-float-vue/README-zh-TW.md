@@ -301,6 +301,18 @@ import { Float, FloatArrow } from 'headlessui-float-vue'
 <Float arrow :offset="15">
 ```
 
+但這時候會發現箭頭疊在浮動元素的上面，並不是我們要的效果，所以要把下面的內容包裝起來，並設定 position 為 `relative`，就會移到箭頭的上面。當然還要設定背景顏色，否則還是會看到下方的箭頭：
+
+```html
+<PopoverPanel class="w-[240px] h-[70px] bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
+  <FloatArrow class="..." />
+
+  <div class="relative h-full bg-white p-3 text-rose-500 rounded-md">
+    Popover & arrow, content...
+  </div>
+</PopoverPanel>
+```
+
 箭頭完整範例：
 
 ```vue
@@ -317,6 +329,7 @@ import { Float, FloatArrow } from 'headlessui-float-vue'
 
       <PopoverPanel class="w-[240px] h-[70px] bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
         <FloatArrow class="absolute bg-white w-5 h-5 rotate-45 border border-gray-200" />
+
         <div class="relative h-full bg-white p-3 text-rose-500 rounded-md">
           Popover & arrow, content...
         </div>
