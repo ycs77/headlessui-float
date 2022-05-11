@@ -21,7 +21,7 @@ English | [繁體中文](README-zh-TW.md)
 * 🚪 Support Portal (Teleport)
 * ➡️ Support Arrow
 
-[**Live demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-vue?file=src%2FApp.vue)
+[**Demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-vue?file=src%2FApp.vue)
 
 ## Installation
 
@@ -403,7 +403,7 @@ import { Float } from 'headlessui-float-vue'
 </script>
 ```
 
-Used in the same way as `<Float>`. It can also override the defined prop in high-order component:
+Used in the same way as `<Float>`, it can also override the defined prop in high-order component:
 
 ```html
 <Menu>

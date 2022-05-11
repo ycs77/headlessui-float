@@ -21,7 +21,7 @@ English | [繁體中文](README-zh-TW.md)
 * 🚪 Support Portal
 * ➡️ Support Arrow
 
-[**Live demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-react?file=src%2FApp.jsx)
+[**Demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-react?file=src%2FApp.jsx)
 
 ## Installation
 
@@ -389,7 +389,7 @@ export default function HighOrderFloat(props) {
 }
 ```
 
-Used in the same way as `<Float>`. It can also override the defined prop in high-order component:
+Used in the same way as `<Float>`, it can also override the defined prop in high-order component:
 
 ```jsx
 <Menu>

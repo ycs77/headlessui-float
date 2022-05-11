@@ -389,7 +389,7 @@ export default function HighOrderFloat(props) {
 }
 ```
 
-使用方式跟 `<Float>` 的用法一樣。也可以覆蓋在高階元件中已經定義的 prop：
+使用方式跟 `<Float>` 的用法一樣，也可以覆蓋在高階元件中已經定義的 prop：
 
 ```jsx
 <Menu>
