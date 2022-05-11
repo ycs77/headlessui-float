@@ -92,8 +92,8 @@ function FloatRoot(props: FloatProps) {
 
   const [isMounted, setIsMounted] = useState(false)
   const [show, setShow] = useState(props.show !== undefined ? props.show : false)
-
   const [middleware, setMiddleware] = useState<Middleware[]>()
+
   const arrowRef = useRef<HTMLElement>(null)
 
   const events = {

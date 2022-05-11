@@ -154,7 +154,7 @@ export const Float = defineComponent({
 
     const referenceEl = ref(dom(reference))
     const floatingEl = ref(dom(floating))
-    const updateEl = () => {
+    const updateElements = () => {
       referenceEl.value = dom(reference)
       floatingEl.value = dom(floating)
     }
@@ -169,12 +169,12 @@ export const Float = defineComponent({
     }
 
     watch(propPlacement, () => {
-      updateEl()
+      updateElements()
       updateFloating()
     })
 
     watch(propStrategy, () => {
-      updateEl()
+      updateElements()
       updateFloating()
     })
 
@@ -187,7 +187,7 @@ export const Float = defineComponent({
       () => props.hide,
       () => props.middleware,
     ], () => {
-      updateEl()
+      updateElements()
       const _middleware = []
       if (typeof props.offset === 'number' ||
           typeof props.offset === 'object' ||
@@ -268,7 +268,7 @@ export const Float = defineComponent({
     }
 
     const handleShow = () => {
-      updateEl()
+      updateElements()
 
       if (isVisibleDOMElement(referenceEl) &&
           isVisibleDOMElement(floatingEl) &&
@@ -284,7 +284,7 @@ export const Float = defineComponent({
       }
     }
 
-    watch(show, handleShow, { immediate: true })
+    watch(show, handleShow)
 
     onMounted(() => {
       isMounted.value = true
@@ -335,7 +335,7 @@ export const Float = defineComponent({
           leaveFromClass: props.leaveFrom,
           leaveToClass: props.leaveTo,
           onBeforeEnter() {
-            updateEl()
+            updateElements()
             show.value = true
           },
           onAfterLeave() {
