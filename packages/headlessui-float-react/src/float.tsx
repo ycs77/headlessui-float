@@ -44,7 +44,7 @@ interface ArrowState {
 const ArrowContext = createContext<ArrowState | null>(null)
 ArrowContext.displayName = 'ArrowContext'
 
-export function useArrowContext(component: string) {
+function useArrowContext(component: string) {
   let context = useContext(ArrowContext)
   if (context === null) {
     let err = new Error(`<${component} /> is missing a parent <Float /> component.`)
@@ -326,16 +326,18 @@ function FloatRoot(props: FloatProps) {
   )
 }
 
-interface ArrowRenderProp {
+export interface FloatArrowProps {
+  as?: ElementType
+  offset?: number
+  className?: string | ((bag: FloatArrowRenderProp) => string)
+  children?: ReactElement | ((slot: FloatArrowRenderProp) => ReactElement)
+}
+
+export interface FloatArrowRenderProp {
   placement: Placement
 }
 
-function Arrow(props: {
-  as?: ElementType
-  offset?: number
-  className?: string | ((bag: ArrowRenderProp) => string)
-  children?: ReactElement | ((slot: ArrowRenderProp) => ReactElement)
-}) {
+function Arrow(props: FloatArrowProps) {
   const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
 
   const staticSide = {

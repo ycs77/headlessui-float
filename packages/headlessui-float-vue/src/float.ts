@@ -44,7 +44,7 @@ interface ArrowState {
 
 const ArrowContext = Symbol() as InjectionKey<ArrowState>
 
-export function useArrowContext(component: string) {
+function useArrowContext(component: string) {
   let context = inject(ArrowContext, null)
 
   if (context === null) {
@@ -400,18 +400,20 @@ export const Float = defineComponent({
   },
 })
 
+export const FloatArrowProps = {
+  as: {
+    type: [String, Object],
+    default: 'div',
+  },
+  offset: {
+    type: Number,
+    default: 4,
+  },
+}
+
 export const FloatArrow = defineComponent({
   name: 'FloatArrow',
-  props: {
-    as: {
-      type: [String, Object],
-      default: 'div',
-    },
-    offset: {
-      type: Number,
-      default: 4,
-    },
-  },
+  props: FloatArrowProps,
   setup(props, { slots, attrs }) {
     const { ref, placement, x, y } = useArrowContext('FloatArrow')
 
