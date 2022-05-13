@@ -60,7 +60,7 @@ Then wrap `<Float>` around `<Menu.Button>` and `<Menu.Items>`:
 
 Note that `<Float>` must contain 2 child elements, the first is the reference element, and the second is the floating element. It can be a Headless UI component or an HTML element.
 
-Then remove the `"absolute"`, `"right-0"` and other positioning class from `<Menu.Items>`, and add the `placement="bottom-end"` attribute:
+Then remove the `absolute`, `right-0` and other positioning class from `<Menu.Items>`, and add the `placement="bottom-end"` attribute:
 
 ```jsx
 <Menu>
@@ -70,7 +70,7 @@ Then remove the `"absolute"`, `"right-0"` and other positioning class from `<Men
 </Menu>
 ```
 
-Remove the `"mt-2"` class from `<Menu.Items>`, and add the `offset={4}` attribute:
+Remove the `mt-2` class from `<Menu.Items>`, and add the `offset={4}` attribute:
 
 ```jsx
 <Menu>

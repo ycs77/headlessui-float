@@ -62,7 +62,7 @@ import { Float } from 'headlessui-float-vue'
 
 需要注意，`<Float>` 必須包含2個子元素，第1個是參考元素，第2個是浮動元素。可以使用 Headless UI 元件或 HTML 元素。
 
-然後刪除掉 `<MenuItems>` 的 `"absolute"`、`"right-0"` 等定位 class，並加上 `placement="bottom-end"` 屬性：
+然後刪除掉 `<MenuItems>` 的 `absolute`、`right-0` 等定位 class，並加上 `placement="bottom-end"` 屬性：
 
 ```html
 <Menu>
@@ -72,7 +72,7 @@ import { Float } from 'headlessui-float-vue'
 </Menu>
 ```
 
-刪除掉 `<MenuItems>` 的 `"mt-2"` class，並加上 `:offset="4"` 屬性：
+刪除掉 `<MenuItems>` 的 `mt-2` class，並加上 `:offset="4"` 屬性：
 
 ```html
 <Menu>
