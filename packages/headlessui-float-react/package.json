@@ -30,7 +30,7 @@
     "url": "git+https://github.com/ycs77/headlessui-float.git",
     "directory": "packages/headlessui-float-react"
   },
-  "homepage": "https://github.com/ycs77/headlessui-float/tree/main/packages/headlessui-float-react#readme",
+  "homepage": "https://headlessui-float.vercel.app/",
   "publishConfig": {
     "access": "public"
   },

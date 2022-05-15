@@ -30,7 +30,7 @@
     "url": "git+https://github.com/ycs77/headlessui-float.git",
     "directory": "packages/headlessui-float-vue"
   },
-  "homepage": "https://github.com/ycs77/headlessui-float/tree/main/packages/headlessui-float-vue#readme",
+  "homepage": "https://headlessui-float.vercel.app/",
   "publishConfig": {
     "access": "public"
   },

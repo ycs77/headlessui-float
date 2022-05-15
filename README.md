@@ -15,6 +15,10 @@
 * 🚪 Support Portal
 * ➡️ Support Arrow
 
+## Documentation
+
+[Documentation](https://headlessui-float.vercel.app/) | [繁體中文文檔](https://headlessui-float.vercel.app/zh-tw/)
+
 ## Packages
 
 | Name                                      | Version                                         | Downloads                                           |
