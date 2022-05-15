@@ -12,7 +12,7 @@
 
 <hr>
 
-English | [繁體中文](README-zh-TW.md)
+## Features
 
 * 💙 Easy use Headless UI & Tailwind CSS
 * 💬 Floating UI (New version Popper.js) position floating elements
@@ -21,11 +21,13 @@ English | [繁體中文](README-zh-TW.md)
 * 🚪 Support Portal (Teleport)
 * ➡️ Support Arrow
 
-[**Demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-vue?file=src%2FApp.vue)
+## Demo
 
-## Getting Started
+[**Online Demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-vue?file=src%2FApp.vue)
 
-Read the [Documentation](https://headlessui-float.vercel.app/) to get started.
+## Documentation
+
+[Documentation](https://headlessui-float.vercel.app/) | [繁體中文文檔](https://headlessui-float.vercel.app/zh-tw/)
 
 ## Credits
 
