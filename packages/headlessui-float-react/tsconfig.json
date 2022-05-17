@@ -16,6 +16,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
