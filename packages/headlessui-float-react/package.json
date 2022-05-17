@@ -1,6 +1,6 @@
 {
   "name": "headlessui-float-react",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Easy use Headless UI for React with Floating UI (Popper.js)",
   "license": "MIT",
   "keywords": [
@@ -30,7 +30,7 @@
     "url": "git+https://github.com/ycs77/headlessui-float.git",
     "directory": "packages/headlessui-float-react"
   },
-  "homepage": "https://headlessui-float.vercel.app/",
+  "homepage": "https://headlessui-float.vercel.app",
   "publishConfig": {
     "access": "public"
   },
