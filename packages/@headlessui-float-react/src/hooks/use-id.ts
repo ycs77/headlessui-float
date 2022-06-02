@@ -2,7 +2,7 @@ import React from 'react'
 import { useIsoMorphicEffect } from './use-iso-morphic-effect'
 import { useServerHandoffComplete } from './use-server-handoff-complete'
 
-/** @see https://github.com/tailwindlabs/headlessui/blob/0162c57d88cfdc74209d6bdcac94d54078f97675/packages/@headlessui-react/src/hooks/use-id.ts */
+// See: https://github.com/tailwindlabs/headlessui/blob/0162c57d88cfdc74209d6bdcac94d54078f97675/packages/%40headlessui-react/src/hooks/use-id.ts
 
 // We used a "simple" approach first which worked for SSR and rehydration on the client. However we
 // didn't take care of the Suspense case. To fix this we used the approach the @reach-ui/auto-id

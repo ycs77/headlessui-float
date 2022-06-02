@@ -20,7 +20,7 @@ export function HeadlessUiFloatResolver(options: HeadlessUiFloatResolverOptions 
         if (components.includes(componentName)) {
           return {
             importName: componentName,
-            path: 'headlessui-float-vue',
+            path: '@headlessui-float/vue',
           }
         }
       }

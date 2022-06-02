@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Combobox } from '@headlessui/react'
-import { Float } from 'headlessui-float-react'
+import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
 import HeroiconsOutlineCheck from '~icons/heroicons-outline/check'
 import HeroiconsOutlineSelector from '~icons/heroicons-outline/selector'

@@ -1,4 +1,4 @@
-const { tailwindcssOriginSafelist } = require('headlessui-float-react')
+const { tailwindcssOriginSafelist } = require('@headlessui-float/react')
 
 module.exports = {
   content: [

@@ -41,6 +41,6 @@
 
 <script setup>
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { Float, FloatArrow } from 'headlessui-float-vue'
+import { Float, FloatArrow } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 </script>

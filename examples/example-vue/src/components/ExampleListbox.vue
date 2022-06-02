@@ -45,7 +45,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { Float } from 'headlessui-float-vue'
+import { Float } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 import HeroiconsOutlineCheck from '~icons/heroicons-outline/check'
 import HeroiconsOutlineSelector from '~icons/heroicons-outline/selector'

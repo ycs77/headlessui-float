@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Float } from 'headlessui-float-react'
+import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
 
 export default function ExampleHoverArrowMenu() {

@@ -1,4 +1,4 @@
-const { tailwindcssOriginSafelist } = require('headlessui-float-vue')
+const { tailwindcssOriginSafelist } = require('@headlessui-float/vue')
 
 module.exports = {
   content: [

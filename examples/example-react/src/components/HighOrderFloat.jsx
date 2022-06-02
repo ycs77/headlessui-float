@@ -1,4 +1,4 @@
-import { Float } from 'headlessui-float-react'
+import { Float } from '@headlessui-float/react'
 
 export default function HighOrderFloat(props) {
   return (

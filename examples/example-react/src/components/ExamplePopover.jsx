@@ -1,5 +1,5 @@
 import { Popover } from '@headlessui/react'
-import { Float } from 'headlessui-float-react'
+import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
 import HeroiconsOutlineMenuAlt2 from '~icons/heroicons-outline/menu-alt-2'
 

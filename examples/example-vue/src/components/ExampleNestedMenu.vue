@@ -122,7 +122,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Float } from 'headlessui-float-vue'
+import { Float } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 import HeroiconsOutlineChevronRight from '~icons/heroicons-outline/chevron-right'
 

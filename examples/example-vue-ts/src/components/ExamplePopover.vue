@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { Float, FloatArrow } from 'headlessui-float-vue'
+import { Float, FloatArrow } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 import HeroiconsOutlineMenuAlt2 from '~icons/heroicons-outline/menu-alt-2'
 </script>

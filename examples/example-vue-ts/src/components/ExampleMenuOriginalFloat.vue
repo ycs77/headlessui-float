@@ -30,6 +30,6 @@
 
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import { Float } from 'headlessui-float-vue'
+import { Float } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 </script>

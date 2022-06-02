@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Float } from 'headlessui-float-react'
+import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
 import HeroiconsOutlineChevronRight from '~icons/heroicons-outline/chevron-right'
 

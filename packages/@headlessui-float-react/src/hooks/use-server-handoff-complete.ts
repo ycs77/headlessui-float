@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-/** @see https://github.com/tailwindlabs/headlessui/blob/0162c57d88cfdc74209d6bdcac94d54078f97675/packages/%40headlessui-react/src/hooks/use-server-handoff-complete.ts */
+// See: https://github.com/tailwindlabs/headlessui/blob/0162c57d88cfdc74209d6bdcac94d54078f97675/packages/%40headlessui-react/src/hooks/use-server-handoff-complete.ts
 
 let state = { serverHandoffComplete: false }
 

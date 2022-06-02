@@ -20,10 +20,10 @@
     "watch:example:react-ts": "yarn react-ts:example dev --port=3012",
     "watch:example:vue": "yarn vue:example dev --port=3011",
     "watch:example:vue-ts": "yarn vue-ts:example dev --port=3013",
-    "react": "yarn workspace headlessui-float-react",
+    "react": "yarn workspace @headlessui-float/react",
     "react:example": "yarn workspace headlessui-float-example-react",
     "react-ts:example": "yarn workspace headlessui-float-example-react-ts",
-    "vue": "yarn workspace headlessui-float-vue",
+    "vue": "yarn workspace @headlessui-float/vue",
     "vue:example": "yarn workspace headlessui-float-example-vue",
     "vue-ts:example": "yarn workspace headlessui-float-example-vue-ts"
   },

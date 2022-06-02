@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Float, FloatArrow } from 'headlessui-float-vue'
+import { Float, FloatArrow } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 
 const show = ref(false)
