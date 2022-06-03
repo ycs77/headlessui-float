@@ -25,7 +25,7 @@ import { offset, flip, shift, autoPlacement, hide, autoUpdate } from '@floating-
 import throttle from 'lodash.throttle'
 import { useFloating, arrow } from './useFloating'
 import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
-import { filterSlot, flattenFragment, isVisibleDOMElement, isValidElement } from './utils/render'
+import { flattenFragment, isVisibleDOMElement, isValidElement } from './utils/render'
 import { dom } from './utils/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
 import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
@@ -308,9 +308,7 @@ export const Float = defineComponent({
 
     return () => {
       if (slots.default) {
-        const [referenceNode, floatingNode] = filterSlot(
-          flattenFragment(slots.default() || [])
-        )
+        const [referenceNode, floatingNode] = flattenFragment(slots.default() || []).filter(isValidElement)
 
         if (!isValidElement(referenceNode)) {
           return
