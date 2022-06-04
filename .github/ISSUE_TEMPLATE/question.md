@@ -8,9 +8,10 @@ assignees: ''
 ---
 
 **Use Version**
-Use version when bugs appear.
+Use version when question appear:
+ - Headless UI: v1.6.4
  - Headless UI Float: v0.6.0
- - Framework: [e.g. Vue, React]
+ - Framework: [e.g. Vue v3.2.1, React v18.0]
 
 **Describe the question**
 A clear and concise description of what the question is.
