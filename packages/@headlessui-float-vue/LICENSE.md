@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright (c) Lucas Yang <yangchenshin77@gmail.com>
+Copyright (c) 2022-present Lucas Yang <yangchenshin77@gmail.com>
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
