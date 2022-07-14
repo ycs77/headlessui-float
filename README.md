@@ -36,6 +36,16 @@
 [vue-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/@headlessui-float-vue
 [vue-link-npm]: https://www.npmjs.com/package/@headlessui-float/vue
 
+## Sponsor
+
+If you think this package have helped you, can [Become a sponsor](https://www.patreon.com/ycs77) to support my work~ and can show your avatar on my open-source project README.
+
+---
+
+**Now there are no sponsors yet, [join it](https://www.patreon.com/ycs77).**
+
+---
+
 ## Credits
 
 * [Headless UI](https://headlessui.dev/)
