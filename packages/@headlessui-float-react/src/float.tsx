@@ -238,7 +238,7 @@ function FloatRoot(props: FloatProps) {
 
   const [ReferenceNode, FloatingNode] = props.children
 
-  if (!isValidElement(ReferenceNode)) {
+  if (!isValidElement<any>(ReferenceNode)) {
     return <Fragment />
   }
 
@@ -360,7 +360,7 @@ function Arrow(props: FloatArrowProps) {
     const ArrowNode = typeof props.children === 'function'
       ? props.children(slot)
       : props.children
-    if (!ArrowNode || !isValidElement(ArrowNode)) {
+    if (!ArrowNode || !isValidElement<any>(ArrowNode)) {
       throw new Error('When the prop `as` of <Float.Arrow /> is <Fragment />, there must be contains 1 child element.')
     }
     return <ArrowNode.type {...ArrowNode.props} ref={arrowRef} style={style} />
