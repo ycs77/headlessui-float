@@ -17,7 +17,6 @@ function generateId() {
 
 export let useId =
   // Prefer React's `useId` if it's available.
-  // @ts-expect-error - `useId` doesn't exist in React < 18.
   React.useId ??
   function useId() {
     let ready = useServerHandoffComplete()

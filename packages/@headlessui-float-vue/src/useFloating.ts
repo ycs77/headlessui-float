@@ -12,8 +12,8 @@ export type UseFloatingOptions = {
 }
 
 export function useFloating(options: UseFloatingOptions = {}) {
-  const reference = ref<HTMLElement | null>(null)
-  const floating = ref<HTMLElement | null>(null)
+  const reference = ref(null) as Ref<HTMLElement | null>
+  const floating = ref(null) as Ref<HTMLElement | null>
 
   const x = ref<number | undefined>(undefined)
   const y = ref<number | undefined>(undefined)

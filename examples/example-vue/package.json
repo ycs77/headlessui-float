@@ -15,10 +15,10 @@
   },
   "devDependencies": {
     "@iconify-json/heroicons-outline": "^1.1.1",
-    "@vitejs/plugin-vue": "^2.3.1",
+    "@vitejs/plugin-vue": "^3.0.0",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.6",
     "unplugin-icons": "^0.13.2",
-    "vite": "^2.9.7"
+    "vite": "^3.0.0"
   }
 }

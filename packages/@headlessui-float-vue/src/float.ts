@@ -142,7 +142,7 @@ export const Float = defineComponent({
     const propStrategy = toRef(props, 'strategy')
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
 
-    const arrowRef = ref<HTMLElement | null>(null)
+    const arrowRef = ref(null) as Ref<HTMLElement | null>
     const arrowX = ref<number | undefined>(undefined)
     const arrowY = ref<number | undefined>(undefined)
 
@@ -152,8 +152,8 @@ export const Float = defineComponent({
       middleware,
     })
 
-    const referenceEl = ref(dom(reference))
-    const floatingEl = ref(dom(floating))
+    const referenceEl = ref(dom(reference)) as Ref<HTMLElement | null>
+    const floatingEl = ref(dom(floating)) as Ref<HTMLElement | null>
     const updateElements = () => {
       referenceEl.value = dom(reference)
       floatingEl.value = dom(floating)
