@@ -39,9 +39,9 @@
     "watch": "vite build --watch"
   },
   "dependencies": {
-    "@floating-ui/core": "^0.6.2",
-    "@floating-ui/dom": "^0.4.5",
-    "@floating-ui/react-dom": "^0.6.3"
+    "@floating-ui/core": "^1.0.0",
+    "@floating-ui/dom": "^1.0.0",
+    "@floating-ui/react-dom": "^1.0.0"
   },
   "devDependencies": {
     "@headlessui/react": "^1.6.0",
