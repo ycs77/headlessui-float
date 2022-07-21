@@ -59,8 +59,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { Combobox, ComboboxInput, ComboboxButton, ComboboxOptions, ComboboxOption } from '@headlessui/vue'
+import { computed, ref } from 'vue'
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/vue'
 import { Float } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 import HeroiconsOutlineCheck from '~icons/heroicons-outline/check'
@@ -81,10 +81,10 @@ const filteredPeople = computed(() =>
   query.value === ''
     ? people
     : people.filter(person =>
-        person.name
-          .toLowerCase()
-          .replace(/\s+/g, '')
-          .includes(query.value.toLowerCase().replace(/\s+/g, ''))
-      )
+      person.name
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+    )
 )
 </script>

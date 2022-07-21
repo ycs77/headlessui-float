@@ -1,7 +1,7 @@
 <template>
   <Block title="Nested Menu (Dropdown) with pure HTML" title-class="text-indigo-400">
     <Float
-      :show="openMapping['m0']"
+      :show="openMapping.m0"
       placement="bottom-start"
     >
       <button
@@ -28,7 +28,7 @@
         </li>
         <li>
           <Float
-            :show="openMapping['m1']"
+            :show="openMapping.m1"
             placement="right-start"
             :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
             shift
@@ -67,7 +67,7 @@
               </li>
               <li>
                 <Float
-                  :show="openMapping['m2']"
+                  :show="openMapping.m2"
                   placement="right-start"
                   :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
                   shift

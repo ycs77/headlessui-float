@@ -1,38 +1,33 @@
 import {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-  useContext,
+  Fragment,
   createContext,
   isValidElement,
-  Fragment,
-
-  // types
-  ElementType,
-  ReactElement,
-  RefObject,
-  MutableRefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react'
+import type { ElementType, MutableRefObject, ReactElement, RefObject } from 'react'
 import { createPortal } from 'react-dom'
-import { useFloating, offset, flip, shift, arrow, autoPlacement, hide, autoUpdate } from '@floating-ui/react-dom'
 import { Transition } from '@headlessui/react'
-import throttle from 'lodash.throttle'
-import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
-import { useId } from './hooks/use-id'
-import { useIsoMorphicEffect } from './hooks/use-iso-morphic-effect'
+import { arrow, autoPlacement, autoUpdate, flip, hide, offset, shift, useFloating } from '@floating-ui/react-dom'
 import type { VirtualElement } from '@floating-ui/core'
+import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
 import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
 import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/flip'
 import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
-import type { Placement, Strategy, Middleware, DetectOverflowOptions } from '@floating-ui/dom'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
+import throttle from 'lodash.throttle'
+import { useId } from './hooks/use-id'
+import { useIsoMorphicEffect } from './hooks/use-iso-morphic-effect'
+import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
-let autoUpdateCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
-let showStateMap = new Map<ReturnType<typeof useId>, boolean>()
+const autoUpdateCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
+const showStateMap = new Map<ReturnType<typeof useId>, boolean>()
 
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
@@ -45,9 +40,9 @@ const ArrowContext = createContext<ArrowState | null>(null)
 ArrowContext.displayName = 'ArrowContext'
 
 function useArrowContext(component: string) {
-  let context = useContext(ArrowContext)
+  const context = useContext(ArrowContext)
   if (context === null) {
-    let err = new Error(`<${component} /> is missing a parent <Float /> component.`)
+    const err = new Error(`<${component} /> is missing a parent <Float /> component.`)
     if (Error.captureStackTrace) Error.captureStackTrace(err, useArrowContext)
     throw err
   }

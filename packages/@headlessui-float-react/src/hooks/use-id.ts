@@ -15,16 +15,16 @@ function generateId() {
   return ++id
 }
 
-export let useId =
+export const useId =
   // Prefer React's `useId` if it's available.
   React.useId ??
   function useId() {
-    let ready = useServerHandoffComplete()
-    let [id, setId] = React.useState(ready ? generateId : null)
+    const ready = useServerHandoffComplete()
+    const [id, setId] = React.useState(ready ? generateId : null)
 
     useIsoMorphicEffect(() => {
       if (id === null) setId(generateId())
     }, [id])
 
-    return id != null ? '' + id : undefined
+    return id != null ? `${id}` : undefined
   }

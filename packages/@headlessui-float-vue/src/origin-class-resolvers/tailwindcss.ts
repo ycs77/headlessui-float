@@ -1,4 +1,4 @@
-import { OriginClassResolver } from './type'
+import type { OriginClassResolver } from './type'
 
 export const tailwindcssOriginSafelist = [
   'origin-bottom',

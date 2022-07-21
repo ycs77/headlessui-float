@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 // See: https://github.com/tailwindlabs/headlessui/blob/0162c57d88cfdc74209d6bdcac94d54078f97675/packages/%40headlessui-react/src/hooks/use-server-handoff-complete.ts
 
-let state = { serverHandoffComplete: false }
+const state = { serverHandoffComplete: false }
 
 export function useServerHandoffComplete() {
-  let [serverHandoffComplete, setServerHandoffComplete] = useState(state.serverHandoffComplete)
+  const [serverHandoffComplete, setServerHandoffComplete] = useState(state.serverHandoffComplete)
 
   useEffect(() => {
     if (serverHandoffComplete === true) return

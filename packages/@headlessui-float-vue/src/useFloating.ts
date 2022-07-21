@@ -1,11 +1,11 @@
-import { ref, unref, shallowRef } from 'vue'
-import { computePosition, arrow as arrowCore } from '@floating-ui/dom'
-import { dom } from './utils/dom'
+import { ref, shallowRef, unref } from 'vue'
 import type { Ref, ShallowRef } from 'vue'
-import type { Placement, Strategy, Middleware } from '@floating-ui/dom'
-import type { SideObject, MiddlewareData } from '@floating-ui/core'
+import type { MiddlewareData, SideObject } from '@floating-ui/core'
+import { arrow as arrowCore, computePosition } from '@floating-ui/dom'
+import type { Middleware, Placement, Strategy } from '@floating-ui/dom'
+import { dom } from './utils/dom'
 
-export type UseFloatingOptions = {
+export interface UseFloatingOptions {
   placement?: Ref<Placement> | Placement
   strategy?: Ref<Strategy> | Strategy
   middleware?: Ref<Middleware[] | undefined> | Middleware[]
@@ -46,8 +46,8 @@ export function useFloating(options: UseFloatingOptions = {}) {
 }
 
 export const arrow = (options: {
-  element: Ref<HTMLElement | null> | HTMLElement,
-  padding?: number | SideObject,
+  element: Ref<HTMLElement | null> | HTMLElement
+  padding?: number | SideObject
 }): Middleware => {
   const { padding } = options
 

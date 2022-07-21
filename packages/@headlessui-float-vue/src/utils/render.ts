@@ -1,4 +1,4 @@
-import { unref, VNode, Fragment } from 'vue'
+import { Fragment, type VNode, unref } from 'vue'
 
 export function flattenFragment(nodes: VNode[]): VNode[] {
   return nodes.reduce<VNode[]>((carry, node) => {

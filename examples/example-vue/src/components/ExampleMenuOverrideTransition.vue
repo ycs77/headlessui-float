@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import HighOrderFloat from '@/components/HighOrderFloat.vue'
 import Block from '@/components/Block.vue'
 </script>

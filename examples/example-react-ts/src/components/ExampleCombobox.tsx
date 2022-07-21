@@ -22,11 +22,11 @@ export default function ExampleCombobox() {
     query === ''
       ? people
       : people.filter(person =>
-          person.name
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(query.toLowerCase().replace(/\s+/g, ''))
-        )
+        person.name
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      )
 
   return (
     <Block title="Combobox (Autocomplete)" titleClass="text-teal-400">

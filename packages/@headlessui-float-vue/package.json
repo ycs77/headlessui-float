@@ -3,6 +3,12 @@
   "version": "0.7.0",
   "description": "Easily use Headless UI for Vue 3 with Floating UI (Popper.js)",
   "license": "MIT",
+  "homepage": "https://headlessui-float.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ycs77/headlessui-float.git",
+    "directory": "packages/@headlessui-float-vue"
+  },
   "keywords": [
     "floating",
     "popper",
@@ -13,30 +19,27 @@
     "headlessui",
     "vue"
   ],
-  "files": [
-    "dist"
-  ],
+  "exports": {
+    ".": {
+      "require": "./dist/headlessui-float.cjs.js",
+      "import": "./dist/headlessui-float.es.js"
+    }
+  },
   "main": "./dist/headlessui-float.cjs.js",
   "module": "./dist/headlessui-float.es.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/headlessui-float.es.js",
-      "require": "./dist/headlessui-float.cjs.js"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ycs77/headlessui-float.git",
-    "directory": "packages/@headlessui-float-vue"
-  },
-  "homepage": "https://headlessui-float.vercel.app",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "vue-tsc --noEmit && vite build && vue-tsc --emitDeclarationOnly --outDir ./dist",
     "watch": "vite build --watch"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
   },
   "dependencies": {
     "@floating-ui/core": "^1.0.0",
@@ -52,8 +55,5 @@
     "vite": "^3.0.0",
     "vue": "^3.2.31",
     "vue-tsc": "^0.38.0"
-  },
-  "peerDependencies": {
-    "vue": "^3.0.0"
   }
 }

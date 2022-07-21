@@ -1,4 +1,4 @@
-import { unref, Ref } from 'vue'
+import { type Ref, unref } from 'vue'
 
 // See: https://github.com/tailwindlabs/headlessui/blob/d8424fe311923f6858f6e3d55083df957bca824d/packages/%40headlessui-vue/src/utils/dom.ts#L3-L7
 

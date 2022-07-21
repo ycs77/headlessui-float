@@ -1,3 +1,3 @@
-import { Placement } from '@floating-ui/dom'
+import type { Placement } from '@floating-ui/dom'
 
 export type OriginClassResolver = (placement: Placement) => string

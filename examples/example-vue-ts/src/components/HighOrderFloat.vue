@@ -12,7 +12,7 @@
     leave-to="scale-95 opacity-0"
     tailwindcss-origin-class
   >
-    <slot></slot>
+    <slot />
   </Float>
 </template>
 

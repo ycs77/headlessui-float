@@ -1,39 +1,33 @@
 import {
-  defineComponent,
-  ref,
-  shallowRef,
-  toRef,
-  computed,
-  watch,
-  provide,
-  inject,
-  onMounted,
-  h,
   Teleport,
   Transition,
   cloneVNode,
+  computed,
   createCommentVNode,
-
-  // types
-  Ref,
-  ShallowRef,
-  PropType,
-  InjectionKey,
-  VNode,
+  defineComponent,
+  h,
+  inject,
+  onMounted,
+  provide,
+  ref,
+  shallowRef,
+  toRef,
+  watch,
 } from 'vue'
-import { offset, flip, shift, autoPlacement, hide, autoUpdate } from '@floating-ui/dom'
+import type { InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
 import throttle from 'lodash.throttle'
-import { useFloating, arrow } from './useFloating'
-import { OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
-import { flattenFragment, isVisibleDOMElement, isValidElement } from './utils/render'
-import { dom } from './utils/dom'
+import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
+import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
 import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
 import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/flip'
 import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
-import type { Placement, Strategy, Middleware, DetectOverflowOptions } from '@floating-ui/dom'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
+import { arrow, useFloating } from './useFloating'
+import { dom } from './utils/dom'
+import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
+import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
 interface ArrowState {
   ref: Ref<HTMLElement | null>
@@ -42,13 +36,13 @@ interface ArrowState {
   y: Ref<number | undefined>
 }
 
-const ArrowContext = Symbol() as InjectionKey<ArrowState>
+const ArrowContext = Symbol('ArrowState') as InjectionKey<ArrowState>
 
 function useArrowContext(component: string) {
-  let context = inject(ArrowContext, null)
+  const context = inject(ArrowContext, null)
 
   if (context === null) {
-    let err = new Error(`<${component} /> must be in the <Float /> component.`)
+    const err = new Error(`<${component} /> must be in the <Float /> component.`)
     if (Error.captureStackTrace) Error.captureStackTrace(err, useArrowContext)
     throw err
   }
@@ -123,8 +117,8 @@ export const FloatProps = {
   },
   middleware: {
     type: [Array, Function] as PropType<Middleware[] | ((refs: {
-      referenceEl: Ref<HTMLElement | null>,
-      floatingEl: Ref<HTMLElement | null>,
+      referenceEl: Ref<HTMLElement | null>
+      floatingEl: Ref<HTMLElement | null>
     }) => Middleware[])>,
     default: () => [],
   },

@@ -3,7 +3,7 @@
     <h2 class="absolute top-3 left-4 font-bold tracking-wider" :class="titleClass">
       {{ title }}
     </h2>
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
