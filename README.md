@@ -21,8 +21,8 @@
 
 ## Packages
 
-| Name                                      | Version                                         | Downloads                                           |
-| ----------------------------------------- | ----------------------------------------------- | --------------------------------------------------- |
+| Name                                       | Version                                         | Downloads                                           |
+| ------------------------------------------ | ----------------------------------------------- | --------------------------------------------------- |
 | [`@headlessui-float/react`][react-link-gh] | [![NPM Version][react-version]][react-link-npm] | [![NPM Downloads][react-downloads]][react-link-npm] |
 | [`@headlessui-float/vue`][vue-link-gh]     | [![NPM Version][vue-version]][vue-link-npm]     | [![NPM Downloads][vue-downloads]][vue-link-npm]     |
 
@@ -38,13 +38,17 @@
 
 ## Sponsor
 
-If you think this package have helped you, can [Become a sponsor](https://www.patreon.com/ycs77) to support my work~ and your avatar will be visible on this page and my major projects.
+If you think this package have helped you, please consider [Become a sponsor](https://www.patreon.com/ycs77) to support my work~
 
----
+<p align="center">
+  <a href="https://www.patreon.com/ycs77">
+    <img src="https://cdn.jsdelivr.net/gh/ycs77/static/sponsors.svg"/>
+  </a>
+</p>
 
-**Now there are no sponsors yet, [join it](https://www.patreon.com/ycs77).**
-
----
+<a href="https://www.patreon.com/ycs77">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron" />
+</a>
 
 ## Credits
 
