@@ -21,12 +21,12 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/headlessui-float.cjs.js",
-      "import": "./dist/headlessui-float.es.js"
+      "require": "./dist/headlessui-float.cjs",
+      "import": "./dist/headlessui-float.js"
     }
   },
-  "main": "./dist/headlessui-float.cjs.js",
-  "module": "./dist/headlessui-float.es.js",
+  "main": "./dist/headlessui-float.cjs",
+  "module": "./dist/headlessui-float.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
