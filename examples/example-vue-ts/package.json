@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@headlessui-float/vue": "*",
-    "@headlessui/vue": "^1.6.0",
+    "@headlessui/vue": "^1.6.7",
     "tailwindcss": "^3.0.23",
     "vue": "^3.2.31"
   },
