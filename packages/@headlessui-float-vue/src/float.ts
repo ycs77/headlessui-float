@@ -96,6 +96,8 @@ export const FloatProps = {
     type: [Number, String],
     default: 9999,
   },
+  transitionName: String,
+  transitionType: String as PropType<'transition' | 'animation'>,
   enter: String,
   enterFrom: String,
   enterTo: String,
@@ -319,13 +321,23 @@ export const Float = defineComponent({
           return ''
         })
 
-        const transitionProps = {
-          enterActiveClass: `${props.enter} ${originClassValue.value}`,
+        const transitionClassesProps = {
+          enterActiveClass: props.enter || originClassValue.value
+            ? `${props.enter || ''} ${originClassValue.value}`
+            : undefined,
           enterFromClass: props.enterFrom,
           enterToClass: props.enterTo,
-          leaveActiveClass: `${props.leave} ${originClassValue.value}`,
+          leaveActiveClass: props.leave || originClassValue.value
+            ? `${props.leave || ''} ${originClassValue.value}`
+            : undefined,
           leaveFromClass: props.leaveFrom,
           leaveToClass: props.leaveTo,
+        }
+
+        const transitionProps = {
+          name: props.transitionName,
+          type: props.transitionType,
+          ...(!props.transitionName ? transitionClassesProps : {}),
           onBeforeEnter() {
             updateElements()
             show.value = true
