@@ -38,7 +38,7 @@
 
 ## Sponsor
 
-If you think this package have helped you, please consider [Become a sponsor](https://www.patreon.com/ycs77) to support my work~
+If you think this package has helped you, please consider [Becoming a sponsor](https://www.patreon.com/ycs77) to support my work~ and your avatar will be visible on my major projects.
 
 <p align="center">
   <a href="https://www.patreon.com/ycs77">
@@ -54,7 +54,7 @@ If you think this package have helped you, please consider [Become a sponsor](ht
 
 * [Headless UI](https://headlessui.dev/)
 * [Floating UI](https://floating-ui.com/)
-* This package is inspired from the [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
+* This package is inspired by the [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
 Under the [MIT LICENSE](LICENSE.md)
