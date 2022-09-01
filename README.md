@@ -31,9 +31,9 @@
 [vue-version]: https://img.shields.io/npm/v/@headlessui-float/vue?style=flat-square
 [vue-downloads]: https://img.shields.io/npm/dt/@headlessui-float/vue?style=flat-square
 
-[react-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/@headlessui-float-react
+[react-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/react
 [react-link-npm]: https://www.npmjs.com/package/@headlessui-float/react
-[vue-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/@headlessui-float-vue
+[vue-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/vue
 [vue-link-npm]: https://www.npmjs.com/package/@headlessui-float/vue
 
 ## Sponsor
