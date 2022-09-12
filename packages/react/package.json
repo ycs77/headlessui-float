@@ -1,6 +1,6 @@
 {
   "name": "@headlessui-float/react",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Easily use Headless UI for React with Floating UI (Popper.js)",
   "license": "MIT",
   "homepage": "https://headlessui-float.vercel.app",
