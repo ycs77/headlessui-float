@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { Combobox } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
@@ -32,16 +32,19 @@ export default function ExampleCombobox() {
     <Block title="Combobox (Autocomplete)" titleClass="text-teal-400">
       <Combobox value={selected} onChange={setSelected}>
         <Float
+          as="div"
+          className="relative w-64"
           placement="bottom-start"
           offset={4}
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
+          floatingAs={Fragment}
           onHide={() => setQuery('')}
         >
-          <div className="relative w-64 text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
+          <div className="relative w-full text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
             <Combobox.Input
-              className="w-64 border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
+              className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
               displayValue={(person: any) => person.name}
               onChange={event => setQuery(event.target.value)}
             />
@@ -51,7 +54,7 @@ export default function ExampleCombobox() {
             </Combobox.Button>
           </div>
 
-          <Combobox.Options className="absolute w-64 py-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <Combobox.Options className="absolute w-full py-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {filteredPeople.length === 0 && query !== '' ? (
               <div className="relative py-2 px-4 text-gray-700 cursor-default select-none">
                 Nothing found.

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { Listbox } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
@@ -19,15 +19,22 @@ export default function ExampleListbox() {
   return (
     <Block title="Listbox (Select)" titleClass="text-amber-400">
       <Listbox value={selected} onChange={setSelected}>
-        <Float placement="bottom" offset={4} flip={10}>
-          <Listbox.Button className="relative w-56 bg-white pl-3.5 pr-10 py-2 text-left text-amber-500 text-sm leading-5 border border-gray-200 rounded-lg shadow-md">
+        <Float
+          as="div"
+          className="relative w-56"
+          placement="bottom"
+          offset={4}
+          flip={10}
+          floatingAs={Fragment}
+        >
+          <Listbox.Button className="relative w-full bg-white pl-3.5 pr-10 py-2 text-left text-amber-500 text-sm leading-5 border border-gray-200 rounded-lg shadow-md">
             {selected.name}
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
               <HeroiconsOutlineSelector className="w-5 h-5 text-gray-400" aria-hidden="true" />
             </span>
           </Listbox.Button>
 
-          <Listbox.Options className="w-56 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
+          <Listbox.Options className="w-full bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
             {people.map(person => (
               <Listbox.Option
                 key={person.id}
