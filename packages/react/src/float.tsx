@@ -1,6 +1,7 @@
 import {
   Fragment,
   createContext,
+  forwardRef,
   isValidElement,
   useCallback,
   useContext,
@@ -51,6 +52,7 @@ function useArrowContext(component: string) {
 
 export interface FloatProps {
   as?: ElementType
+  floatingAs?: ElementType
   show?: boolean
   placement?: Placement
   strategy?: Strategy
@@ -76,13 +78,16 @@ export interface FloatProps {
     referenceEl: MutableRefObject<Element | VirtualElement | null>
     floatingEl: MutableRefObject<HTMLElement | null>
   }) => Middleware[])
+
+  className?: string | undefined
   children: ReactElement[]
+
   onShow?: () => void
   onHide?: () => void
   onUpdate?: () => void
 }
 
-function FloatRoot(props: FloatProps) {
+const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const id = useId()
 
   const [isMounted, setIsMounted] = useState(false)
@@ -282,6 +287,19 @@ function FloatRoot(props: FloatProps) {
     },
   }
 
+  const renderWrapper = (children: ReactElement[]) => {
+    if (props.as === Fragment) {
+      return <Fragment>{children}</Fragment>
+    }
+
+    const Wrapper = props.as || 'div'
+    return (
+      <Wrapper ref={ref} className={props.className}>
+        {children}
+      </Wrapper>
+    )
+  }
+
   const renderPortal = (children: ReactElement) => {
     if (isMounted && props.portal) {
       const root = document?.querySelector(props.portal === true ? 'body' : props.portal)
@@ -293,11 +311,11 @@ function FloatRoot(props: FloatProps) {
   }
 
   const renderFloating = (Children: ReactElement) => {
-    if (props.as === Fragment) {
+    if (props.floatingAs === Fragment) {
       return <Children.type {...Children.props} {...floatingProps} />
     }
 
-    const FloatingWrapper = props.as || 'div'
+    const FloatingWrapper = props.floatingAs || 'div'
     return (
       <FloatingWrapper {...floatingProps}>
         <Children.type {...Children.props} />
@@ -305,21 +323,27 @@ function FloatRoot(props: FloatProps) {
     )
   }
 
-  return (
-    <>
-      <ReferenceNode.type {...ReferenceNode.props} ref={reference} />
-      <ArrowContext.Provider value={arrowApi}>
-        {renderPortal(
-          renderFloating(
-            <Transition as={Fragment} {...transitionProps}>
-              <FloatingNode.type {...FloatingNode.props} />
-            </Transition>
-          )
-        )}
-      </ArrowContext.Provider>
-    </>
-  )
-}
+  return renderWrapper([
+    <ReferenceNode.type
+      key="ReferenceNode"
+      {...ReferenceNode.props}
+      ref={reference}
+    />,
+    <ArrowContext.Provider
+      key="FloatingNode"
+      value={arrowApi}
+    >
+      {renderPortal(
+        renderFloating(
+          <Transition as={Fragment} {...transitionProps}>
+            <FloatingNode.type {...FloatingNode.props} />
+          </Transition>
+        )
+      )}
+    </ArrowContext.Provider>,
+  ])
+})
+FloatRoot.displayName = 'Float'
 
 export interface FloatArrowProps {
   as?: ElementType

@@ -2,16 +2,19 @@
   <Block title="Combobox (Autocomplete)" title-class="text-teal-400">
     <Combobox v-model="selected">
       <Float
+        as="div"
+        class="relative w-64"
         placement="bottom-start"
         :offset="4"
         leave="transition ease-in duration-100"
         leave-from="opacity-100"
         leave-to="opacity-0"
+        floating-as="template"
         @hide="query = ''"
       >
-        <div class="relative w-64 text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
+        <div class="relative w-full text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
           <ComboboxInput
-            class="w-64 border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
+            class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
             :display-value="(person: any) => person.name"
             @change="query = $event.target.value"
           />
@@ -21,7 +24,7 @@
           </ComboboxButton>
         </div>
 
-        <ComboboxOptions class="absolute w-64 py-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+        <ComboboxOptions class="absolute w-full py-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
           <div
             v-if="filteredPeople.length === 0 && query !== ''"
             class="relative py-2 px-4 text-gray-700 cursor-default select-none"
