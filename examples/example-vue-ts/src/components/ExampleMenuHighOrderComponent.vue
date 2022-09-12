@@ -30,6 +30,6 @@
 
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import HighOrderFloat from '@/components/HighOrderFloat.vue'
+import HighOrderFloat from '@/components/HighOrderFloat'
 import Block from '@/components/Block.vue'
 </script>

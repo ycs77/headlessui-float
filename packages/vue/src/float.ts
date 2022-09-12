@@ -50,6 +50,38 @@ function useArrowContext(component: string) {
   return context
 }
 
+export interface FloatPropsType {
+  as?: string | Component
+  floatingAs?: string | Component
+  show?: boolean
+  placement?: Placement
+  strategy?: Strategy
+  offset?: OffsetOptions
+  shift?: boolean | number | Partial<ShiftOptions & DetectOverflowOptions>
+  flip?: boolean | number | Partial<FlipOptions & DetectOverflowOptions>
+  arrow?: boolean | number
+  autoPlacement?: boolean | Partial<AutoPlacementOptions & DetectOverflowOptions>
+  hide?: boolean | Partial<HideOptions & DetectOverflowOptions>
+  autoUpdate?: boolean | Partial<AutoUpdateOptions>
+  zIndex?: number | string
+  transitionName?: string
+  transitionType?: 'transition' | 'animation'
+  enter?: string
+  enterFrom?: string
+  enterTo?: string
+  leave?: string
+  leaveFrom?: string
+  leaveTo?: string
+  originClass?: string | OriginClassResolver
+  tailwindcssOriginClass?: boolean
+  portal?: boolean | string
+  transform?: boolean
+  middleware?: Middleware[] | ((refs: {
+    referenceEl: Ref<HTMLElement | null>
+    floatingEl: Ref<HTMLElement | null>
+  }) => Middleware[])
+}
+
 export const FloatProps = {
   as: {
     type: [String, Object],
