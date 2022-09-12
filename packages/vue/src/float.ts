@@ -14,7 +14,7 @@ import {
   toRef,
   watch,
 } from 'vue'
-import type { InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
+import type { Component, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
 import throttle from 'lodash.throttle'
 import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
 import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
@@ -52,7 +52,11 @@ function useArrowContext(component: string) {
 
 export const FloatProps = {
   as: {
-    type: [String, Object],
+    type: [String, Function, Object] as PropType<string | Component>,
+    default: 'template',
+  },
+  floatingAs: {
+    type: [String, Function, Object] as PropType<string | Component>,
     default: 'div',
   },
   show: {
@@ -67,7 +71,7 @@ export const FloatProps = {
     type: String as PropType<Strategy>,
     default: 'absolute',
   },
-  offset: [Number, Object, Function] as PropType<OffsetOptions>,
+  offset: [Number, Function, Object] as PropType<OffsetOptions>,
   shift: {
     type: [Boolean, Number, Object] as PropType<boolean | number | Partial<ShiftOptions & DetectOverflowOptions>>,
     default: false,
@@ -130,7 +134,7 @@ export const Float = defineComponent({
   name: 'Float',
   props: FloatProps,
   emits: ['show', 'hide', 'update'],
-  setup(props, { slots, emit }) {
+  setup(props, { emit, slots, attrs }) {
     const isMounted = ref(false)
     const show = ref(props.show !== null ? props.show : false)
 
@@ -365,6 +369,15 @@ export const Float = defineComponent({
           },
         }
 
+        const renderWrapper = (nodes: VNode[]) => {
+          if (props.as === 'template') {
+            return nodes
+          } else if (typeof props.as === 'string') {
+            return h(props.as, attrs, nodes)
+          }
+          return h(props.as, () => nodes)
+        }
+
         const renderPortal = (node: VNode) => {
           if (isMounted.value &&
               (props.portal === true || typeof props.portal === 'string')
@@ -377,13 +390,15 @@ export const Float = defineComponent({
         }
 
         const renderFloating = (node: VNode) => {
-          if (props.as === 'template') {
+          if (props.floatingAs === 'template') {
             return node
+          } else if (typeof props.floatingAs === 'string') {
+            return h(props.floatingAs, floatingProps, node)
           }
-          return h(props.as, floatingProps, node)
+          return h(props.floatingAs, () => node)
         }
 
-        return [
+        return renderWrapper([
           cloneVNode(referenceNode, { ref: reference }),
 
           renderPortal(
@@ -393,12 +408,12 @@ export const Float = defineComponent({
                   ? props.show
                   : true
                 )
-                  ? cloneVNode(floatingNode, props.as === 'template' ? floatingProps : null)
+                  ? cloneVNode(floatingNode, props.floatingAs === 'template' ? floatingProps : null)
                   : createCommentVNode()
               )
             )
           ),
-        ]
+        ])
       }
     }
   },
