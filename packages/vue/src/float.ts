@@ -435,14 +435,21 @@ export const Float = defineComponent({
 
           renderPortal(
             renderFloating(
-              h(Transition, transitionProps, () =>
-                (typeof props.show === 'boolean'
-                  ? props.show
-                  : true
-                )
-                  ? cloneVNode(floatingNode, props.floatingAs === 'template' ? floatingProps : null)
-                  : createCommentVNode()
-              )
+              h(Transition, transitionProps, () => {
+                const contentProps = props.floatingAs === 'template' ? floatingProps : null
+                const el = cloneVNode(floatingNode, contentProps)
+
+                if (el.props?.unmount === false) {
+                  updateElements()
+                  updateFloating()
+                  return el
+                }
+
+                if (typeof props.show === 'boolean' ? props.show : true) {
+                  return el
+                }
+                return createCommentVNode()
+              })
             )
           ),
         ])
