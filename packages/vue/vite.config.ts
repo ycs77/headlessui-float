@@ -14,7 +14,7 @@ export default defineConfig({
         if (format === 'cjs') {
           return 'headlessui-float.cjs'
         }
-        return 'headlessui-float.js'
+        return 'headlessui-float.mjs'
       },
     },
     rollupOptions: {
