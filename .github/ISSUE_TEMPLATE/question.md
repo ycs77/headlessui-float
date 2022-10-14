@@ -9,8 +9,8 @@ assignees: ''
 
 **Use Version**
 Use version when question appear:
- - Headless UI: v1.6.0
- - Headless UI Float: v0.7.0
+ - Headless UI: v1.7.0
+ - Headless UI Float: v0.9.0
  - Framework: [e.g. vue v3.2.0, react v18.0]
 
 **Describe the question**
