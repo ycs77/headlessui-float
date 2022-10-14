@@ -184,14 +184,26 @@ export const Float = defineComponent({
       middleware,
     })
 
+    const originClassValue = computed(() => {
+      if (typeof props.originClass === 'function') {
+        return props.originClass(placement.value)
+      } else if (typeof props.originClass === 'string') {
+        return props.originClass
+      } else if (props.tailwindcssOriginClass) {
+        return tailwindcssOriginClassResolver(placement.value)
+      }
+      return ''
+    })
+
     const referenceEl = ref(dom(reference)) as Ref<HTMLElement | null>
     const floatingEl = ref(dom(floating)) as Ref<HTMLElement | null>
-    const updateElements = () => {
+
+    function updateElements() {
       referenceEl.value = dom(reference)
       floatingEl.value = dom(floating)
     }
 
-    const updateFloating = () => {
+    function updateFloating() {
       if (
         !isVisibleDOMElement(referenceEl) ||
         !isVisibleDOMElement(floatingEl)
@@ -276,9 +288,15 @@ export const Float = defineComponent({
       updateFloating()
     }, { immediate: true })
 
+    watch(middlewareData, () => {
+      const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
+      arrowX.value = arrowData?.x
+      arrowY.value = arrowData?.y
+    })
+
     let disposeAutoUpdate: (() => void) | undefined
 
-    const startAutoUpdate = () => {
+    function startAutoUpdate() {
       if (isVisibleDOMElement(referenceEl) &&
           isVisibleDOMElement(floatingEl) &&
           props.autoUpdate !== false
@@ -294,12 +312,14 @@ export const Float = defineComponent({
       }
     }
 
-    const clearAutoUpdate = () => {
-      if (disposeAutoUpdate) disposeAutoUpdate()
-      disposeAutoUpdate = undefined
+    function clearAutoUpdate() {
+      if (disposeAutoUpdate) {
+        disposeAutoUpdate()
+        disposeAutoUpdate = undefined
+      }
     }
 
-    const handleShow = () => {
+    function handleShow() {
       updateElements()
 
       if (isVisibleDOMElement(referenceEl) &&
@@ -323,12 +343,6 @@ export const Float = defineComponent({
       handleShow()
     })
 
-    watch(middlewareData, () => {
-      const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
-      arrowX.value = arrowData?.x
-      arrowY.value = arrowData?.y
-    })
-
     const arrowApi = {
       ref: arrowRef,
       placement,
@@ -345,17 +359,6 @@ export const Float = defineComponent({
         if (!isValidElement(referenceNode)) {
           return
         }
-
-        const originClassValue = computed(() => {
-          if (typeof props.originClass === 'function') {
-            return props.originClass(placement.value)
-          } else if (typeof props.originClass === 'string') {
-            return props.originClass
-          } else if (props.tailwindcssOriginClass) {
-            return tailwindcssOriginClassResolver(placement.value)
-          }
-          return ''
-        })
 
         const transitionClassesProps = {
           enterActiveClass: props.enter || originClassValue.value
@@ -401,7 +404,7 @@ export const Float = defineComponent({
           },
         }
 
-        const renderWrapper = (nodes: VNode[]) => {
+        function renderWrapper(nodes: VNode[]) {
           if (props.as === 'template') {
             return nodes
           } else if (typeof props.as === 'string') {
@@ -410,7 +413,7 @@ export const Float = defineComponent({
           return h(props.as, () => nodes)
         }
 
-        const renderPortal = (node: VNode) => {
+        function renderPortal(node: VNode) {
           if (isMounted.value &&
               (props.portal === true || typeof props.portal === 'string')
           ) {
@@ -421,7 +424,7 @@ export const Float = defineComponent({
           return node
         }
 
-        const renderFloating = (node: VNode) => {
+        function renderFloating(node: VNode) {
           if (props.floatingAs === 'template') {
             return node
           } else if (typeof props.floatingAs === 'string') {

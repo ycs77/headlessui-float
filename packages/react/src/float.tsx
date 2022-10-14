@@ -108,6 +108,17 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     middleware,
   })
 
+  const originClassValue = useMemo(() => {
+    if (typeof props.originClass === 'function') {
+      return props.originClass(placement)
+    } else if (typeof props.originClass === 'string') {
+      return props.originClass
+    } else if (props.tailwindcssOriginClass) {
+      return tailwindcssOriginClassResolver(placement)
+    }
+    return ''
+  }, [props.originClass, props.tailwindcssOriginClass])
+
   const updateFloating = useCallback(() => {
     update()
     events.update()
@@ -176,7 +187,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     props.middleware,
   ])
 
-  const startAutoUpdate = () => {
+  function startAutoUpdate() {
     if (refs.reference.current &&
         refs.floating.current &&
         props.autoUpdate !== false &&
@@ -193,11 +204,12 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     }
   }
 
-  const clearAutoUpdate = () => {
-    const disposeAutoUpdate = autoUpdateCleanerMap.get(id)!
-    disposeAutoUpdate()
-
-    autoUpdateCleanerMap.delete(id)
+  function clearAutoUpdate() {
+    const disposeAutoUpdate = autoUpdateCleanerMap.get(id)
+    if (disposeAutoUpdate) {
+      disposeAutoUpdate()
+      autoUpdateCleanerMap.delete(id)
+    }
   }
 
   useIsoMorphicEffect(() => {
@@ -242,17 +254,6 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     return <Fragment />
   }
 
-  const originClassValue = useMemo(() => {
-    if (typeof props.originClass === 'function') {
-      return props.originClass(placement)
-    } else if (typeof props.originClass === 'string') {
-      return props.originClass
-    } else if (props.tailwindcssOriginClass) {
-      return tailwindcssOriginClassResolver(placement)
-    }
-    return ''
-  }, [props.originClass, props.tailwindcssOriginClass])
-
   const transitionProps = {
     show: isMounted ? props.show : false,
     enter: `${props.enter || ''} ${originClassValue}`,
@@ -287,7 +288,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     },
   }
 
-  const renderWrapper = (children: ReactElement[]) => {
+  function renderWrapper(children: ReactElement[]) {
     if (props.as === Fragment) {
       return <Fragment>{children}</Fragment>
     }
@@ -300,7 +301,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     )
   }
 
-  const renderPortal = (children: ReactElement) => {
+  function renderPortal(children: ReactElement) {
     if (isMounted && props.portal) {
       const root = document?.querySelector(props.portal === true ? 'body' : props.portal)
       if (root) {
@@ -310,7 +311,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     return children
   }
 
-  const renderFloating = (Children: ReactElement) => {
+  function renderFloating(Children: ReactElement) {
     if (props.floatingAs === Fragment) {
       return <Children.type {...Children.props} {...floatingProps} />
     }
