@@ -5,5 +5,8 @@ import { type Ref, unref } from 'vue'
 export function dom<T extends HTMLElement>(ref?: Ref<T | null> | T | null): T | null {
   ref = unref(ref)
   if (ref == null) return null
-  return ((ref as T & { $el: unknown })?.$el ?? ref) as T | null
+
+  const el = ((ref as T & { $el: unknown })?.$el ?? ref) as T | null
+  if ((el as T & { $el: unknown }).$el) return dom(el)
+  return el
 }
