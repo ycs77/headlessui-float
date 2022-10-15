@@ -3823,7 +3823,7 @@ vue-tsc@^1.0.0:
     "@volar/vue-language-core" "1.0.7"
     "@volar/vue-typescript" "1.0.7"
 
-vue@^3.2.31:
+vue@3.2.33, vue@^3.2.31:
   version "3.2.33"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.33.tgz#7867eb16a3293a28c4d190a837bc447878bd64c2"
   integrity sha512-si1ExAlDUrLSIg/V7D/GgA4twJwfsfgG+t9w10z38HhL/HA07132pUQ2KuwAo8qbCyMJ9e6OqrmWrOCr+jW7ZQ==
