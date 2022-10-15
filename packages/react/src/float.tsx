@@ -27,14 +27,15 @@ import { useId } from './hooks/use-id'
 import { useIsoMorphicEffect } from './hooks/use-iso-morphic-effect'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
-const autoUpdateCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
 const showStateMap = new Map<ReturnType<typeof useId>, boolean>()
+const autoUpdateCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
+const referenceElResizeObserveCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
 
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
   placement: Placement
-  x: number | undefined
-  y: number | undefined
+  x: number | null
+  y: number | null
 }
 
 const ArrowContext = createContext<ArrowState | null>(null)
@@ -74,6 +75,7 @@ export interface FloatProps {
   tailwindcssOriginClass?: boolean
   portal?: boolean | string
   transform?: boolean
+  adaptiveWidth?: boolean
   middleware?: Middleware[] | ((refs: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>
     floatingEl: MutableRefObject<HTMLElement | null>
@@ -102,7 +104,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     update: props.onUpdate || (() => {}),
   }
 
-  const { x, y, placement, strategy, reference, floating, update, refs, middlewareData } = useFloating({
+  const { x, y, placement, strategy, reference, floating, update, refs, middlewareData } = useFloating<HTMLElement>({
     placement: props.placement || 'bottom-start',
     strategy: props.strategy,
     middleware,
@@ -118,6 +120,8 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     }
     return ''
   }, [props.originClass, props.tailwindcssOriginClass])
+
+  const [referenceElWidth, setReferenceElWidth] = useState<number | null>(null)
 
   const updateFloating = useCallback(() => {
     update()
@@ -212,6 +216,32 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     }
   }
 
+  function startReferenceElResizeObserver() {
+    if (props.adaptiveWidth &&
+      window &&
+      'ResizeObserver' in window &&
+      refs.reference.current &&
+      !referenceElResizeObserveCleanerMap.get(id)
+    ) {
+      const observer = new ResizeObserver(([entry]) => {
+        const width = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
+        setReferenceElWidth(width)
+      })
+      observer.observe(refs.reference.current)
+      referenceElResizeObserveCleanerMap.set(id, () => {
+        observer.disconnect()
+      })
+    }
+  }
+
+  function clearReferenceElResizeObserver() {
+    const disconnectResizeObserver = referenceElResizeObserveCleanerMap.get(id)
+    if (disconnectResizeObserver) {
+      disconnectResizeObserver()
+      referenceElResizeObserveCleanerMap.delete(id)
+    }
+  }
+
   useIsoMorphicEffect(() => {
     if (refs.reference.current &&
         refs.floating.current &&
@@ -221,8 +251,8 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
       showStateMap.set(id, true)
 
       // show...
-      events.show()
       startAutoUpdate()
+      events.show()
     } else if (
       show === false &&
       showStateMap.get(id) &&
@@ -239,13 +269,18 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
   useEffect(() => {
     setIsMounted(true)
+    startReferenceElResizeObserver()
+
+    return () => {
+      clearReferenceElResizeObserver()
+    }
   }, [])
 
   const arrowApi = {
     arrowRef,
     placement,
-    x: middlewareData.arrow?.x,
-    y: middlewareData.arrow?.y,
+    x: middlewareData.arrow?.x ?? null,
+    y: middlewareData.arrow?.y ?? null,
   } as ArrowState
 
   const [ReferenceNode, FloatingNode] = props.children
@@ -272,19 +307,24 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
   const floatingProps = {
     ref: floating,
-    style: props.transform || props.transform === undefined ? {
-      position: strategy,
-      zIndex: props.zIndex || 9999,
-      top: 0,
-      left: 0,
-      right: 'auto',
-      bottom: 'auto',
-      transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
-    } : {
-      position: strategy,
-      zIndex: props.zIndex || 9999,
-      top: `${y || 0}px`,
-      left: `${x || 0}px`,
+    style: {
+      ...(props.transform || props.transform === undefined ? {
+        position: strategy,
+        zIndex: props.zIndex || 9999,
+        top: 0,
+        left: 0,
+        right: 'auto',
+        bottom: 'auto',
+        transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
+      } : {
+        position: strategy,
+        zIndex: props.zIndex || 9999,
+        top: `${y || 0}px`,
+        left: `${x || 0}px`,
+      }),
+      width: props.adaptiveWidth && typeof referenceElWidth === 'number'
+        ? `${referenceElWidth}px`
+        : null,
     },
   }
 
@@ -303,7 +343,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
   function renderPortal(children: ReactElement) {
     if (isMounted && props.portal) {
-      const root = document?.querySelector(props.portal === true ? 'body' : props.portal)
+      const root = document.querySelector(props.portal === true ? 'body' : props.portal)
       if (root) {
         return createPortal(children, root)
       }

@@ -7,6 +7,7 @@ import {
   defineComponent,
   h,
   inject,
+  onBeforeUnmount,
   onMounted,
   provide,
   ref,
@@ -32,8 +33,8 @@ import { type OriginClassResolver, tailwindcssOriginClassResolver } from './orig
 interface ArrowState {
   ref: Ref<HTMLElement | null>
   placement: Ref<Placement>
-  x: Ref<number | undefined>
-  y: Ref<number | undefined>
+  x: Ref<number | null>
+  y: Ref<number | null>
 }
 
 const ArrowContext = Symbol('ArrowState') as InjectionKey<ArrowState>
@@ -76,6 +77,7 @@ export interface FloatPropsType {
   tailwindcssOriginClass?: boolean
   portal?: boolean | string
   transform?: boolean
+  adaptiveWidth?: boolean
   middleware?: Middleware[] | ((refs: {
     referenceEl: Ref<HTMLElement | null>
     floatingEl: Ref<HTMLElement | null>
@@ -153,6 +155,10 @@ export const FloatProps = {
     type: Boolean,
     default: true,
   },
+  adaptiveWidth: {
+    type: Boolean,
+    default: false,
+  },
   middleware: {
     type: [Array, Function] as PropType<Middleware[] | ((refs: {
       referenceEl: Ref<HTMLElement | null>
@@ -175,8 +181,8 @@ export const Float = defineComponent({
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
 
     const arrowRef = ref(null) as Ref<HTMLElement | null>
-    const arrowX = ref<number | undefined>(undefined)
-    const arrowY = ref<number | undefined>(undefined)
+    const arrowX = ref<number | null>(null)
+    const arrowY = ref<number | null>(null)
 
     const { x, y, placement, strategy, reference, floating, middlewareData, update } = useFloating({
       placement: propPlacement,
@@ -198,6 +204,8 @@ export const Float = defineComponent({
     const referenceEl = ref(dom(reference)) as Ref<HTMLElement | null>
     const floatingEl = ref(dom(floating)) as Ref<HTMLElement | null>
 
+    const referenceElWidth = ref<number | null>(null)
+
     function updateElements() {
       referenceEl.value = dom(reference)
       floatingEl.value = dom(floating)
@@ -205,11 +213,12 @@ export const Float = defineComponent({
 
     function updateFloating() {
       if (
-        !isVisibleDOMElement(referenceEl) ||
-        !isVisibleDOMElement(floatingEl)
-      ) return
-      update()
-      emit('update')
+        isVisibleDOMElement(referenceEl) &&
+        isVisibleDOMElement(floatingEl)
+      ) {
+        update()
+        emit('update')
+      }
     }
 
     watch(propPlacement, () => {
@@ -290,8 +299,8 @@ export const Float = defineComponent({
 
     watch(middlewareData, () => {
       const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
-      arrowX.value = arrowData?.x
-      arrowY.value = arrowData?.y
+      arrowX.value = arrowData?.x ?? null
+      arrowY.value = arrowData?.y ?? null
     })
 
     let disposeAutoUpdate: (() => void) | undefined
@@ -319,6 +328,31 @@ export const Float = defineComponent({
       }
     }
 
+    let referenceElResizeObserver: ResizeObserver | undefined
+
+    function startReferenceElResizeObserver() {
+      updateElements()
+
+      if (props.adaptiveWidth &&
+          window &&
+          'ResizeObserver' in window &&
+          referenceEl.value
+      ) {
+        referenceElResizeObserver = new ResizeObserver(([entry]) => {
+          referenceElWidth.value = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
+        })
+        referenceElResizeObserver.observe(referenceEl.value)
+      }
+    }
+
+    function clearReferenceElResizeObserver() {
+      if (referenceElResizeObserver) {
+        referenceElResizeObserver.disconnect()
+        referenceElResizeObserver = undefined
+        referenceElWidth.value = null
+      }
+    }
+
     function handleShow() {
       updateElements()
 
@@ -327,8 +361,8 @@ export const Float = defineComponent({
           show.value === true
       ) {
         // show...
-        emit('show')
         startAutoUpdate()
+        emit('show')
       } else if (show.value === false && disposeAutoUpdate) {
         // hide...
         clearAutoUpdate()
@@ -340,7 +374,12 @@ export const Float = defineComponent({
 
     onMounted(() => {
       isMounted.value = true
+      startReferenceElResizeObserver()
       handleShow()
+    })
+
+    onBeforeUnmount(() => {
+      clearReferenceElResizeObserver()
     })
 
     const arrowApi = {
@@ -388,19 +427,24 @@ export const Float = defineComponent({
 
         const floatingProps = {
           ref: floating,
-          style: props.transform ? {
-            position: strategy.value,
-            zIndex: props.zIndex,
-            top: '0',
-            left: '0',
-            right: 'auto',
-            bottom: 'auto',
-            transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
-          } : {
-            position: strategy.value,
-            zIndex: props.zIndex,
-            top: `${y.value || 0}px`,
-            left: `${x.value || 0}px`,
+          style: {
+            ...(props.transform ? {
+              position: strategy.value,
+              zIndex: props.zIndex,
+              top: '0',
+              left: '0',
+              right: 'auto',
+              bottom: 'auto',
+              transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
+            } : {
+              position: strategy.value,
+              zIndex: props.zIndex,
+              top: `${y.value || 0}px`,
+              left: `${x.value || 0}px`,
+            }),
+            width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
+              ? `${referenceElWidth.value}px`
+              : null,
           },
         }
 
