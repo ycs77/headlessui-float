@@ -21,11 +21,13 @@ export default function ExampleListbox() {
       <Listbox value={selected} onChange={setSelected}>
         <Float
           as="div"
-          className="relative w-56"
+          className="relative w-full"
           placement="bottom"
           offset={4}
           flip={10}
           floatingAs={Fragment}
+          adaptiveWidth
+          portal
         >
           <Listbox.Button className="relative w-full bg-white pl-3.5 pr-10 py-2 text-left text-amber-500 text-sm leading-5 border border-gray-200 rounded-lg shadow-md">
             {selected.name}

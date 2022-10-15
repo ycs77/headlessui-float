@@ -3,11 +3,13 @@
     <Listbox v-model="selected">
       <Float
         as="div"
-        class="relative w-56"
+        class="relative w-full"
         placement="bottom"
         :offset="4"
         :flip="10"
         floating-as="template"
+        adaptive-width
+        portal
       >
         <ListboxButton class="relative w-full bg-white pl-3.5 pr-10 py-2 text-left text-amber-500 text-sm leading-5 border border-gray-200 rounded-lg shadow-md">
           {{ selected.name }}
