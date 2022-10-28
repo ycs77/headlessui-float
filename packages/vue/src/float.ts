@@ -444,7 +444,7 @@ export const Float = defineComponent({
             }),
             width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
               ? `${referenceElWidth.value}px`
-              : null,
+              : '',
           },
         }
 
