@@ -19,6 +19,7 @@
     "headlessui",
     "vue"
   ],
+  "sideEffects": false,
   "exports": {
     ".": {
       "require": "./dist/headlessui-float.cjs",

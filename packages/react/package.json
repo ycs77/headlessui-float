@@ -19,6 +19,7 @@
     "headlessui",
     "react"
   ],
+  "sideEffects": false,
   "exports": {
     ".": {
       "require": "./dist/headlessui-float.cjs",
