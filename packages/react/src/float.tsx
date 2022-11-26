@@ -218,7 +218,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
   function startReferenceElResizeObserver() {
     if (props.adaptiveWidth &&
-      window &&
+      typeof window !== 'undefined' &&
       'ResizeObserver' in window &&
       refs.reference.current &&
       !referenceElResizeObserveCleanerMap.get(id)

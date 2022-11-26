@@ -334,7 +334,7 @@ export const Float = defineComponent({
       updateElements()
 
       if (props.adaptiveWidth &&
-          window &&
+          typeof window !== 'undefined' &&
           'ResizeObserver' in window &&
           referenceEl.value
       ) {
