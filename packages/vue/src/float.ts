@@ -7,6 +7,7 @@ import {
   defineComponent,
   h,
   inject,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   provide,
@@ -353,7 +354,8 @@ export const Float = defineComponent({
       }
     }
 
-    function handleShow() {
+    async function handleShow() {
+      await nextTick()
       updateElements()
 
       if (isVisibleDOMElement(referenceEl) &&
@@ -372,10 +374,10 @@ export const Float = defineComponent({
 
     watch(show, handleShow)
 
-    onMounted(() => {
+    onMounted(async () => {
       isMounted.value = true
       startReferenceElResizeObserver()
-      handleShow()
+      await handleShow()
     })
 
     onBeforeUnmount(() => {

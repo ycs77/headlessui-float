@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@headlessui-float/vue": "*",
-    "@headlessui/vue": "^1.7.0",
+    "@headlessui/vue": "^1.7.4",
     "tailwindcss": "^3.0.23",
-    "vue": "3.2.33"
+    "vue": "3.2.45"
   },
   "devDependencies": {
     "@iconify-json/heroicons-outline": "^1.1.1",

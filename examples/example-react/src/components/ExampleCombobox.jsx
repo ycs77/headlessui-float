@@ -45,7 +45,7 @@ export default function ExampleCombobox() {
           <div className="relative w-full text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
             <Combobox.Input
               className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
-              displayValue={person => person.name}
+              displayValue={person => person?.name}
               onChange={event => setQuery(event.target.value)}
             />
 

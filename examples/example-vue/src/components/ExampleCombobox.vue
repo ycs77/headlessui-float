@@ -15,7 +15,7 @@
         <div class="relative w-full text-left bg-white border border-gray-200 rounded-lg shadow-md cursor-default focus:outline-none sm:text-sm overflow-hidden">
           <ComboboxInput
             class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
-            :display-value="person => person.name"
+            :display-value="person => person?.name"
             @change="query = $event.target.value"
           />
 
