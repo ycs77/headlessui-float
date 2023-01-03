@@ -20,7 +20,7 @@ Use version when bugs appear:
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Please provide a minimal working example (like github repo, codesandbox, stackblitz...), and steps to reproduce the behavior:
+Please provide a minimal reproducible example (like github repo, codesandbox, stackblitz...), and steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
