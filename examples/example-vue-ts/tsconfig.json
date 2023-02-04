@@ -15,7 +15,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client"]
+    "types": ["vite/client", "unplugin-icons/types/vue3"]
   },
   "include": ["src/**/*", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

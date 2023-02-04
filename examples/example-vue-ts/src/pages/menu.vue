@@ -1,7 +1,7 @@
 <template>
-  <Block title="Menu (Dropdown) with High-Order Component" title-class="text-indigo-400">
+  <Block title="Floating Menu" content-class="block-menu h-[200px] p-4">
     <Menu>
-      <HighOrderFloat placement="bottom-end">
+      <Float placement="bottom-start" :offset="4">
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
           Options
         </MenuButton>
@@ -23,13 +23,13 @@
             </span>
           </MenuItem>
         </MenuItems>
-      </HighOrderFloat>
+      </Float>
     </Menu>
   </Block>
 </template>
 
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import HighOrderFloat from '@/components/HighOrderFloat'
+import { Float } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 </script>
