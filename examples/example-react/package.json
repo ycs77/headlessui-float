@@ -18,7 +18,7 @@
     "@iconify-json/heroicons-outline": "^1.1.1",
     "@svgr/core": "^6.2.1",
     "@vitejs/plugin-react": "^3.0.0",
-    "autoprefixer": "^10.4.2",
+    "autoprefixer": "^10.4.13",
     "postcss": "^8.4.6",
     "unplugin-icons": "^0.13.2",
     "vite": "^4.0.0"
