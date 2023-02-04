@@ -1,15 +1,16 @@
 <template>
-  <div class="relative h-[240px] flex justify-center items-center border-2 border-dashed border-indigo-100 rounded-lg">
-    <h2 class="absolute top-3 left-4 font-bold tracking-wider" :class="titleClass">
-      {{ title }}
-    </h2>
-    <slot />
+  <div class="relative max-w-screen-md">
+    <h2 class="font-bold tracking-wider mb-4">{{ title }}</h2>
+    <div :class="contentClass">
+      <slot />
+    </div>
+    <slot name="form" />
   </div>
 </template>
 
 <script setup lang="ts">
 defineProps({
   title: String,
-  titleClass: String,
+  contentClass: String,
 })
 </script>

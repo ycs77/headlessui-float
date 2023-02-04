@@ -1,7 +1,7 @@
 <template>
-  <Block title="Menu (Dropdown) with original Float" title-class="text-indigo-400">
+  <Block title="Portal" content-class="block-portal h-[200px] p-4">
     <Menu>
-      <Float placement="bottom-start" :offset="4">
+      <Float placement="bottom-start" :offset="4" portal>
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
           Options
         </MenuButton>
