@@ -24,11 +24,8 @@ import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hi
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import throttle from 'lodash.throttle'
 import { useId } from './hooks/use-id'
-import { useIsoMorphicEffect } from './hooks/use-iso-morphic-effect'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
-const showStateMap = new Map<ReturnType<typeof useId>, boolean>()
-const autoUpdateCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
 const referenceElResizeObserveCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
 
 interface ArrowState {
@@ -92,7 +89,7 @@ export interface FloatProps {
 const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const id = useId()
 
-  const [isMounted, setIsMounted] = useState(false)
+  const mounted = useRef(false)
   const [show, setShow] = useState(props.show !== undefined ? props.show : false)
   const [middleware, setMiddleware] = useState<Middleware[]>()
 
@@ -191,29 +188,22 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     props.middleware,
   ])
 
-  function startAutoUpdate() {
+  function useAutoUpdate() {
     if (refs.reference.current &&
         refs.floating.current &&
-        props.autoUpdate !== false &&
-        !autoUpdateCleanerMap.get(id)
+        props.autoUpdate !== false
     ) {
-      autoUpdateCleanerMap.set(id, autoUpdate(
+      return autoUpdate(
         refs.reference.current,
         refs.floating.current,
         throttle(updateFloating, 16),
         typeof props.autoUpdate === 'object'
           ? props.autoUpdate
           : undefined
-      ))
+      )
     }
-  }
 
-  function clearAutoUpdate() {
-    const disposeAutoUpdate = autoUpdateCleanerMap.get(id)
-    if (disposeAutoUpdate) {
-      disposeAutoUpdate()
-      autoUpdateCleanerMap.delete(id)
-    }
+    return () => {}
   }
 
   function startReferenceElResizeObserver() {
@@ -242,39 +232,27 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     }
   }
 
-  useIsoMorphicEffect(() => {
-    if (refs.reference.current &&
-        refs.floating.current &&
-        show === true &&
-        !showStateMap.get(id)
-    ) {
-      showStateMap.set(id, true)
-
-      // show...
-      startAutoUpdate()
-      events.show()
-    } else if (
-      show === false &&
-      showStateMap.get(id) &&
-      autoUpdateCleanerMap.get(id)
-    ) {
-      showStateMap.delete(id)
-
-      // hide...
-      clearAutoUpdate()
-      events.hide()
-    }
-    return autoUpdateCleanerMap.get(id)
-  }, [show])
-
   useEffect(() => {
-    setIsMounted(true)
+    mounted.current = true
     startReferenceElResizeObserver()
 
     return () => {
+      mounted.current = false
       clearReferenceElResizeObserver()
     }
   }, [])
+
+  useEffect(() => {
+    if (refs.reference.current && refs.floating.current && show) {
+      const cleanup = useAutoUpdate()
+      events.show()
+
+      return () => {
+        cleanup()
+        events.hide()
+      }
+    }
+  }, [show, reference, floating, update, refs])
 
   const arrowApi = {
     arrowRef,
@@ -290,7 +268,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   }
 
   const transitionProps = {
-    show: isMounted ? props.show : false,
+    show: mounted.current ? props.show : false,
     enter: `${props.enter || ''} ${originClassValue}`,
     enterFrom: `${props.enterFrom || ''}`,
     enterTo: `${props.enterTo || ''}`,
@@ -342,7 +320,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   }
 
   function renderPortal(children: ReactElement) {
-    if (isMounted && props.portal) {
+    if (mounted.current && props.portal) {
       const root = document.querySelector(props.portal === true ? 'body' : props.portal)
       if (root) {
         return createPortal(children, root)
