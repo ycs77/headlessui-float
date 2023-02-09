@@ -23,10 +23,7 @@ import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/midd
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import throttle from 'lodash.throttle'
-import { useId } from './hooks/use-id'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
-
-const referenceElResizeObserveCleanerMap = new Map<ReturnType<typeof useId>, (() => void)>()
 
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
@@ -87,8 +84,6 @@ export interface FloatProps {
 }
 
 const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
-  const id = useId()
-
   const mounted = useRef(false)
   const [show, setShow] = useState(props.show !== undefined ? props.show : false)
   const [middleware, setMiddleware] = useState<Middleware[]>()
@@ -206,39 +201,33 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     return () => {}
   }
 
-  function startReferenceElResizeObserver() {
+  function useReferenceElResizeObserver() {
     if (props.adaptiveWidth &&
       typeof window !== 'undefined' &&
       'ResizeObserver' in window &&
-      refs.reference.current &&
-      !referenceElResizeObserveCleanerMap.get(id)
+      refs.reference.current
     ) {
       const observer = new ResizeObserver(([entry]) => {
         const width = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
         setReferenceElWidth(width)
       })
       observer.observe(refs.reference.current)
-      referenceElResizeObserveCleanerMap.set(id, () => {
-        observer.disconnect()
-      })
-    }
-  }
 
-  function clearReferenceElResizeObserver() {
-    const disconnectResizeObserver = referenceElResizeObserveCleanerMap.get(id)
-    if (disconnectResizeObserver) {
-      disconnectResizeObserver()
-      referenceElResizeObserveCleanerMap.delete(id)
+      return () => {
+        observer.disconnect()
+      }
     }
+
+    return () => {}
   }
 
   useEffect(() => {
     mounted.current = true
-    startReferenceElResizeObserver()
+    const cleanupResizeObserver = useReferenceElResizeObserver()
 
     return () => {
       mounted.current = false
-      clearReferenceElResizeObserver()
+      cleanupResizeObserver()
     }
   }, [])
 
