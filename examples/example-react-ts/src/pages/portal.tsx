@@ -2,11 +2,11 @@ import { Menu } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
 
-export default function ExampleMenuOriginalFloat() {
+export default function ExamplePortal() {
   return (
-    <Block title="Menu (Dropdown) with original Float" titleClass="text-indigo-400">
+    <Block title="Portal" contentClass="block-portal h-[200px] p-4">
       <Menu>
-        <Float placement="bottom-start" offset={4}>
+        <Float placement="bottom-start" offset={4} portal>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </Menu.Button>

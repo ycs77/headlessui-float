@@ -5,7 +5,7 @@ import HeroiconsOutlineMenuAlt2 from '~icons/heroicons-outline/menu-alt-2'
 
 export default function ExamplePopover() {
   return (
-    <Block title="Popover" titleClass="text-rose-400">
+    <Block title="Floating Popover" contentClass="block-popover h-[160px] p-4">
       <Popover>
         <Float
           placement="bottom-start"

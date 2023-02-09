@@ -29,7 +29,7 @@ export default function ExampleCombobox() {
       )
 
   return (
-    <Block title="Combobox (Autocomplete)" titleClass="text-teal-400">
+    <Block title="Floating Combobox" contentClass="block-combobox h-[320px] p-4">
       <Combobox value={selected} onChange={setSelected}>
         <Float
           as="div"
