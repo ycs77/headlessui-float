@@ -1,12 +1,12 @@
 import { Menu } from '@headlessui/react'
-import HighOrderFloat from '@/components/HighOrderFloat'
+import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
 
-export default function ExampleMenuHighOrderComponent() {
+export default function ExampleMenu() {
   return (
-    <Block title="Menu (Dropdown) with High-Order Component" titleClass="text-indigo-400">
+    <Block title="Floating Menu" contentClass="block-menu h-[200px] p-4">
       <Menu>
-        <HighOrderFloat placement="bottom-end">
+        <Float placement="bottom-start" offset={4}>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </Menu.Button>
@@ -36,7 +36,7 @@ export default function ExampleMenuHighOrderComponent() {
               </span>
             </Menu.Item>
           </Menu.Items>
-        </HighOrderFloat>
+        </Float>
       </Menu>
     </Block>
   )

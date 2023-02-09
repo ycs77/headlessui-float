@@ -4,6 +4,9 @@ module.exports = {
     // basic
     'multiline-ternary': 'off',
 
+    // react
+    'react/prop-types': 'off',
+
     // vue
     'vue/no-template-shadow': 'off',
     'vue/one-component-per-file': 'off',

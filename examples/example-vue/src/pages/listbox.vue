@@ -1,5 +1,5 @@
 <template>
-  <Block title="Listbox (Select)" title-class="text-amber-400">
+  <Block title="Floating Listbox" content-class="block-listbox h-[300px] p-4">
     <Listbox v-model="selected">
       <Float
         as="div"
