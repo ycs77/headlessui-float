@@ -1,5 +1,5 @@
 <template>
-  <Block title="Combobox (Autocomplete)" title-class="text-teal-400">
+  <Block title="Floating Combobox" content-class="block-combobox h-[320px] p-4">
     <Combobox v-model="selected">
       <Float
         as="div"

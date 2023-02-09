@@ -1,7 +1,17 @@
 <template>
-  <Block title="Menu (Dropdown) with original Float" title-class="text-indigo-400">
+  <Block title="Transition" content-class="block-transition h-[200px] p-4">
     <Menu>
-      <Float placement="bottom-start" :offset="4">
+      <Float
+        placement="bottom-start"
+        :offset="4"
+        enter="transition duration-200 ease-out"
+        enter-from="scale-95 opacity-0"
+        enter-to="scale-100 opacity-100"
+        leave="transition duration-150 ease-in"
+        leave-from="scale-100 opacity-100"
+        leave-to="scale-95 opacity-0"
+        tailwindcss-origin-class
+      >
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
           Options
         </MenuButton>
