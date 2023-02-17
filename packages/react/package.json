@@ -36,7 +36,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc --noEmit && vite build && tsc --emitDeclarationOnly --outDir ./dist",
+    "build": "tsc -p tsconfig.app.json --noEmit && vite build && tsc -p tsconfig.app.json --emitDeclarationOnly --outDir ./dist",
     "watch": "vite build --watch",
     "test:unit": "vitest --root test/unit/",
     "test:functional": "playwright test test/functional",
@@ -55,6 +55,9 @@
   "devDependencies": {
     "@headlessui/react": "^1.7.4",
     "@playwright/test": "^1.30.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/lodash.throttle": "^4.1.6",
     "@types/node": "^17.0.21",
     "@types/react": "^18.0.0",

@@ -1,29 +1,9 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "preserve",
-    "resolveJsonModule": true,
-    "useDefineForClassFields": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "lib": ["DOM", "ESNext"],
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "declaration": true
-  },
-  "include": [
-    "src/**/*",
-    "src/**/*.vue"
-  ],
-  "exclude": [
-    "**/node_modules",
-    "**/dist",
-    "**/test-results"
-  ],
+  "files": [],
   "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
     {
       "path": "./tsconfig.test.json"
     }

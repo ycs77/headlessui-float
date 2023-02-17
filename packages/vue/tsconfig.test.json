@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
@@ -11,6 +12,7 @@
     ]
   },
   "include": [
+    "src/**/*",
     "test/**/*",
     "vitest.config.ts",
     "playwright.config.ts"
