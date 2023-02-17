@@ -9,11 +9,23 @@
     "useDefineForClassFields": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": ["DOM", "ESNext"],
     "skipLibCheck": true,
     "sourceMap": true,
     "declaration": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+    "**/test-results"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.test.json"
+    }
+  ]
 }
