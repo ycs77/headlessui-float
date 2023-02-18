@@ -3,7 +3,7 @@ import { render, screen, userEvent } from './utils'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Float } from '../../src/float'
 
-describe('components', () => {
+describe('render components', () => {
   it('should to render <Float> with <Menu>', async () => {
     render(defineComponent({
       components: { Menu, MenuButton, MenuItem, MenuItems, Float, Transition },
