@@ -23,6 +23,7 @@ import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/midd
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import throttle from 'lodash.throttle'
+import { env } from './utils/env'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
 interface ArrowState {
@@ -203,8 +204,8 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
   function useReferenceElResizeObserver() {
     if (props.adaptiveWidth &&
-      typeof window !== 'undefined' &&
-      'ResizeObserver' in window &&
+      env.isClient &&
+      typeof ResizeObserver !== 'undefined' &&
       refs.reference.current
     ) {
       const observer = new ResizeObserver(([entry]) => {

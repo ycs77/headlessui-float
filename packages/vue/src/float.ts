@@ -28,6 +28,7 @@ import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hi
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { arrow, useFloating } from './useFloating'
 import { dom } from './utils/dom'
+import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
@@ -335,9 +336,9 @@ export const Float = defineComponent({
       updateElements()
 
       if (props.adaptiveWidth &&
-          typeof window !== 'undefined' &&
-          'ResizeObserver' in window &&
-          referenceEl.value
+        env.isClient &&
+        typeof ResizeObserver !== 'undefined' &&
+        referenceEl.value
       ) {
         referenceElResizeObserver = new ResizeObserver(([entry]) => {
           referenceElWidth.value = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
