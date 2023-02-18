@@ -36,7 +36,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vue-tsc -p tsconfig.app.json --noEmit && vite build && vue-tsc -p tsconfig.app.json --emitDeclarationOnly --outDir ./dist",
+    "build": "sh build/build.sh",
     "watch": "vite build --watch",
     "test:unit": "vitest --root test/unit/",
     "test:functional": "playwright test test/functional",
