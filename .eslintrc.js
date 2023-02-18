@@ -9,6 +9,7 @@ module.exports = {
 
     // vue
     'vue/no-template-shadow': 'off',
+    'vue/no-reserved-component-names': 'off',
     'vue/one-component-per-file': 'off',
 
     // typescript

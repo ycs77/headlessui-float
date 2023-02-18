@@ -1,6 +1,6 @@
-import { render, screen, userEvent, waitFor } from './utils'
 import { Menu } from '@headlessui/react'
 import { Float } from '../../src/float'
+import { render, screen, userEvent, waitFor } from './utils'
 
 describe('render components', () => {
   it('should to render <Float> with <Menu>', async () => {

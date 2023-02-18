@@ -1,7 +1,7 @@
-import { defineComponent, Transition } from 'vue'
-import { render, screen, userEvent } from './utils'
+import { Transition, defineComponent } from 'vue'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Float } from '../../src/float'
+import { render, screen, userEvent } from './utils'
 
 describe('render components', () => {
   it('should to render <Float> with <Menu>', async () => {

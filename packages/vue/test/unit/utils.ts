@@ -1,5 +1,4 @@
-/* eslint-disable import/export */
-import { cleanup, render, type RenderOptions } from '@testing-library/vue'
+import { type RenderOptions, cleanup, render } from '@testing-library/vue'
 import { afterEach } from 'vitest'
 
 afterEach(() => {
