@@ -29,7 +29,7 @@ export default function ExampleCombobox() {
       )
 
   return (
-    <Block title="Floating Combobox" contentClass="block-combobox h-[320px] p-4">
+    <Block title="Floating Combobox" contentClass="h-[320px] p-4" data-testid="block-combobox">
       <Combobox value={selected} onChange={setSelected}>
         <Float
           as="div"

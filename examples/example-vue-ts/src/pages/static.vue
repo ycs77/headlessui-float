@@ -1,5 +1,5 @@
 <template>
-  <Block title="Hover menu" content-class="block-hover-menu h-[200px] p-4">
+  <Block title="Hover menu" content-class="h-[200px] p-4" data-testid="block-hover-menu">
     <Float
       :show="showHoverMenu"
       placement="bottom-start"
@@ -46,7 +46,7 @@
     </Float>
   </Block>
 
-  <Block title="Nested Menu" content-class="block-nested-menu h-[300px] p-4">
+  <Block title="Nested Menu" content-class="h-[300px] p-4" data-testid="block-nested-menu">
     <Float
       :show="openMapping.m0"
       placement="bottom-start"

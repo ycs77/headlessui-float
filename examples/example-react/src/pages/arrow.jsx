@@ -4,7 +4,7 @@ import Block from '@/components/Block'
 
 function ExampleBasicArrow() {
   return (
-    <Block title="Arrow" contentClass="block-arrow h-[200px] p-4">
+    <Block title="Arrow" contentClass="h-[200px] p-4" data-testid="block-arrow">
       <Menu>
         <Float placement="bottom-start" offset={12} flip arrow>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
@@ -47,7 +47,7 @@ function ExampleBasicArrow() {
 
 function ExampleArrowPinToLeft() {
   return (
-    <Block title="Arrow pin to left" contentClass="block-arrow-pin-left h-[200px] p-4">
+    <Block title="Arrow pin to left" contentClass="h-[200px] p-4" data-testid="block-arrow-pin-left">
       <Menu>
         <Float placement="bottom-start" offset={12} flip arrow>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">

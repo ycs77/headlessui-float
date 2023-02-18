@@ -1,5 +1,5 @@
 <template>
-  <Block title="Transition" content-class="block-transition h-[200px] p-4">
+  <Block title="Transition" content-class="h-[200px] p-4" data-testid="block-transition">
     <Menu>
       <Float
         placement="bottom-start"

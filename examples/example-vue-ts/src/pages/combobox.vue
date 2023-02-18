@@ -1,5 +1,5 @@
 <template>
-  <Block title="Floating Combobox" content-class="block-combobox h-[320px] p-4">
+  <Block title="Floating Combobox" content-class="h-[320px] p-4" data-testid="block-combobox">
     <Combobox v-model="selected">
       <Float
         as="div"

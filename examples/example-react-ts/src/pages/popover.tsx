@@ -5,7 +5,7 @@ import HeroiconsBars3BottomLeft20Solid from '~icons/heroicons/bars-3-bottom-left
 
 export default function ExamplePopover() {
   return (
-    <Block title="Floating Popover" contentClass="block-popover h-[160px] p-4">
+    <Block title="Floating Popover" contentClass="h-[160px] p-4" data-testid="block-popover">
       <Popover>
         <Float
           placement="bottom-start"

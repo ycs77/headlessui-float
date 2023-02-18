@@ -1,5 +1,5 @@
 <template>
-  <Block title="Adaptive width using CSS" content-class="block-adaptive-width-css h-[300px] p-4">
+  <Block title="Adaptive width using CSS" content-class="h-[300px] p-4" data-testid="block-adaptive-width-css">
     <Listbox v-model="selected">
       <Float
         as="div"
@@ -47,7 +47,7 @@
     </Listbox>
   </Block>
 
-  <Block title="Adaptive width using JS" content-class="block-adaptive-width-js h-[300px] p-4">
+  <Block title="Adaptive width using JS" content-class="h-[300px] p-4" data-testid="block-adaptive-width-js">
     <Listbox v-model="selected">
       <Float
         as="div"

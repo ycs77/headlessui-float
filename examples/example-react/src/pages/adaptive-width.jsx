@@ -18,7 +18,7 @@ export default function ExampleAdaptiveWidth() {
 
   return (
     <>
-      <Block title="Adaptive width using CSS" contentClass="block-adaptive-width-css h-[300px] p-4">
+      <Block title="Adaptive width using CSS" contentClass="h-[300px] p-4" data-testid="block-adaptive-width-css">
         <Listbox value={selected} onChange={setSelected}>
           <Float
             as="div"
@@ -65,7 +65,7 @@ export default function ExampleAdaptiveWidth() {
         </Listbox>
       </Block>
 
-      <Block title="Adaptive width using JS" contentClass="block-adaptive-width-js h-[300px] p-4">
+      <Block title="Adaptive width using JS" contentClass="h-[300px] p-4" data-testid="block-adaptive-width-js">
         <Listbox value={selected} onChange={setSelected}>
           <Float
             as="div"

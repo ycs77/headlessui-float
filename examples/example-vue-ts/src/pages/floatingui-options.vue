@@ -1,10 +1,10 @@
 <template>
-  <Block title="Placement" content-class="block-placement relative h-[320px] flex justify-center items-center border rounded">
+  <Block title="Placement" content-class="relative h-[320px] flex justify-center items-center border rounded" data-testid="block-placement">
     <template #form>
       <div class="absolute top-0 right-0">
         <div class="flex items-center">
           <div class="mr-2">placement</div>
-          <select v-model="placement" class="pl-2 pr-1 py-1 border border-gray-300 rounded">
+          <select v-model="placement" class="pl-2 pr-1 py-1 border border-gray-300 rounded" data-testid="placement-select">
             <option>top-start</option>
             <option>top</option>
             <option>top-end</option>
@@ -49,12 +49,12 @@
     </Menu>
   </Block>
 
-  <Block title="Offset" content-class="block-offset relative h-[320px] border rounded">
+  <Block title="Offset" content-class="relative h-[320px] border rounded" data-testid="block-offset">
     <template #form>
       <div class="absolute top-0 right-0">
         <div class="flex items-center">
           <div class="mr-2">offset</div>
-          <input v-model.number="offset" type="number" class="w-[100px] px-2 py-1 border border-gray-300 rounded">
+          <input v-model.number="offset" type="number" class="w-[100px] px-2 py-1 border border-gray-300 rounded" data-testid="offset-input">
         </div>
       </div>
     </template>
@@ -86,12 +86,12 @@
     </Menu>
   </Block>
 
-  <Block title="Shift" content-class="block-shift relative h-[320px] overflow-y-auto border rounded">
+  <Block title="Shift" content-class="relative h-[320px] overflow-y-auto border rounded" data-testid="block-shift">
     <template #form>
       <div class="absolute top-0 right-0">
         <div class="flex items-center">
           <div class="mr-2">shift</div>
-          <input v-model.number="shift" type="number" class="w-[100px] px-2 py-1 border border-gray-300 rounded">
+          <input v-model.number="shift" type="number" class="w-[100px] px-2 py-1 border border-gray-300 rounded" data-testid="shift-input">
         </div>
       </div>
     </template>
@@ -125,12 +125,12 @@
     </div>
   </Block>
 
-  <Block title="Flip" content-class="block-flip relative h-[320px] overflow-y-auto border rounded">
+  <Block title="Flip" content-class="relative h-[320px] overflow-y-auto border rounded" data-testid="block-flip">
     <template #form>
       <div class="absolute top-0 right-0">
         <div class="flex items-center">
           <div class="mr-2">flip</div>
-          <input v-model.number="flip" type="number" class="w-[100px] px-2 py-1 border border-gray-300 rounded">
+          <input v-model.number="flip" type="number" class="w-[100px] px-2 py-1 border border-gray-300 rounded" data-testid="flip-input">
         </div>
       </div>
     </template>

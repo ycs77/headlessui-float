@@ -1,5 +1,5 @@
 <template>
-  <Block title="High-order component" content-class="block-high-order-component h-[200px] p-4">
+  <Block title="High-order component" content-class="h-[200px] p-4" data-testid="block-high-order-component">
     <Menu>
       <HighOrderFloat>
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
@@ -27,7 +27,7 @@
     </Menu>
   </Block>
 
-  <Block title="High-order component override props" content-class="block-high-order-component-override h-[200px] p-4 pt-16">
+  <Block title="High-order component override props" content-class="h-[200px] p-4 pt-16" data-testid="block-high-order-component-override">
     <Menu>
       <HighOrderFloat
         :offset="20"

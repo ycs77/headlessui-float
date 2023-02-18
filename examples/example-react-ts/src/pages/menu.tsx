@@ -4,7 +4,7 @@ import Block from '@/components/Block'
 
 export default function ExampleMenu() {
   return (
-    <Block title="Floating Menu" contentClass="block-menu h-[200px] p-4">
+    <Block title="Floating Menu" contentClass="h-[200px] p-4" data-testid="block-menu">
       <Menu>
         <Float placement="bottom-start" offset={4}>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">

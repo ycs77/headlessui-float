@@ -25,7 +25,7 @@ function HoverMenu() {
   }
 
   return (
-    <Block title="Hover menu" contentClass="block-hover-menu h-[200px] p-4">
+    <Block title="Hover menu" contentClass="h-[200px] p-4" data-testid="block-hover-menu">
       <Float
         show={show}
         placement="bottom-start"
@@ -91,7 +91,7 @@ function NestedMenu() {
   }
 
   return (
-    <Block title="Nested Menu" contentClass="block-nested-menu h-[300px] p-4">
+    <Block title="Nested Menu" contentClass="h-[300px] p-4" data-testid="block-nested-menu">
       <Float show={openMapping.m0} placement="bottom-start">
         <button
           type="button"
