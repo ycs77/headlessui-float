@@ -16,7 +16,7 @@
         leave-to="opacity-0 -translate-y-1"
       >
         <PopoverButton class="w-8 h-8 flex justify-center items-center bg-rose-50 hover:bg-rose-100 text-rose-500 rounded">
-          <HeroiconsOutlineMenuAlt2 class="w-5 h-5" aria-hidden="true" />
+          <HeroiconsBars3BottomLeft20Solid class="w-5 h-5" aria-hidden="true" />
         </PopoverButton>
 
         <PopoverPanel class="w-[240px] h-[70px] bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
@@ -34,5 +34,5 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { Float, FloatArrow } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
-import HeroiconsOutlineMenuAlt2 from '~icons/heroicons-outline/menu-alt-2'
+import HeroiconsBars3BottomLeft20Solid from '~icons/heroicons/bars-3-bottom-left-20-solid'
 </script>

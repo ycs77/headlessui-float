@@ -12,7 +12,7 @@
         <ListboxButton class="relative w-full bg-white pl-3.5 pr-10 py-2 text-left text-amber-500 text-sm leading-5 border border-gray-200 rounded-lg shadow-md">
           {{ selected.name }}
           <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-            <HeroiconsOutlineSelector class="w-5 h-5 text-gray-400" aria-hidden="true" />
+            <HeroiconsChevronUpDown20Solid class="w-5 h-5 text-gray-400" aria-hidden="true" />
           </span>
         </ListboxButton>
 
@@ -39,7 +39,7 @@
                 v-if="selected"
                 class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
               >
-                <HeroiconsOutlineCheck class="w-5 h-5" aria-hidden="true" />
+                <HeroiconsCheck20Solid class="w-5 h-5" aria-hidden="true" />
               </span>
             </li>
           </ListboxOption>
@@ -54,8 +54,8 @@ import { ref } from 'vue'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { Float } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
-import HeroiconsOutlineCheck from '~icons/heroicons-outline/check'
-import HeroiconsOutlineSelector from '~icons/heroicons-outline/selector'
+import HeroiconsCheck20Solid from '~icons/heroicons/check-20-solid'
+import HeroiconsChevronUpDown20Solid from '~icons/heroicons/chevron-up-down-20-solid'
 
 const people = [
   { id: 1, name: 'Durward Reynolds', unavailable: false },

@@ -88,7 +88,7 @@
               @mouseleave="menuLeave('m1')"
             >
               Documentation
-              <HeroiconsOutlineChevronRight class="absolute top-2 right-2 w-4 h-4" />
+              <HeroiconsChevronRight20Solid class="absolute top-2 right-2 w-4 h-4" />
             </button>
             <ul
               class="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
@@ -128,7 +128,7 @@
                     @mouseleave="menuLeave('m2')"
                   >
                     Options
-                    <HeroiconsOutlineChevronRight class="absolute top-2 right-2 w-4 h-4" />
+                    <HeroiconsChevronRight20Solid class="absolute top-2 right-2 w-4 h-4" />
                   </button>
                   <ul
                     class="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
@@ -173,7 +173,7 @@
 import { ref } from 'vue'
 import { Float, FloatArrow } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
-import HeroiconsOutlineChevronRight from '~icons/heroicons-outline/chevron-right'
+import HeroiconsChevronRight20Solid from '~icons/heroicons/chevron-right-20-solid'
 
 function useHoverMenu(delay = 150) {
   const show = ref(false)

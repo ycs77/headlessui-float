@@ -2,8 +2,8 @@ import { Fragment, useState } from 'react'
 import { Combobox } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
-import HeroiconsOutlineCheck from '~icons/heroicons-outline/check'
-import HeroiconsOutlineSelector from '~icons/heroicons-outline/selector'
+import HeroiconsCheck20Solid from '~icons/heroicons/check-20-solid'
+import HeroiconsChevronUpDown20Solid from '~icons/heroicons/chevron-up-down-20-solid'
 
 const people = [
   { id: 1, name: 'Wade Cooper', unavailable: false },
@@ -50,7 +50,7 @@ export default function ExampleCombobox() {
             />
 
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-              <HeroiconsOutlineSelector className="w-5 h-5 text-gray-400" aria-hidden="true" />
+              <HeroiconsChevronUpDown20Solid className="w-5 h-5 text-gray-400" aria-hidden="true" />
             </Combobox.Button>
           </div>
 
@@ -81,7 +81,7 @@ export default function ExampleCombobox() {
                             active ? 'text-white' : 'text-teal-600'
                           }`}
                         >
-                          <HeroiconsOutlineCheck className="w-5 h-5" aria-hidden="true" />
+                          <HeroiconsCheck20Solid className="w-5 h-5" aria-hidden="true" />
                         </span>
                       )}
                     </>
