@@ -13,8 +13,10 @@
     ]
   },
   "include": [
-    "src/**/*",
-    "test/**/*",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
     "vitest.config.ts",
     "playwright.config.ts"
   ]
