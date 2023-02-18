@@ -8,7 +8,8 @@ function ExamplePlacement() {
   return (
     <Block
       title="Placement"
-      contentClass="block-placement relative h-[320px] flex justify-center items-center border rounded"
+      contentClass="relative h-[320px] flex justify-center items-center border rounded"
+      data-testid="block-placement"
       form={
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
@@ -17,6 +18,7 @@ function ExamplePlacement() {
               className="pl-2 pr-1 py-1 border border-gray-300 rounded"
               value={placement}
               onChange={event => setPlacement(event.target.value)}
+              data-testid="placement-select"
             >
               <option>top-start</option>
               <option>top</option>
@@ -77,7 +79,8 @@ function ExampleOffset() {
   return (
     <Block
       title="Offset"
-      contentClass="block-offset relative h-[320px] border rounded"
+      contentClass="relative h-[320px] border rounded"
+      data-testid="block-offset"
       form={
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
@@ -87,6 +90,7 @@ function ExampleOffset() {
               className="w-[100px] px-2 py-1 border border-gray-300 rounded"
               value={offset}
               onChange={event => setOffset(parseInt(event.target.value))}
+              data-testid="offset-input"
             />
           </div>
         </div>
@@ -134,7 +138,8 @@ function ExampleShift() {
   return (
     <Block
       title="Shift"
-      contentClass="block-shift relative h-[320px] overflow-y-auto border rounded"
+      contentClass="relative h-[320px] overflow-y-auto border rounded"
+      data-testid="block-shift"
       form={
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
@@ -144,6 +149,7 @@ function ExampleShift() {
               className="w-[100px] px-2 py-1 border border-gray-300 rounded"
               value={shift}
               onChange={event => setShift(parseInt(event.target.value))}
+              data-testid="shift-input"
             />
           </div>
         </div>
@@ -193,7 +199,8 @@ function ExampleFlip() {
   return (
     <Block
       title="Flip"
-      contentClass="block-flip relative h-[320px] overflow-y-auto border rounded"
+      contentClass="relative h-[320px] overflow-y-auto border rounded"
+      data-testid="block-flip"
       form={
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
@@ -203,6 +210,7 @@ function ExampleFlip() {
               className="w-[100px] px-2 py-1 border border-gray-300 rounded"
               value={flip}
               onChange={event => setFlip(parseInt(event.target.value))}
+              data-testid="flip-input"
             />
           </div>
         </div>

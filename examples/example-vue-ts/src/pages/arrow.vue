@@ -1,5 +1,5 @@
 <template>
-  <Block title="Arrow" content-class="block-arrow h-[200px] p-4">
+  <Block title="Arrow" content-class="h-[200px] p-4" data-testid="block-arrow">
     <Menu>
       <Float placement="bottom-start" :offset="12" flip arrow>
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
@@ -38,7 +38,7 @@
     </Menu>
   </Block>
 
-  <Block title="Arrow pin to left" content-class="block-arrow-pin-left h-[200px] p-4">
+  <Block title="Arrow pin to left" content-class="h-[200px] p-4" data-testid="block-arrow-pin-left">
     <Menu>
       <Float placement="bottom-start" :offset="12" flip arrow>
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">

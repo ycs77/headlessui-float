@@ -1,5 +1,5 @@
 <template>
-  <Block title="Floating Menu" content-class="block-menu h-[200px] p-4">
+  <Block title="Floating Menu" content-class="h-[200px] p-4" data-testid="block-menu">
     <Menu>
       <Float placement="bottom-start" :offset="4">
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">

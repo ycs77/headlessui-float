@@ -17,7 +17,7 @@ export default function ExampleListbox() {
   const [selected, setSelected] = useState(people[0])
 
   return (
-    <Block title="Floating Listbox" contentClass="block-listbox h-[300px] p-4">
+    <Block title="Floating Listbox" contentClass="h-[300px] p-4" data-testid="block-listbox">
       <Listbox value={selected} onChange={setSelected}>
         <Float
           as="div"

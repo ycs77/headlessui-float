@@ -4,7 +4,7 @@ import Block from '@/components/Block'
 
 export default function ExampleTransition() {
   return (
-    <Block title="Transition" contentClass="block-transition h-[200px] p-4">
+    <Block title="Transition" contentClass="h-[200px] p-4" data-testid="block-transition">
       <Menu>
         <Float
           placement="bottom-start"

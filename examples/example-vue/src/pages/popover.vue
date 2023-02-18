@@ -1,5 +1,5 @@
 <template>
-  <Block title="Floating Popover" content-class="block-popover h-[160px] p-4">
+  <Block title="Floating Popover" content-class="h-[160px] p-4" data-testid="block-popover">
     <Popover>
       <Float
         placement="bottom-start"

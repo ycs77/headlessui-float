@@ -4,7 +4,7 @@ import Block from '@/components/Block'
 
 export default function ExamplePortal() {
   return (
-    <Block title="Portal" contentClass="block-portal h-[200px] p-4">
+    <Block title="Portal" contentClass="h-[200px] p-4" data-testid="block-portal">
       <Menu>
         <Float placement="bottom-start" offset={4} portal>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
