@@ -20,7 +20,7 @@
           />
 
           <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
-            <HeroiconsOutlineSelector class="w-5 h-5 text-gray-400" aria-hidden="true" />
+            <HeroiconsChevronUpDown20Solid class="w-5 h-5 text-gray-400" aria-hidden="true" />
           </ComboboxButton>
         </div>
 
@@ -51,7 +51,7 @@
                 class="absolute inset-y-0 left-0 flex items-center pl-3"
                 :class="active ? 'text-white' : 'text-teal-600'"
               >
-                <HeroiconsOutlineCheck class="w-5 h-5" aria-hidden="true" />
+                <HeroiconsCheck20Solid class="w-5 h-5" aria-hidden="true" />
               </span>
             </li>
           </ComboboxOption>
@@ -66,8 +66,8 @@ import { computed, ref } from 'vue'
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/vue'
 import { Float } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
-import HeroiconsOutlineCheck from '~icons/heroicons-outline/check'
-import HeroiconsOutlineSelector from '~icons/heroicons-outline/selector'
+import HeroiconsCheck20Solid from '~icons/heroicons/check-20-solid'
+import HeroiconsChevronUpDown20Solid from '~icons/heroicons/chevron-up-down-20-solid'
 
 const people = [
   { id: 1, name: 'Wade Cooper', unavailable: false },

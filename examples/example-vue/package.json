@@ -15,7 +15,7 @@
     "vue-router": "^4.1.0"
   },
   "devDependencies": {
-    "@iconify-json/heroicons-outline": "^1.1.1",
+    "@iconify-json/heroicons": "^1.1.10",
     "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.6",

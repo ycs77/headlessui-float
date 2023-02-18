@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
-import HeroiconsOutlineChevronRight from '~icons/heroicons-outline/chevron-right'
+import HeroiconsChevronRight20Solid from '~icons/heroicons/chevron-right-20-solid'
 
 function HoverMenu() {
   const delay = 150
@@ -129,7 +129,7 @@ function NestedMenu() {
                 onMouseLeave={() => menuLeave('m1')}
               >
                 Documentation
-                <HeroiconsOutlineChevronRight className="absolute top-2 right-2 w-4 h-4" />
+                <HeroiconsChevronRight20Solid className="absolute top-2 right-2 w-4 h-4" />
               </button>
               <ul
                 className="w-48 bg-white border border-gray-200 shadow-lg focus:outline-none"
@@ -168,7 +168,7 @@ function NestedMenu() {
                       onMouseLeave={() => menuLeave('m2')}
                     >
                       Options
-                      <HeroiconsOutlineChevronRight className="absolute top-2 right-2 w-4 h-4" />
+                      <HeroiconsChevronRight20Solid className="absolute top-2 right-2 w-4 h-4" />
                     </button>
                     <ul
                       className="w-48 bg-white border border-gray-200 shadow-lg focus:outline-none"
