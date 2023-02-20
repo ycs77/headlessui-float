@@ -28,8 +28,8 @@ import { type OriginClassResolver, tailwindcssOriginClassResolver } from './orig
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
   placement: Placement
-  x: number | null
-  y: number | null
+  x: number | undefined
+  y: number | undefined
 }
 
 const ArrowContext = createContext<ArrowState | null>(null)
@@ -85,6 +85,13 @@ export interface FloatProps {
 
 const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const mounted = useRef(false)
+  const [ReferenceNode, FloatingNode] = props.children
+
+  if (!isValidElement<any>(ReferenceNode)) {
+    console.warn('<Float /> is missing a reference and floating element.')
+    return <Fragment />
+  }
+
   const [show, setShow] = useState(props.show !== undefined ? props.show : false)
   const [middleware, setMiddleware] = useState<Middleware[]>()
 
@@ -226,7 +233,6 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     const cleanupResizeObserver = useReferenceElResizeObserver()
 
     return () => {
-      mounted.current = false
       cleanupResizeObserver()
     }
   }, [])
@@ -246,15 +252,9 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const arrowApi = {
     arrowRef,
     placement,
-    x: middlewareData.arrow?.x ?? null,
-    y: middlewareData.arrow?.y ?? null,
+    x: middlewareData.arrow?.x,
+    y: middlewareData.arrow?.y,
   } as ArrowState
-
-  const [ReferenceNode, FloatingNode] = props.children
-
-  if (!isValidElement<any>(ReferenceNode)) {
-    return <Fragment />
-  }
 
   const transitionProps = {
     show: mounted.current ? props.show : false,
@@ -278,8 +278,8 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
       ...(props.transform || props.transform === undefined ? {
         position: strategy,
         zIndex: props.zIndex || 9999,
-        top: 0,
-        left: 0,
+        top: '0px',
+        left: '0px',
         right: 'auto',
         bottom: 'auto',
         transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
@@ -331,6 +331,21 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     )
   }
 
+  function renderFloatingNode() {
+    if (env.isServer) {
+      if (mounted.current && props.show) {
+        return <FloatingNode.type {...FloatingNode.props} />
+      }
+      return <Fragment />
+    }
+
+    return (
+      <Transition as={Fragment} {...transitionProps}>
+        <FloatingNode.type {...FloatingNode.props} />
+      </Transition>
+    )
+  }
+
   return renderWrapper([
     <ReferenceNode.type
       key="ReferenceNode"
@@ -343,9 +358,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     >
       {renderPortal(
         renderFloating(
-          <Transition as={Fragment} {...transitionProps}>
-            <FloatingNode.type {...FloatingNode.props} />
-          </Transition>
+          renderFloatingNode()
         )
       )}
     </ArrowContext.Provider>,
@@ -375,10 +388,10 @@ function Arrow(props: FloatArrowProps) {
   }[placement.split('-')[0]]!
 
   const style = {
-    left: typeof x === 'number' ? `${x}px` : '',
-    top: typeof y === 'number' ? `${y}px` : '',
-    right: '',
-    bottom: '',
+    left: typeof x === 'number' ? `${x}px` : undefined,
+    top: typeof y === 'number' ? `${y}px` : undefined,
+    right: undefined,
+    bottom: undefined,
     [staticSide]: `${(props.offset ?? 4) * -1}px`,
   }
 

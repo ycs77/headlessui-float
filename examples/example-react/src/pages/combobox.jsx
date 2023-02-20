@@ -6,12 +6,12 @@ import HeroiconsCheck20Solid from '~icons/heroicons/check-20-solid'
 import HeroiconsChevronUpDown20Solid from '~icons/heroicons/chevron-up-down-20-solid'
 
 const people = [
-  { id: 1, name: 'Wade Cooper', unavailable: false },
-  { id: 2, name: 'Arlene Mccoy', unavailable: false },
-  { id: 3, name: 'Devon Webb', unavailable: false },
-  { id: 4, name: 'Tom Cook', unavailable: false },
-  { id: 5, name: 'Tanya Fox', unavailable: true },
-  { id: 6, name: 'Hellen Schmidt', unavailable: false },
+  { id: 1, name: 'Wade Cooper' },
+  { id: 2, name: 'Arlene Mccoy' },
+  { id: 3, name: 'Devon Webb' },
+  { id: 4, name: 'Tom Cook' },
+  { id: 5, name: 'Tanya Fox' },
+  { id: 6, name: 'Hellen Schmidt' },
 ]
 
 export default function ExampleCombobox() {
