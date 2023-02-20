@@ -174,7 +174,7 @@ export const Float = defineComponent({
   props: FloatProps,
   emits: ['show', 'hide', 'update'],
   setup(props, { emit, slots, attrs }) {
-    const isMounted = ref(false)
+    const mounted = ref(false)
     const show = ref(props.show !== null ? props.show : false)
 
     const propPlacement = toRef(props, 'placement')
@@ -182,8 +182,8 @@ export const Float = defineComponent({
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
 
     const arrowRef = ref(null) as Ref<HTMLElement | null>
-    const arrowX = ref<number | null>(null)
-    const arrowY = ref<number | null>(null)
+    const arrowX = ref<number | undefined>(undefined)
+    const arrowY = ref<number | undefined>(undefined)
 
     const { x, y, placement, strategy, reference, floating, middlewareData, update } = useFloating({
       placement: propPlacement,
@@ -300,8 +300,8 @@ export const Float = defineComponent({
 
     watch(middlewareData, () => {
       const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
-      arrowX.value = arrowData?.x ?? null
-      arrowY.value = arrowData?.y ?? null
+      arrowX.value = arrowData?.x
+      arrowY.value = arrowData?.y
     })
 
     let disposeAutoUpdate: (() => void) | undefined
@@ -375,12 +375,13 @@ export const Float = defineComponent({
     watch(show, handleShow)
 
     onMounted(async () => {
-      isMounted.value = true
+      mounted.value = true
       startReferenceElResizeObserver()
       await handleShow()
     })
 
     onBeforeUnmount(() => {
+      clearAutoUpdate()
       clearReferenceElResizeObserver()
     })
 
@@ -433,8 +434,8 @@ export const Float = defineComponent({
             ...(props.transform ? {
               position: strategy.value,
               zIndex: props.zIndex,
-              top: '0',
-              left: '0',
+              top: '0px',
+              left: '0px',
               right: 'auto',
               bottom: 'auto',
               transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
@@ -446,7 +447,7 @@ export const Float = defineComponent({
             }),
             width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
               ? `${referenceElWidth.value}px`
-              : '',
+              : undefined,
           },
         }
 
@@ -460,7 +461,7 @@ export const Float = defineComponent({
         }
 
         function renderPortal(node: VNode) {
-          if (isMounted.value &&
+          if (mounted.value &&
               (props.portal === true || typeof props.portal === 'string')
           ) {
             return h(Teleport, {
@@ -479,26 +480,40 @@ export const Float = defineComponent({
           return h(props.floatingAs, () => node)
         }
 
+        function renderFloatingNode() {
+          function createFloatingNode() {
+            const contentProps = props.floatingAs === 'template' ? floatingProps : null
+            const el = cloneVNode(floatingNode, contentProps)
+
+            if (el.props?.unmount === false) {
+              updateElements()
+              updateFloating()
+              return el
+            }
+
+            if (typeof props.show === 'boolean' ? props.show : true) {
+              return el
+            }
+
+            return createCommentVNode()
+          }
+
+          if (env.isServer) {
+            if (mounted.value && props.show) {
+              return createFloatingNode()
+            }
+            return createCommentVNode()
+          }
+
+          return h(Transition, transitionProps, createFloatingNode)
+        }
+
         return renderWrapper([
           cloneVNode(referenceNode, { ref: reference }),
 
           renderPortal(
             renderFloating(
-              h(Transition, transitionProps, () => {
-                const contentProps = props.floatingAs === 'template' ? floatingProps : null
-                const el = cloneVNode(floatingNode, contentProps)
-
-                if (el.props?.unmount === false) {
-                  updateElements()
-                  updateFloating()
-                  return el
-                }
-
-                if (typeof props.show === 'boolean' ? props.show : true) {
-                  return el
-                }
-                return createCommentVNode()
-              })
+              renderFloatingNode()
             )
           ),
         ])
@@ -533,10 +548,10 @@ export const FloatArrow = defineComponent({
       }[placement.value.split('-')[0]]!
 
       const style = {
-        left: typeof x.value === 'number' ? `${x.value}px` : '',
-        top: typeof y.value === 'number' ? `${y.value}px` : '',
-        right: '',
-        bottom: '',
+        left: typeof x.value === 'number' ? `${x.value}px` : undefined,
+        top: typeof y.value === 'number' ? `${y.value}px` : undefined,
+        right: undefined,
+        bottom: undefined,
         [staticSide]: `${props.offset * -1}px`,
       }
 

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { nextFrame } from './utils/nextFrame.js'
 
 test('render floating menu', async ({ page }) => {
   await page.goto('http://localhost:3032/menu')
@@ -21,5 +22,6 @@ test('render floating combobox', async ({ page }) => {
 test('render floating popover', async ({ page }) => {
   await page.goto('http://localhost:3032/popover')
   await page.click('[data-testid=block-popover] button')
+  await nextFrame()
   expect(await page.getByTestId('block-popover').screenshot()).toMatchSnapshot('popover.png')
 })

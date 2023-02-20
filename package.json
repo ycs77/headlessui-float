@@ -25,7 +25,7 @@
     "test:unit": "npm-run-all -p test:unit:*",
     "test:unit:react": "yarn react test:unit --run",
     "test:unit:vue": "yarn vue test:unit --run",
-    "test:functional": "npm-run-all -p test:functional:*",
+    "test:functional": "npm-run-all test:functional:*",
     "test:functional:react": "yarn react test:functional",
     "test:functional:vue": "yarn vue test:functional",
     "react": "yarn workspace @headlessui-float/react",

@@ -26,5 +26,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './setup.ts',
+    deps: {
+      inline: ['vue'],
+    },
   },
 })

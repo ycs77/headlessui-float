@@ -6,11 +6,11 @@ import HeroiconsCheck20Solid from '~icons/heroicons/check-20-solid'
 import HeroiconsChevronUpDown20Solid from '~icons/heroicons/chevron-up-down-20-solid'
 
 const people = [
-  { id: 1, name: 'Durward Reynolds', unavailable: false },
-  { id: 2, name: 'Kenton Towne', unavailable: false },
-  { id: 3, name: 'Therese Wunsch', unavailable: false },
-  { id: 4, name: 'Benedict Kessler', unavailable: true },
-  { id: 5, name: 'Katelyn Rohan', unavailable: false },
+  { id: 1, name: 'Durward Reynolds' },
+  { id: 2, name: 'Kenton Towne' },
+  { id: 3, name: 'Therese Wunsch' },
+  { id: 4, name: 'Benedict Kessler' },
+  { id: 5, name: 'Katelyn Rohan' },
 ]
 
 export default function ExampleAdaptiveWidth() {
@@ -39,12 +39,11 @@ export default function ExampleAdaptiveWidth() {
                 <Listbox.Option
                   key={person.id}
                   className={({ active }) =>
-                    `relative block w-full pl-10 pr-3 py-2 text-left text-gray-600 text-sm cursor-default ${
-                      active ? 'bg-amber-100 text-amber-700' : ''
-                    } ${person.unavailable ? 'text-gray-300' : ''}`
+                    `relative block w-full pl-10 pr-3 py-2 text-left text-sm cursor-default ${
+                      active ? 'bg-amber-100 text-amber-700' : 'text-gray-600'
+                    }`
                   }
                   value={person}
-                  disabled={person.unavailable}
                 >
                   {({ selected }) => (
                     <>
@@ -87,12 +86,11 @@ export default function ExampleAdaptiveWidth() {
                 <Listbox.Option
                   key={person.id}
                   className={({ active }) =>
-                    `relative block w-full pl-10 pr-3 py-2 text-left text-gray-600 text-sm cursor-default ${
-                      active ? 'bg-amber-100 text-amber-700' : ''
-                    } ${person.unavailable ? 'text-gray-300' : ''}`
+                    `relative block w-full pl-10 pr-3 py-2 text-left text-sm cursor-default ${
+                      active ? 'bg-amber-100 text-amber-700' : 'text-gray-600'
+                    }`
                   }
                   value={person}
-                  disabled={person.unavailable}
                 >
                   {({ selected }) => (
                     <>

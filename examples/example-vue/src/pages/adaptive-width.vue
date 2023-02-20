@@ -21,15 +21,11 @@
             v-slot="{ active, selected }"
             :key="person.name"
             :value="person"
-            :disabled="person.unavailable"
             as="template"
           >
             <li
-              class="relative block w-full pl-10 pr-3 py-2 text-left text-gray-600 text-sm cursor-default"
-              :class="{
-                'bg-amber-100 text-amber-700': active,
-                'text-gray-300': person.unavailable,
-              }"
+              class="relative block w-full pl-10 pr-3 py-2 text-left text-sm cursor-default"
+              :class="active ? 'bg-amber-100 text-amber-700' : 'text-gray-600'"
             >
               <span class="block truncate" :class="selected ? 'font-medium' : 'font-normal'">
                 {{ person.name }}
@@ -70,15 +66,11 @@
             v-slot="{ active, selected }"
             :key="person.name"
             :value="person"
-            :disabled="person.unavailable"
             as="template"
           >
             <li
-              class="relative block w-full pl-10 pr-3 py-2 text-left text-gray-600 text-sm cursor-default"
-              :class="{
-                'bg-amber-100 text-amber-700': active,
-                'text-gray-300': person.unavailable,
-              }"
+              class="relative block w-full pl-10 pr-3 py-2 text-left text-sm cursor-default"
+              :class="active ? 'bg-amber-100 text-amber-700' : 'text-gray-600'"
             >
               <span class="block truncate" :class="selected ? 'font-medium' : 'font-normal'">
                 {{ person.name }}
@@ -106,11 +98,11 @@ import HeroiconsCheck20Solid from '~icons/heroicons/check-20-solid'
 import HeroiconsChevronUpDown20Solid from '~icons/heroicons/chevron-up-down-20-solid'
 
 const people = [
-  { id: 1, name: 'Durward Reynolds', unavailable: false },
-  { id: 2, name: 'Kenton Towne', unavailable: false },
-  { id: 3, name: 'Therese Wunsch', unavailable: false },
-  { id: 4, name: 'Benedict Kessler', unavailable: true },
-  { id: 5, name: 'Katelyn Rohan', unavailable: false },
+  { id: 1, name: 'Durward Reynolds' },
+  { id: 2, name: 'Kenton Towne' },
+  { id: 3, name: 'Therese Wunsch' },
+  { id: 4, name: 'Benedict Kessler' },
+  { id: 5, name: 'Katelyn Rohan' },
 ]
 const selected = ref(people[0])
 </script>
