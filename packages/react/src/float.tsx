@@ -22,7 +22,6 @@ import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/fl
 import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
-import throttle from 'lodash.throttle'
 import { env } from './utils/env'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
@@ -192,7 +191,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
       return autoUpdate(
         refs.reference.current,
         refs.floating.current,
-        throttle(updateFloating, 16),
+        updateFloating,
         typeof props.autoUpdate === 'object'
           ? props.autoUpdate
           : undefined

@@ -17,7 +17,6 @@ import {
   watch,
 } from 'vue'
 import type { Component, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
-import throttle from 'lodash.throttle'
 import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
 import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
@@ -315,7 +314,7 @@ export const Float = defineComponent({
         disposeAutoUpdate = autoUpdate(
           referenceEl.value!,
           floatingEl.value!,
-          throttle(updateFloating, 16),
+          updateFloating,
           typeof props.autoUpdate === 'object'
             ? props.autoUpdate
             : undefined
