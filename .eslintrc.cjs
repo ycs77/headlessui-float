@@ -14,6 +14,7 @@ module.exports = {
 
     // typescript
     '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/prefer-ts-expect-error': 'off',
   },
 }

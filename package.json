@@ -1,5 +1,6 @@
 {
   "name": "headlessui-float",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
   "description": "Easily use Headless UI components with Floating UI (Popper.js)",
