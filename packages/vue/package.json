@@ -37,7 +37,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "sh build/build.sh",
+    "build": "sh scripts/build.sh",
     "watch": "vite build --watch",
     "test:unit": "vitest --root test/unit/",
     "test:functional": "playwright test test/functional",
