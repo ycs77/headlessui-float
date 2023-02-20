@@ -10,7 +10,7 @@
     "useDefineForClassFields": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["DOM", "ESNext"],
+    "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "sourceMap": true,
     "declaration": true
