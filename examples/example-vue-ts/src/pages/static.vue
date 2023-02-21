@@ -77,7 +77,6 @@
           <Float
             :show="openMapping.m1"
             placement="right-start"
-            :offset="-4"
             :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
             shift
           >
@@ -117,7 +116,6 @@
                 <Float
                   :show="openMapping.m2"
                   placement="right-start"
-                  :offset="-4"
                   :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
                   shift
                 >
