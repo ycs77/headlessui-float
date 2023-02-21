@@ -296,7 +296,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   }
 
   function renderWrapper(children: ReactElement[]) {
-    if (props.as === Fragment) {
+    if (props.as === Fragment || !props.as) {
       return <Fragment>{children}</Fragment>
     }
 

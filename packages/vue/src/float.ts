@@ -16,7 +16,7 @@ import {
   toRef,
   watch,
 } from 'vue'
-import type { Component, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
+import type { FunctionalComponent, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
 import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
 import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
@@ -53,8 +53,8 @@ function useArrowContext(component: string) {
 }
 
 export interface FloatPropsType {
-  as?: string | Component
-  floatingAs?: string | Component
+  as?: string | FunctionalComponent
+  floatingAs?: string | FunctionalComponent
   show?: boolean
   placement?: Placement
   strategy?: Strategy
@@ -87,11 +87,11 @@ export interface FloatPropsType {
 
 export const FloatProps = {
   as: {
-    type: [String, Function, Object] as PropType<string | Component>,
+    type: [String, Function] as PropType<string | FunctionalComponent>,
     default: 'template',
   },
   floatingAs: {
-    type: [String, Function, Object] as PropType<string | Component>,
+    type: [String, Function] as PropType<string | FunctionalComponent>,
     default: 'div',
   },
   show: {
@@ -457,7 +457,7 @@ export const Float = defineComponent({
           } else if (typeof props.as === 'string') {
             return h(props.as, attrs, nodes)
           }
-          return h(props.as, () => nodes)
+          return h(props.as, attrs, () => nodes)
         }
 
         function renderPortal(node: VNode) {
@@ -477,7 +477,7 @@ export const Float = defineComponent({
           } else if (typeof props.floatingAs === 'string') {
             return h(props.floatingAs, floatingProps, node)
           }
-          return h(props.floatingAs, () => node)
+          return h(props.floatingAs, floatingProps, () => node)
         }
 
         function renderFloatingNode() {
@@ -524,7 +524,7 @@ export const Float = defineComponent({
 
 export const FloatArrowProps = {
   as: {
-    type: [String, Object],
+    type: [String, Function] as PropType<string | FunctionalComponent>,
     default: 'div',
   },
   offset: {
