@@ -324,7 +324,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
       }),
       width: props.adaptiveWidth && typeof referenceElWidth === 'number'
         ? `${referenceElWidth}px`
-        : '',
+        : undefined,
     },
   }
 
