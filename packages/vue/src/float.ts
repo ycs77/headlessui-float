@@ -169,17 +169,152 @@ export const FloatProps = {
   },
 }
 
+export interface RenderFloatingElementContext {
+  mounted: Ref<boolean>
+  show: Ref<boolean>
+  x: Readonly<Ref<number | null>>
+  y: Readonly<Ref<number | null>>
+  placement: Readonly<Ref<Placement>>
+  strategy: Readonly<Ref<Strategy>>
+  referenceElWidth: Ref<number | null>
+  updateFloating: () => void
+}
+
+export function renderReferenceElement(referenceNode: VNode, referenceRef: Ref<ReferenceElement | null>) {
+  return cloneVNode(referenceNode, { ref: referenceRef })
+}
+
+export function renderFloatingElement(
+  floatingNode: VNode,
+  floatingRef: Ref<FloatingElement | null>,
+  props: FloatPropsType,
+  context: RenderFloatingElementContext
+) {
+  const { mounted, show, x, y, placement, strategy, updateFloating, referenceElWidth } = context
+
+  const originClassValue = computed(() => {
+    if (typeof props.originClass === 'function') {
+      return props.originClass(placement.value)
+    } else if (typeof props.originClass === 'string') {
+      return props.originClass
+    } else if (props.tailwindcssOriginClass) {
+      return tailwindcssOriginClassResolver(placement.value)
+    }
+    return ''
+  })
+
+  const transitionClassesProps = {
+    enterActiveClass: props.enter || originClassValue.value
+      ? `${props.enter || ''} ${originClassValue.value}`
+      : undefined,
+    enterFromClass: props.enterFrom,
+    enterToClass: props.enterTo,
+    leaveActiveClass: props.leave || originClassValue.value
+      ? `${props.leave || ''} ${originClassValue.value}`
+      : undefined,
+    leaveFromClass: props.leaveFrom,
+    leaveToClass: props.leaveTo,
+  }
+
+  const transitionProps = {
+    name: props.transitionName,
+    type: props.transitionType,
+    ...(!props.transitionName ? transitionClassesProps : {}),
+    onBeforeEnter() {
+      show.value = true
+    },
+    onAfterLeave() {
+      show.value = false
+    },
+  }
+
+  const floatingProps = {
+    ref: floatingRef,
+    style: {
+      ...(props.transform ? {
+        position: strategy.value,
+        zIndex: props.zIndex,
+        top: '0px',
+        left: '0px',
+        right: 'auto',
+        bottom: 'auto',
+        transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
+      } : {
+        position: strategy.value,
+        zIndex: props.zIndex,
+        top: `${y.value || 0}px`,
+        left: `${x.value || 0}px`,
+      }),
+      width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
+        ? `${referenceElWidth.value}px`
+        : undefined,
+    },
+  }
+
+  function renderPortal(node: VNode) {
+    if (props.portal) {
+      return h(Portal, () => node)
+    }
+    return node
+  }
+
+  function renderFloating(node: VNode) {
+    if (props.floatingAs === 'template') {
+      return node
+    } else if (typeof props.floatingAs === 'string') {
+      return h(props.floatingAs, floatingProps, node)
+    }
+    return h(props.floatingAs!, floatingProps, () => node)
+  }
+
+  function renderFloatingNode() {
+    function createFloatingNode() {
+      const contentProps = props.floatingAs === 'template' ? floatingProps : null
+      const el = cloneVNode(floatingNode, contentProps)
+
+      if (el.props?.unmount === false) {
+        updateFloating()
+        return el
+      }
+
+      if (typeof props.show === 'boolean' ? props.show : true) {
+        return el
+      }
+
+      return createCommentVNode()
+    }
+
+    if (env.isServer) {
+      if (mounted.value && props.show) {
+        return createFloatingNode()
+      }
+      return createCommentVNode()
+    }
+
+    return h(Transition, transitionProps, createFloatingNode)
+  }
+
+  return renderPortal(
+    renderFloating(
+      renderFloatingNode()
+    )
+  )
+}
+
 export const Float = defineComponent({
   name: 'Float',
   props: FloatProps,
   emits: ['show', 'hide', 'update'],
-  setup(props, { emit, slots, attrs }) {
+  setup(props, context) {
+    const { emit, slots, attrs } = context
+
     const mounted = ref(false)
+
     const show = ref(props.show !== null ? props.show : false)
 
     const propPlacement = toRef(props, 'placement')
     const propStrategy = toRef(props, 'strategy')
-    const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
+    const middleware = shallowRef({}) as ShallowRef<Middleware[]>
 
     const reference = ref(null) as Ref<ReferenceElement | null>
     const floating = ref(null) as Ref<FloatingElement | null>
@@ -187,27 +322,21 @@ export const Float = defineComponent({
     const arrowX = ref<number | undefined>(undefined)
     const arrowY = ref<number | undefined>(undefined)
 
-    const { x, y, placement, strategy, middlewareData, update } = useFloating(reference, floating, {
+    const floatingContext = useFloating(reference, floating, {
       placement: propPlacement,
       strategy: propStrategy,
       middleware,
     })
-
-    const originClassValue = computed(() => {
-      if (typeof props.originClass === 'function') {
-        return props.originClass(placement.value)
-      } else if (typeof props.originClass === 'string') {
-        return props.originClass
-      } else if (props.tailwindcssOriginClass) {
-        return tailwindcssOriginClassResolver(placement.value)
-      }
-      return ''
-    })
+    const { x, y, placement, strategy, middlewareData, update } = floatingContext
 
     const referenceEl = computed(() => dom(reference)) as ComputedRef<ReferenceElement | null>
     const floatingEl = computed(() => dom(floating)) as ComputedRef<FloatingElement | null>
 
     const referenceElWidth = ref<number | null>(null)
+
+    onMounted(() => {
+      mounted.value = true
+    })
 
     function updateFloating() {
       if (
@@ -219,9 +348,7 @@ export const Float = defineComponent({
       }
     }
 
-    watch([propPlacement, propStrategy, middleware], () => {
-      updateFloating()
-    }, { flush: 'sync' })
+    watch([propPlacement, propStrategy, middleware], updateFloating, { flush: 'sync' })
 
     watch([
       () => props.offset,
@@ -292,25 +419,15 @@ export const Float = defineComponent({
       arrowY.value = arrowData?.y
     })
 
-    function useAutoUpdate() {
-      if (isVisibleDOMElement(referenceEl) &&
-          isVisibleDOMElement(floatingEl) &&
-          props.autoUpdate !== false
-      ) {
-        return autoUpdate(
-          referenceEl.value!,
-          floatingEl.value!,
-          updateFloating,
-          typeof props.autoUpdate === 'object'
-            ? props.autoUpdate
-            : undefined
-        )
-      }
-
-      return () => {}
-    }
-
     let cleanupResizeObserver: () => void = () => {}
+
+    onMounted(() => {
+      cleanupResizeObserver = useReferenceElResizeObserver()
+    })
+
+    onBeforeUnmount(() => {
+      cleanupResizeObserver()
+    })
 
     function useReferenceElResizeObserver() {
       if (props.adaptiveWidth &&
@@ -332,14 +449,23 @@ export const Float = defineComponent({
       return () => {}
     }
 
-    onMounted(() => {
-      mounted.value = true
-      cleanupResizeObserver = useReferenceElResizeObserver()
-    })
+    function useAutoUpdate() {
+      if (isVisibleDOMElement(referenceEl) &&
+          isVisibleDOMElement(floatingEl) &&
+          props.autoUpdate !== false
+      ) {
+        return autoUpdate(
+          referenceEl.value!,
+          floatingEl.value!,
+          updateFloating,
+          typeof props.autoUpdate === 'object'
+            ? props.autoUpdate
+            : undefined
+        )
+      }
 
-    onBeforeUnmount(() => {
-      cleanupResizeObserver()
-    })
+      return () => {}
+    }
 
     watch(show, async (value, oldValue, onCleanup) => {
       await nextTick()
@@ -367,6 +493,15 @@ export const Float = defineComponent({
 
     provide(ArrowContext, arrowApi)
 
+    function renderWrapper(nodes: VNode[]) {
+      if (props.as === 'template') {
+        return nodes
+      } else if (typeof props.as === 'string') {
+        return h(props.as, attrs, nodes)
+      }
+      return h(props.as, attrs, () => nodes)
+    }
+
     return () => {
       if (slots.default) {
         const [referenceNode, floatingNode] = flattenFragment(slots.default() || []).filter(isValidElement)
@@ -375,114 +510,18 @@ export const Float = defineComponent({
           return
         }
 
-        const transitionClassesProps = {
-          enterActiveClass: props.enter || originClassValue.value
-            ? `${props.enter || ''} ${originClassValue.value}`
-            : undefined,
-          enterFromClass: props.enterFrom,
-          enterToClass: props.enterTo,
-          leaveActiveClass: props.leave || originClassValue.value
-            ? `${props.leave || ''} ${originClassValue.value}`
-            : undefined,
-          leaveFromClass: props.leaveFrom,
-          leaveToClass: props.leaveTo,
-        }
+        const referenceElement = renderReferenceElement(referenceNode, reference)
 
-        const transitionProps = {
-          name: props.transitionName,
-          type: props.transitionType,
-          ...(!props.transitionName ? transitionClassesProps : {}),
-          onBeforeEnter() {
-            show.value = true
-          },
-          onAfterLeave() {
-            show.value = false
-          },
-        }
-
-        const floatingProps = {
-          ref: floating,
-          style: {
-            ...(props.transform ? {
-              position: strategy.value,
-              zIndex: props.zIndex,
-              top: '0px',
-              left: '0px',
-              right: 'auto',
-              bottom: 'auto',
-              transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
-            } : {
-              position: strategy.value,
-              zIndex: props.zIndex,
-              top: `${y.value || 0}px`,
-              left: `${x.value || 0}px`,
-            }),
-            width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
-              ? `${referenceElWidth.value}px`
-              : undefined,
-          },
-        }
-
-        function renderWrapper(nodes: VNode[]) {
-          if (props.as === 'template') {
-            return nodes
-          } else if (typeof props.as === 'string') {
-            return h(props.as, attrs, nodes)
-          }
-          return h(props.as, attrs, () => nodes)
-        }
-
-        function renderPortal(node: VNode) {
-          if (props.portal) {
-            return h(Portal, () => node)
-          }
-          return node
-        }
-
-        function renderFloating(node: VNode) {
-          if (props.floatingAs === 'template') {
-            return node
-          } else if (typeof props.floatingAs === 'string') {
-            return h(props.floatingAs, floatingProps, node)
-          }
-          return h(props.floatingAs, floatingProps, () => node)
-        }
-
-        function renderFloatingNode() {
-          function createFloatingNode() {
-            const contentProps = props.floatingAs === 'template' ? floatingProps : null
-            const el = cloneVNode(floatingNode, contentProps)
-
-            if (el.props?.unmount === false) {
-              updateFloating()
-              return el
-            }
-
-            if (typeof props.show === 'boolean' ? props.show : true) {
-              return el
-            }
-
-            return createCommentVNode()
-          }
-
-          if (env.isServer) {
-            if (mounted.value && props.show) {
-              return createFloatingNode()
-            }
-            return createCommentVNode()
-          }
-
-          return h(Transition, transitionProps, createFloatingNode)
-        }
+        const floatingElement = renderFloatingElement(
+          floatingNode,
+          floating,
+          props,
+          { mounted, show, x, y, placement, strategy, referenceElWidth, updateFloating }
+        )
 
         return renderWrapper([
-          cloneVNode(referenceNode, { ref: reference }),
-
-          renderPortal(
-            renderFloating(
-              renderFloatingNode()
-            )
-          ),
+          referenceElement,
+          floatingElement,
         ])
       }
     }
