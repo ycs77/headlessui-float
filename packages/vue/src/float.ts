@@ -6,6 +6,7 @@ import {
   defineComponent,
   h,
   inject,
+  mergeProps,
   nextTick,
   onBeforeUnmount,
   onMounted,
@@ -15,7 +16,7 @@ import {
   toRef,
   watch,
 } from 'vue'
-import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
+import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, SetupContext, ShallowRef, VNode } from 'vue'
 import { Portal } from '@headlessui/vue'
 import { arrow, useFloating } from '@floating-ui/vue'
 import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
@@ -31,6 +32,23 @@ import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
+interface ReferenceState {
+  referenceRef: Ref<ReferenceElement | null>
+}
+
+interface FloatingState {
+  floatingRef: Ref<FloatingElement | null>
+  props: FloatPropsType
+  mounted: Ref<boolean>
+  show: Ref<boolean>
+  x: Readonly<Ref<number | null>>
+  y: Readonly<Ref<number | null>>
+  placement: Readonly<Ref<Placement>>
+  strategy: Readonly<Ref<Strategy>>
+  referenceElWidth: Ref<number | null>
+  updateFloating: () => void
+}
+
 interface ArrowState {
   ref: Ref<HTMLElement | null>
   placement: Ref<Placement>
@@ -38,17 +56,37 @@ interface ArrowState {
   y: Ref<number | null>
 }
 
-const ArrowContext = Symbol('ArrowState') as InjectionKey<ArrowState>
+const ReferenceContext = Symbol('ReferenceContext') as InjectionKey<ReferenceState>
+const FloatingContext = Symbol('FloatingContext') as InjectionKey<FloatingState>
+const ArrowContext = Symbol('ArrowContext') as InjectionKey<ArrowState>
+
+function useReferenceContext(component: string) {
+  const context = inject(ReferenceContext, null)
+  if (context === null) {
+    const err = new Error(`<${component} /> must be in the <Float /> component.`)
+    if (Error.captureStackTrace) Error.captureStackTrace(err, useReferenceContext)
+    throw err
+  }
+  return context
+}
+
+function useFloatingContext(component: string) {
+  const context = inject(FloatingContext, null)
+  if (context === null) {
+    const err = new Error(`<${component} /> must be in the <Float /> component.`)
+    if (Error.captureStackTrace) Error.captureStackTrace(err, useFloatingContext)
+    throw err
+  }
+  return context
+}
 
 function useArrowContext(component: string) {
   const context = inject(ArrowContext, null)
-
   if (context === null) {
     const err = new Error(`<${component} /> must be in the <Float /> component.`)
     if (Error.captureStackTrace) Error.captureStackTrace(err, useArrowContext)
     throw err
   }
-
   return context
 }
 
@@ -79,6 +117,7 @@ export interface FloatPropsType {
   portal?: boolean
   transform?: boolean
   adaptiveWidth?: boolean
+  composable?: boolean
   middleware?: Middleware[] | ((refs: {
     referenceEl: Ref<HTMLElement | null>
     floatingEl: Ref<HTMLElement | null>
@@ -160,6 +199,10 @@ export const FloatProps = {
     type: Boolean,
     default: false,
   },
+  composable: {
+    type: Boolean,
+    default: false,
+  },
   middleware: {
     type: [Array, Function] as PropType<Middleware[] | ((refs: {
       referenceEl: Ref<ReferenceElement | null>
@@ -169,28 +212,36 @@ export const FloatProps = {
   },
 }
 
-export interface RenderFloatingElementContext {
-  mounted: Ref<boolean>
-  show: Ref<boolean>
-  x: Readonly<Ref<number | null>>
-  y: Readonly<Ref<number | null>>
-  placement: Readonly<Ref<Placement>>
-  strategy: Readonly<Ref<Strategy>>
-  referenceElWidth: Ref<number | null>
-  updateFloating: () => void
-}
+export function renderReferenceElement(
+  referenceNode: VNode,
+  renderAs: string | FunctionalComponent,
+  attrs: SetupContext['attrs'],
+  context: ReferenceState
+) {
+  const { referenceRef } = context
 
-export function renderReferenceElement(referenceNode: VNode, referenceRef: Ref<ReferenceElement | null>) {
-  return cloneVNode(referenceNode, { ref: referenceRef })
+  const node = cloneVNode(
+    referenceNode,
+    mergeProps(renderAs === 'template' ? attrs : {}, {
+      ref: referenceRef,
+    })
+  )
+
+  if (renderAs === 'template') {
+    return node
+  } else if (typeof renderAs === 'string') {
+    return h(renderAs, attrs, [node])
+  }
+  return h(renderAs, attrs, () => [node])
 }
 
 export function renderFloatingElement(
   floatingNode: VNode,
-  floatingRef: Ref<FloatingElement | null>,
-  props: FloatPropsType,
-  context: RenderFloatingElementContext
+  renderAs: string | FunctionalComponent,
+  attrs: SetupContext['attrs'],
+  context: FloatingState
 ) {
-  const { mounted, show, x, y, placement, strategy, updateFloating, referenceElWidth } = context
+  const { floatingRef, props, mounted, show, x, y, placement, strategy, updateFloating, referenceElWidth } = context
 
   const originClassValue = computed(() => {
     if (typeof props.originClass === 'function') {
@@ -229,7 +280,6 @@ export function renderFloatingElement(
   }
 
   const floatingProps = {
-    ref: floatingRef,
     style: {
       ...(props.transform ? {
         position: strategy.value,
@@ -259,17 +309,21 @@ export function renderFloatingElement(
   }
 
   function renderFloating(node: VNode) {
-    if (props.floatingAs === 'template') {
+    const props = mergeProps(floatingProps, attrs, { ref: floatingRef })
+
+    if (renderAs === 'template') {
       return node
-    } else if (typeof props.floatingAs === 'string') {
-      return h(props.floatingAs, floatingProps, node)
+    } else if (typeof renderAs === 'string') {
+      return h(renderAs, props, node)
     }
-    return h(props.floatingAs!, floatingProps, () => node)
+    return h(renderAs, props, () => node)
   }
 
   function renderFloatingNode() {
     function createFloatingNode() {
-      const contentProps = props.floatingAs === 'template' ? floatingProps : null
+      const contentProps = renderAs === 'template'
+        ? mergeProps(floatingProps, attrs, { ref: floatingRef })
+        : null
       const el = cloneVNode(floatingNode, contentProps)
 
       if (el.props?.unmount === false) {
@@ -305,9 +359,7 @@ export const Float = defineComponent({
   name: 'Float',
   props: FloatProps,
   emits: ['show', 'hide', 'update'],
-  setup(props, context) {
-    const { emit, slots, attrs } = context
-
+  setup(props, { emit, slots, attrs }) {
     const mounted = ref(false)
 
     const show = ref(props.show !== null ? props.show : false)
@@ -484,6 +536,23 @@ export const Float = defineComponent({
       }
     }, { flush: 'post', immediate: true })
 
+    const referenceApi = {
+      referenceRef: reference,
+    } as ReferenceState
+
+    const floatingApi = {
+      floatingRef: floating,
+      props,
+      mounted,
+      show,
+      x,
+      y,
+      placement,
+      strategy,
+      referenceElWidth,
+      updateFloating,
+    } as FloatingState
+
     const arrowApi = {
       ref: arrowRef,
       placement,
@@ -493,36 +562,105 @@ export const Float = defineComponent({
 
     provide(ArrowContext, arrowApi)
 
-    function renderWrapper(nodes: VNode[]) {
+    function renderWrapper(nodes: VNode | VNode[]) {
+      const children = Array.isArray(nodes) ? nodes : [nodes]
       if (props.as === 'template') {
-        return nodes
+        return children
       } else if (typeof props.as === 'string') {
-        return h(props.as, attrs, nodes)
+        return h(props.as, attrs, children)
       }
-      return h(props.as, attrs, () => nodes)
+      return h(props.as, attrs, () => children)
+    }
+
+    if (props.composable) {
+      provide(ReferenceContext, referenceApi)
+      provide(FloatingContext, floatingApi)
+
+      return () => {
+        if (slots.default) {
+          return renderWrapper(slots.default())
+        }
+      }
     }
 
     return () => {
       if (slots.default) {
-        const [referenceNode, floatingNode] = flattenFragment(slots.default() || []).filter(isValidElement)
+        const [referenceNode, floatingNode] = flattenFragment(slots.default()).filter(isValidElement)
 
         if (!isValidElement(referenceNode)) {
           return
         }
 
-        const referenceElement = renderReferenceElement(referenceNode, reference)
+        const referenceElement = renderReferenceElement(
+          referenceNode,
+          'template',
+          {},
+          referenceApi
+        )
 
         const floatingElement = renderFloatingElement(
           floatingNode,
-          floating,
-          props,
-          { mounted, show, x, y, placement, strategy, referenceElWidth, updateFloating }
+          props.floatingAs,
+          {},
+          floatingApi
         )
 
         return renderWrapper([
           referenceElement,
           floatingElement,
         ])
+      }
+    }
+  },
+})
+
+export const FloatReferenceProps = {
+  as: {
+    type: [String, Function] as PropType<string | FunctionalComponent>,
+    default: 'template',
+  },
+}
+
+export const FloatReference = defineComponent({
+  name: 'FloatReference',
+  props: FloatReferenceProps,
+  setup(props, { slots, attrs }) {
+    const context = useReferenceContext('FloatReference')
+
+    return () => {
+      if (slots.default) {
+        return renderReferenceElement(
+          slots.default()[0],
+          props.as,
+          attrs,
+          context
+        )
+      }
+    }
+  },
+})
+
+export const FloatContentProps = {
+  as: {
+    type: [String, Function] as PropType<string | FunctionalComponent>,
+    default: 'div',
+  },
+}
+
+export const FloatContent = defineComponent({
+  name: 'FloatContent',
+  props: FloatContentProps,
+  setup(props, { slots, attrs }) {
+    const context = useFloatingContext('FloatContent')
+
+    return () => {
+      if (slots.default) {
+        return renderFloatingElement(
+          slots.default()[0],
+          props.as,
+          attrs,
+          context
+        )
       }
     }
   },
@@ -563,11 +701,8 @@ export const FloatArrow = defineComponent({
 
       if (props.as === 'template') {
         const slot = { placement: placement.value }
-        const children = slots.default?.(slot)
-        const [node] = Array.isArray(children) ? children : [children]
-        if (!node || !isValidElement(node)) {
-          throw new Error('When the prop `as` of <FloatArrow /> is \'template\', there must be contains 1 child element.')
-        }
+        const node = slots.default?.(slot)[0]
+        if (!node || !isValidElement(node)) return
         return cloneVNode(node, { ref, style })
       }
 

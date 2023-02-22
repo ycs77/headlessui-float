@@ -1,5 +1,5 @@
 import { type FunctionalComponent, defineComponent, h, mergeProps } from 'vue'
-import { Float } from '../../src/float'
+import { Float, FloatContent, FloatReference } from '../../src/float'
 import { render } from './utils/testing-library'
 import { html } from './utils/html'
 
@@ -109,6 +109,167 @@ describe('Render as component for wrapper', () => {
     }))
 
     const wrapper = container.children[1]
+    expect(wrapper).toHaveClass('floating-wrapper-class')
+    expect(wrapper).toHaveAttribute('data-label', 'floating wrapper label')
+    expect(wrapper).toHaveStyle('position: absolute; z-index: 9999; top: 0px; left: 0px; transform: translate(0px,0px);')
+  })
+})
+
+describe('Render composable component for wrapper', () => {
+  it('should to render other element on composable mode', async () => {
+    const { container } = render(defineComponent({
+      components: { Float, FloatReference, FloatContent },
+      template: html`
+        <Float show composable>
+          <div>look me!</div>
+          <FloatReference>
+            <button type="button">button</button>
+          </FloatReference>
+          <main>
+            <FloatContent>
+              <div>content</div>
+            </FloatContent>
+          </main>
+        </Float>
+      `,
+    }))
+
+    const wrapper = container.children[0]
+    expect(wrapper.innerHTML).toBe('look me!')
+  })
+
+  it('should to render <FloatReference> wrapper as HTML tag', async () => {
+    const { container } = render(defineComponent({
+      components: { Float, FloatReference, FloatContent },
+      template: html`
+        <Float show composable>
+          <div>look me!</div>
+          <FloatReference as="article">
+            <button type="button">button</button>
+          </FloatReference>
+          <main>
+            <FloatContent>
+              <div>content</div>
+            </FloatContent>
+          </main>
+        </Float>
+      `,
+    }))
+
+    const wrapper = container.children[1]
+    expect(wrapper.tagName).toBe('ARTICLE')
+  })
+
+  it('should to render <FloatContent> wrapper as HTML tag', async () => {
+    const { container } = render(defineComponent({
+      components: { Float, FloatReference, FloatContent },
+      template: html`
+        <Float show composable>
+          <div>look me!</div>
+          <FloatReference>
+            <button type="button">button</button>
+          </FloatReference>
+          <main>
+            <FloatContent as="article">
+              <div>content</div>
+            </FloatContent>
+          </main>
+        </Float>
+      `,
+    }))
+
+    const wrapper = container.children[2].children[0]
+    expect(wrapper.tagName).toBe('ARTICLE')
+  })
+
+  it('should to render <FloatReference> wrapper as template', async () => {
+    const { container } = render(defineComponent({
+      components: { Float, FloatReference, FloatContent },
+      template: html`
+        <Float show composable>
+          <div>look me!</div>
+          <FloatReference as="template">
+            <button type="button">button</button>
+          </FloatReference>
+          <main>
+            <FloatContent>
+              <div>content</div>
+            </FloatContent>
+          </main>
+        </Float>
+      `,
+    }))
+
+    const wrapper = container.children[1]
+    expect(wrapper.innerHTML).toBe('button')
+  })
+
+  it('should to render <FloatContent> wrapper as template', async () => {
+    const { container } = render(defineComponent({
+      components: { Float, FloatReference, FloatContent },
+      template: html`
+        <Float show composable>
+          <div>look me!</div>
+          <FloatReference>
+            <button type="button">button</button>
+          </FloatReference>
+          <main>
+            <FloatContent as="template">
+              <div>content</div>
+            </FloatContent>
+          </main>
+        </Float>
+      `,
+    }))
+
+    const wrapper = container.children[2].children[0]
+    expect(wrapper.innerHTML).toBe('content')
+  })
+
+  it('should to render <FloatReference> wrapper as component', async () => {
+    const { container } = render(defineComponent({
+      components: { Float, FloatReference, FloatContent },
+      data: () => ({ Wrapper }),
+      template: html`
+        <Float show composable>
+          <div>look me!</div>
+          <FloatReference :as="Wrapper">
+            <button type="button">button</button>
+          </FloatReference>
+          <main>
+            <FloatContent>
+              <div>content</div>
+            </FloatContent>
+          </main>
+        </Float>
+      `,
+    }))
+
+    const wrapper = container.children[1]
+    expect(wrapper).toHaveClass('wrapper-class')
+    expect(wrapper).toHaveAttribute('data-label', 'wrapper label')
+  })
+
+  it('should to render <FloatContent> wrapper as component', async () => {
+    const { container } = render(defineComponent({
+      components: { Float, FloatReference, FloatContent },
+      data: () => ({ FloatingWrapper }),
+      template: html`
+        <Float show composable>
+          <div>look me!</div>
+          <FloatReference>
+            <button type="button">button</button>
+          </FloatReference>
+          <main>
+            <FloatContent :as="FloatingWrapper">
+              <div>content</div>
+            </FloatContent>
+          </main>
+        </Float>
+      `,
+    }))
+
+    const wrapper = container.children[2].children[0]
     expect(wrapper).toHaveClass('floating-wrapper-class')
     expect(wrapper).toHaveAttribute('data-label', 'floating wrapper label')
     expect(wrapper).toHaveStyle('position: absolute; z-index: 9999; top: 0px; left: 0px; transform: translate(0px,0px);')
