@@ -1,4 +1,4 @@
-import { type RenderOptions, cleanup, render } from '@testing-library/vue'
+import { type RenderOptions, cleanup, render, waitFor } from '@testing-library/vue'
 import { afterEach } from 'vitest'
 
 afterEach(() => {
@@ -15,6 +15,13 @@ const customRender = (TestComponent: any, options?: RenderOptions) =>
     ...options,
   })
 
+const promisedWaitFor = () => new Promise<void>(resolve => waitFor(resolve))
+const waitTimeout = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
+
 export * from '@testing-library/vue'
 export { default as userEvent } from '@testing-library/user-event'
-export { customRender as render }
+export {
+  customRender as render,
+  promisedWaitFor as waitFor,
+  waitTimeout,
+}
