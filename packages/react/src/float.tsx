@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import type { ElementType, MutableRefObject, ReactElement, RefObject } from 'react'
+import type { Dispatch, ElementType, MutableRefObject, ReactElement, RefObject, SetStateAction } from 'react'
 import { Portal, Transition } from '@headlessui/react'
 import { arrow, autoPlacement, autoUpdate, flip, hide, offset, shift, useFloating } from '@floating-ui/react-dom'
 import type { VirtualElement } from '@floating-ui/core'
@@ -82,6 +82,126 @@ export interface FloatProps {
   onUpdate?: () => void
 }
 
+export interface RenderFloatingElementContext {
+  mounted: MutableRefObject<boolean>
+  setShow: Dispatch<SetStateAction<boolean>>
+  x: number | null
+  y: number | null
+  placement: Placement
+  strategy: Strategy
+  referenceElWidth: number | null
+}
+
+export function renderReferenceElement(ReferenceNode: ReactElement, referenceRef: (node: HTMLElement) => void) {
+  return (
+    <ReferenceNode.type
+      key="ReferenceNode"
+      {...ReferenceNode.props}
+      ref={referenceRef}
+    />
+  )
+}
+
+export function renderFloatingElement(
+  FloatingNode: ReactElement,
+  floatingRef: (node: HTMLElement) => void,
+  props: FloatProps,
+  context: RenderFloatingElementContext
+) {
+  const { mounted, setShow, x, y, placement, strategy, referenceElWidth } = context
+
+  const originClassValue = useMemo(() => {
+    if (typeof props.originClass === 'function') {
+      return props.originClass(placement)
+    } else if (typeof props.originClass === 'string') {
+      return props.originClass
+    } else if (props.tailwindcssOriginClass) {
+      return tailwindcssOriginClassResolver(placement)
+    }
+    return ''
+  }, [props.originClass, props.tailwindcssOriginClass])
+
+  const transitionProps = {
+    show: mounted.current ? props.show : false,
+    enter: `${props.enter || ''} ${originClassValue}`,
+    enterFrom: `${props.enterFrom || ''}`,
+    enterTo: `${props.enterTo || ''}`,
+    leave: `${props.leave || ''} ${originClassValue}`,
+    leaveFrom: `${props.leaveFrom || ''}`,
+    leaveTo: `${props.leaveTo || ''}`,
+    beforeEnter: () => {
+      setShow(true)
+    },
+    afterLeave: () => {
+      setShow(false)
+    },
+  }
+
+  const floatingProps = {
+    ref: floatingRef,
+    style: {
+      ...(props.transform || props.transform === undefined ? {
+        position: strategy,
+        zIndex: props.zIndex || 9999,
+        top: '0px',
+        left: '0px',
+        right: 'auto',
+        bottom: 'auto',
+        transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
+      } : {
+        position: strategy,
+        zIndex: props.zIndex || 9999,
+        top: `${y || 0}px`,
+        left: `${x || 0}px`,
+      }),
+      width: props.adaptiveWidth && typeof referenceElWidth === 'number'
+        ? `${referenceElWidth}px`
+        : undefined,
+    },
+  }
+
+  function renderPortal(children: ReactElement) {
+    if (props.portal) {
+      return <Portal>{children}</Portal>
+    }
+    return children
+  }
+
+  function renderFloating(Children: ReactElement) {
+    if (props.floatingAs === Fragment) {
+      return <Children.type {...Children.props} {...floatingProps} />
+    }
+
+    const FloatingWrapper = props.floatingAs || 'div'
+    return (
+      <FloatingWrapper {...floatingProps}>
+        <Children.type {...Children.props} />
+      </FloatingWrapper>
+    )
+  }
+
+  function renderFloatingNode() {
+    if (env.isServer) {
+      if (mounted.current && props.show) {
+        return <FloatingNode.type {...FloatingNode.props} />
+      }
+      return <Fragment />
+    }
+
+    return (
+      <Transition as={Fragment} {...transitionProps}>
+        <FloatingNode.type {...FloatingNode.props} />
+      </Transition>
+    )
+  }
+
+  return renderPortal(
+    renderFloating(
+      renderFloatingNode()
+    )
+  )
+}
+
 const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const mounted = useRef(false)
   const [ReferenceNode, FloatingNode] = props.children
@@ -97,27 +217,16 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const arrowRef = useRef<HTMLElement>(null)
 
   const events = {
-    show: props.onShow || (() => {}),
-    hide: props.onHide || (() => {}),
-    update: props.onUpdate || (() => {}),
+    show: props.onShow ?? (() => {}),
+    hide: props.onHide ?? (() => {}),
+    update: props.onUpdate ?? (() => {}),
   }
 
   const { x, y, placement, strategy, reference, floating, update, refs, middlewareData } = useFloating<HTMLElement>({
-    placement: props.placement || 'bottom-start',
+    placement: props.placement ?? 'bottom-start',
     strategy: props.strategy,
     middleware,
   })
-
-  const originClassValue = useMemo(() => {
-    if (typeof props.originClass === 'function') {
-      return props.originClass(placement)
-    } else if (typeof props.originClass === 'string') {
-      return props.originClass
-    } else if (props.tailwindcssOriginClass) {
-      return tailwindcssOriginClassResolver(placement)
-    }
-    return ''
-  }, [props.originClass, props.tailwindcssOriginClass])
 
   const [referenceElWidth, setReferenceElWidth] = useState<number | null>(null)
 
@@ -125,6 +234,10 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     update()
     events.update()
   }, [update])
+
+  useEffect(() => {
+    updateFloating()
+  }, [props.placement, props.strategy, middleware])
 
   useEffect(() => {
     const _middleware = []
@@ -259,45 +372,6 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     y: middlewareData.arrow?.y,
   } as ArrowState
 
-  const transitionProps = {
-    show: mounted.current ? props.show : false,
-    enter: `${props.enter || ''} ${originClassValue}`,
-    enterFrom: `${props.enterFrom || ''}`,
-    enterTo: `${props.enterTo || ''}`,
-    leave: `${props.leave || ''} ${originClassValue}`,
-    leaveFrom: `${props.leaveFrom || ''}`,
-    leaveTo: `${props.leaveTo || ''}`,
-    beforeEnter: () => {
-      setShow(true)
-    },
-    afterLeave: () => {
-      setShow(false)
-    },
-  }
-
-  const floatingProps = {
-    ref: floating,
-    style: {
-      ...(props.transform || props.transform === undefined ? {
-        position: strategy,
-        zIndex: props.zIndex || 9999,
-        top: '0px',
-        left: '0px',
-        right: 'auto',
-        bottom: 'auto',
-        transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
-      } : {
-        position: strategy,
-        zIndex: props.zIndex || 9999,
-        top: `${y || 0}px`,
-        left: `${x || 0}px`,
-      }),
-      width: props.adaptiveWidth && typeof referenceElWidth === 'number'
-        ? `${referenceElWidth}px`
-        : undefined,
-    },
-  }
-
   function renderWrapper(children: ReactElement[]) {
     if (props.as === Fragment || !props.as) {
       return <Fragment>{children}</Fragment>
@@ -311,56 +385,22 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     )
   }
 
-  function renderPortal(children: ReactElement) {
-    if (props.portal) {
-      return <Portal>{children}</Portal>
-    }
-    return children
-  }
+  const referenceElement = renderReferenceElement(ReferenceNode, reference)
 
-  function renderFloating(Children: ReactElement) {
-    if (props.floatingAs === Fragment) {
-      return <Children.type {...Children.props} {...floatingProps} />
-    }
-
-    const FloatingWrapper = props.floatingAs || 'div'
-    return (
-      <FloatingWrapper {...floatingProps}>
-        <Children.type {...Children.props} />
-      </FloatingWrapper>
-    )
-  }
-
-  function renderFloatingNode() {
-    if (env.isServer) {
-      if (mounted.current && props.show) {
-        return <FloatingNode.type {...FloatingNode.props} />
-      }
-      return <Fragment />
-    }
-
-    return (
-      <Transition as={Fragment} {...transitionProps}>
-        <FloatingNode.type {...FloatingNode.props} />
-      </Transition>
-    )
-  }
+  const floatingElement = renderFloatingElement(
+    FloatingNode,
+    floating,
+    props,
+    { mounted, setShow, x, y, placement, strategy, referenceElWidth }
+  )
 
   return renderWrapper([
-    <ReferenceNode.type
-      key="ReferenceNode"
-      {...ReferenceNode.props}
-      ref={reference}
-    />,
+    referenceElement,
     <ArrowContext.Provider
       key="FloatingNode"
       value={arrowApi}
     >
-      {renderPortal(
-        renderFloating(
-          renderFloatingNode()
-        )
-      )}
+      {floatingElement}
     </ArrowContext.Provider>,
   ])
 })
