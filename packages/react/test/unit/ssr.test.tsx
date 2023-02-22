@@ -5,9 +5,19 @@ import { renderSSR } from './utils/ssr'
 async function createExample(renderEnv: RenderEnv) {
   env.set(renderEnv)
 
+  const oldWindow = globalThis.window
+  const oldDocument = globalThis.document
+
   if (env.isServer) {
-    vi.stubGlobal('window', undefined)
-    vi.stubGlobal('document', undefined)
+    Object.defineProperty(globalThis, 'document', {
+      value: undefined,
+      configurable: true,
+    })
+
+    Object.defineProperty(globalThis, 'window', {
+      value: undefined,
+      configurable: true,
+    })
   }
 
   const ResizeObserverMock = vi.fn(() => ({
@@ -30,7 +40,15 @@ async function createExample(renderEnv: RenderEnv) {
   }
 
   if (env.isServer) {
-    vi.unstubAllGlobals()
+    Object.defineProperty(globalThis, 'window', {
+      value: oldWindow,
+      configurable: true,
+    })
+
+    Object.defineProperty(globalThis, 'document', {
+      value: oldDocument,
+      configurable: true,
+    })
   }
 
   return Example
