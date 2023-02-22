@@ -24,6 +24,22 @@ import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpda
 import { env } from './utils/env'
 import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
 
+interface ReferenceState {
+  referenceRef: (node: HTMLElement) => void
+}
+
+interface FloatingState {
+  floatingRef: (node: HTMLElement) => void
+  props: FloatProps
+  mounted: MutableRefObject<boolean>
+  setShow: Dispatch<SetStateAction<boolean>>
+  x: number | null
+  y: number | null
+  placement: Placement
+  strategy: Strategy
+  referenceElWidth: number | null
+}
+
 interface ArrowState {
   arrowRef: RefObject<HTMLElement>
   placement: Placement
@@ -31,8 +47,32 @@ interface ArrowState {
   y: number | undefined
 }
 
+const ReferenceContext = createContext<ReferenceState | null>(null)
+ReferenceContext.displayName = 'ReferenceContext'
+const FloatingContext = createContext<FloatingState | null>(null)
+FloatingContext.displayName = 'FloatingContext'
 const ArrowContext = createContext<ArrowState | null>(null)
 ArrowContext.displayName = 'ArrowContext'
+
+function useReferenceContext(component: string) {
+  const context = useContext(ReferenceContext)
+  if (context === null) {
+    const err = new Error(`<${component} /> is missing a parent <Float /> component.`)
+    if (Error.captureStackTrace) Error.captureStackTrace(err, useReferenceContext)
+    throw err
+  }
+  return context
+}
+
+function useFloatingContext(component: string) {
+  const context = useContext(FloatingContext)
+  if (context === null) {
+    const err = new Error(`<${component} /> is missing a parent <Float /> component.`)
+    if (Error.captureStackTrace) Error.captureStackTrace(err, useFloatingContext)
+    throw err
+  }
+  return context
+}
 
 function useArrowContext(component: string) {
   const context = useContext(ArrowContext)
@@ -69,6 +109,7 @@ export interface FloatProps {
   portal?: boolean
   transform?: boolean
   adaptiveWidth?: boolean
+  composable?: boolean
   middleware?: Middleware[] | ((refs: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>
     floatingEl: MutableRefObject<HTMLElement | null>
@@ -82,33 +123,42 @@ export interface FloatProps {
   onUpdate?: () => void
 }
 
-export interface RenderFloatingElementContext {
-  mounted: MutableRefObject<boolean>
-  setShow: Dispatch<SetStateAction<boolean>>
-  x: number | null
-  y: number | null
-  placement: Placement
-  strategy: Strategy
-  referenceElWidth: number | null
-}
+export function renderReferenceElement(
+  ReferenceNode: ReactElement,
+  renderAs: ElementType,
+  attrs: Record<string, any>,
+  context: ReferenceState
+) {
+  const { referenceRef } = context
 
-export function renderReferenceElement(ReferenceNode: ReactElement, referenceRef: (node: HTMLElement) => void) {
+  if (renderAs === Fragment) {
+    return (
+      <ReferenceNode.type
+        {...ReferenceNode.props}
+        {...attrs}
+        ref={referenceRef}
+      />
+    )
+  }
+
+  const Wrapper = renderAs || 'div'
   return (
-    <ReferenceNode.type
-      key="ReferenceNode"
-      {...ReferenceNode.props}
-      ref={referenceRef}
-    />
+    <Wrapper {...attrs}>
+      <ReferenceNode.type
+        {...ReferenceNode.props}
+        ref={referenceRef}
+      />
+    </Wrapper>
   )
 }
 
 export function renderFloatingElement(
   FloatingNode: ReactElement,
-  floatingRef: (node: HTMLElement) => void,
-  props: FloatProps,
-  context: RenderFloatingElementContext
+  renderAs: ElementType,
+  attrs: Record<string, any>,
+  context: FloatingState
 ) {
-  const { mounted, setShow, x, y, placement, strategy, referenceElWidth } = context
+  const { floatingRef, props, mounted, setShow, x, y, placement, strategy, referenceElWidth } = context
 
   const originClassValue = useMemo(() => {
     if (typeof props.originClass === 'function') {
@@ -138,7 +188,6 @@ export function renderFloatingElement(
   }
 
   const floatingProps = {
-    ref: floatingRef,
     style: {
       ...(props.transform || props.transform === undefined ? {
         position: strategy,
@@ -167,16 +216,23 @@ export function renderFloatingElement(
     return children
   }
 
-  function renderFloating(Children: ReactElement) {
-    if (props.floatingAs === Fragment) {
-      return <Children.type {...Children.props} {...floatingProps} />
+  function renderFloating(FloatingNode: ReactElement) {
+    if (renderAs === Fragment) {
+      return (
+        <FloatingNode.type
+          {...FloatingNode.props}
+          {...floatingProps}
+          {...attrs}
+          ref={floatingRef}
+        />
+      )
     }
 
-    const FloatingWrapper = props.floatingAs || 'div'
+    const Wrapper = renderAs || 'div'
     return (
-      <FloatingWrapper {...floatingProps}>
-        <Children.type {...Children.props} />
-      </FloatingWrapper>
+      <Wrapper {...floatingProps} {...attrs} ref={floatingRef}>
+        <FloatingNode.type {...FloatingNode.props} />
+      </Wrapper>
     )
   }
 
@@ -217,13 +273,13 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const arrowRef = useRef<HTMLElement>(null)
 
   const events = {
-    show: props.onShow ?? (() => {}),
-    hide: props.onHide ?? (() => {}),
-    update: props.onUpdate ?? (() => {}),
+    show: props.onShow || (() => {}),
+    hide: props.onHide || (() => {}),
+    update: props.onUpdate || (() => {}),
   }
 
   const { x, y, placement, strategy, reference, floating, update, refs, middlewareData } = useFloating<HTMLElement>({
-    placement: props.placement ?? 'bottom-start',
+    placement: props.placement || 'bottom-start',
     strategy: props.strategy,
     middleware,
   })
@@ -365,6 +421,22 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     }
   }, [show, reference, floating, update, refs])
 
+  const referenceApi = {
+    referenceRef: reference,
+  } as ReferenceState
+
+  const floatingApi = {
+    floatingRef: floating,
+    props,
+    mounted,
+    setShow,
+    x,
+    y,
+    placement,
+    strategy,
+    referenceElWidth,
+  } as FloatingState
+
   const arrowApi = {
     arrowRef,
     placement,
@@ -372,7 +444,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     y: middlewareData.arrow?.y,
   } as ArrowState
 
-  function renderWrapper(children: ReactElement[]) {
+  function renderWrapper(children: ReactElement | ReactElement[]) {
     if (props.as === Fragment || !props.as) {
       return <Fragment>{children}</Fragment>
     }
@@ -385,26 +457,90 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     )
   }
 
-  const referenceElement = renderReferenceElement(ReferenceNode, reference)
+  if (props.composable) {
+    return renderWrapper(
+      <ReferenceContext.Provider key="FloatingNode" value={referenceApi}>
+        <FloatingContext.Provider value={floatingApi}>
+          <ArrowContext.Provider value={arrowApi}>
+            {props.children}
+          </ArrowContext.Provider>
+        </FloatingContext.Provider>
+      </ReferenceContext.Provider>
+    )
+  }
+
+  const referenceElement = renderReferenceElement(
+    ReferenceNode,
+    Fragment,
+    { key: 'ReferenceNode' },
+    referenceApi
+  )
 
   const floatingElement = renderFloatingElement(
     FloatingNode,
-    floating,
-    props,
-    { mounted, setShow, x, y, placement, strategy, referenceElWidth }
+    props.floatingAs || 'div',
+    {},
+    floatingApi
   )
 
   return renderWrapper([
     referenceElement,
-    <ArrowContext.Provider
-      key="FloatingNode"
-      value={arrowApi}
-    >
+    <ArrowContext.Provider key="FloatingNode" value={arrowApi}>
       {floatingElement}
     </ArrowContext.Provider>,
   ])
 })
 FloatRoot.displayName = 'Float'
+
+export interface FloatReferenceProps {
+  as?: ElementType
+  className?: string
+  children?: ReactElement
+}
+
+function Reference(props: FloatReferenceProps) {
+  if (!props.children) {
+    return <Fragment />
+  }
+
+  const attrs = { ...props }
+  delete attrs.as
+  delete attrs.children
+
+  const context = useReferenceContext('Float.Reference')
+
+  return renderReferenceElement(
+    props.children,
+    props.as || Fragment,
+    attrs,
+    context
+  )
+}
+
+export interface FloatContentProps {
+  as?: ElementType
+  className?: string
+  children?: ReactElement
+}
+
+function Content(props: FloatContentProps) {
+  if (!props.children) {
+    return <Fragment />
+  }
+
+  const attrs = { ...props }
+  delete attrs.as
+  delete attrs.children
+
+  const context = useFloatingContext('Float.Content')
+
+  return renderFloatingElement(
+    props.children,
+    props.as || 'div',
+    attrs,
+    context
+  )
+}
 
 export interface FloatArrowProps {
   as?: ElementType
@@ -440,9 +576,7 @@ function Arrow(props: FloatArrowProps) {
     const ArrowNode = typeof props.children === 'function'
       ? props.children(slot)
       : props.children
-    if (!ArrowNode || !isValidElement<any>(ArrowNode)) {
-      throw new Error('When the prop `as` of <Float.Arrow /> is <Fragment />, there must be contains 1 child element.')
-    }
+    if (!ArrowNode || !isValidElement<any>(ArrowNode)) return
     return <ArrowNode.type {...ArrowNode.props} ref={arrowRef} style={style} />
   }
 
@@ -456,4 +590,4 @@ function Arrow(props: FloatArrowProps) {
   )
 }
 
-export const Float = Object.assign(FloatRoot, { Arrow })
+export const Float = Object.assign(FloatRoot, { Reference, Content, Arrow })
