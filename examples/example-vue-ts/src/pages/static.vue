@@ -48,34 +48,34 @@
 
   <Block title="Nested Menu" content-class="h-[300px] p-4" data-testid="block-nested-menu">
     <Float
-      :show="openMapping.m0"
+      :show="nestedStatus['0'].open"
       placement="bottom-start"
     >
       <button
         type="button"
         class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md"
-        @mouseenter="menuEnter('m0')"
-        @mouseleave="menuLeave('m0')"
+        @mouseenter="menuEnter('0')"
+        @mouseleave="menuLeave('0')"
       >
         Options
       </button>
       <ul
         class="w-48 bg-white border border-gray-200 shadow-lg focus:outline-none"
-        @mouseenter="menuEnter('m0')"
-        @mouseleave="menuLeave('m0')"
+        @mouseenter="menuEnter('0')"
+        @mouseleave="menuLeave('0')"
       >
         <li>
           <button
             type="button"
             class="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-            @click="menuLeave('m0')"
+            @click="menuClick('0')"
           >
             Account settings
           </button>
         </li>
         <li>
           <Float
-            :show="openMapping.m1"
+            :show="nestedStatus['1'].open"
             placement="right-start"
             :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
             shift
@@ -83,22 +83,22 @@
             <button
               type="button"
               class="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-              @mouseenter="menuEnter('m1')"
-              @mouseleave="menuLeave('m1')"
+              @mouseenter="menuEnter('1')"
+              @mouseleave="menuLeave('1')"
             >
               Documentation
               <HeroiconsChevronRight20Solid class="absolute top-2 right-2 w-4 h-4" />
             </button>
             <ul
               class="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
-              @mouseenter="menuEnter('m1')"
-              @mouseleave="menuLeave('m1')"
+              @mouseenter="menuEnter('1')"
+              @mouseleave="menuLeave('1')"
             >
               <li>
                 <button
                   type="button"
                   class="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                  @click="menuLeave('m1')"
+                  @click="menuClick('1')"
                 >
                   Installation
                 </button>
@@ -107,14 +107,14 @@
                 <button
                   type="button"
                   class="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                  @click="menuLeave('m1')"
+                  @click="menuClick('1')"
                 >
                   Usage
                 </button>
               </li>
               <li>
                 <Float
-                  :show="openMapping.m2"
+                  :show="nestedStatus['2'].open"
                   placement="right-start"
                   :flip="{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }"
                   shift
@@ -122,22 +122,22 @@
                   <button
                     type="button"
                     class="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                    @mouseenter="menuEnter('m2')"
-                    @mouseleave="menuLeave('m2')"
+                    @mouseenter="menuEnter('2')"
+                    @mouseleave="menuLeave('2')"
                   >
                     Options
                     <HeroiconsChevronRight20Solid class="absolute top-2 right-2 w-4 h-4" />
                   </button>
                   <ul
                     class="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
-                    @mouseenter="menuEnter('m2')"
-                    @mouseleave="menuLeave('m2')"
+                    @mouseenter="menuEnter('2')"
+                    @mouseleave="menuLeave('2')"
                   >
                     <li>
                       <button
                         type="button"
                         class="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                        @click="menuLeave('m2')"
+                        @click="menuClick('2')"
                       >
                         Option 1
                       </button>
@@ -146,7 +146,7 @@
                       <button
                         type="button"
                         class="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                        @click="menuLeave('m2')"
+                        @click="menuClick('2')"
                       >
                         Option 2
                       </button>
@@ -168,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Ref, ref } from 'vue'
+import { type Ref, computed, ref, watch } from 'vue'
 import { Float, FloatArrow } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 import HeroiconsChevronRight20Solid from '~icons/heroicons/chevron-right-20-solid'
@@ -196,21 +196,44 @@ function useHoverMenu(delay = 150) {
   return { show, timer, open, close, delayClose }
 }
 
-function useNestedMenu(keys: string[]) {
-  const defaultMapping = {} as Record<string, boolean>
-  for (const key of keys) {
-    defaultMapping[key] = false
-  }
-  const openMapping = ref(defaultMapping)
+interface Node {
+  id: string
+  open?: boolean
+  parentId?: string
+}
 
-  const menuEnter = (key: string) => {
-    openMapping.value[key] = true
+function useNestedMenu(nodes: Node[]) {
+  const defaultNestedStatus: Record<string, Node> = {}
+  for (const node of nodes) {
+    defaultNestedStatus[node.id] = {
+      open: false,
+      ...node,
+    }
   }
-  const menuLeave = (key: string) => {
-    openMapping.value[key] = false
+  const nestedStatus = ref(defaultNestedStatus) as Ref<Record<string, Node>>
+
+  function closeParent(node: Node) {
+    if (node.parentId) {
+      const parent = nestedStatus.value[node.parentId]
+      if (parent.open) {
+        parent.open = false
+      }
+      closeParent(parent)
+    }
   }
 
-  return { openMapping, menuEnter, menuLeave }
+  const menuEnter = (id: string) => {
+    nestedStatus.value[id].open = true
+  }
+  const menuLeave = (id: string) => {
+    nestedStatus.value[id].open = false
+  }
+  const menuClick = (id: string) => {
+    nestedStatus.value[id].open = false
+    closeParent(nestedStatus.value[id])
+  }
+
+  return { nestedStatus, menuEnter, menuLeave, menuClick }
 }
 
 const {
@@ -221,8 +244,13 @@ const {
 } = useHoverMenu(150)
 
 const {
-  openMapping,
+  nestedStatus,
   menuEnter,
   menuLeave,
-} = useNestedMenu(['m0', 'm1', 'm2'])
+  menuClick,
+} = useNestedMenu([
+  { id: '0' },
+  { id: '1', parentId: '0' },
+  { id: '2', parentId: '1' },
+])
 </script>

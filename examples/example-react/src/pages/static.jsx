@@ -75,49 +75,84 @@ function HoverMenu() {
 }
 
 function NestedMenu() {
-  const keys = ['m0', 'm1', 'm2']
+  const nodes = [
+    { id: '0' },
+    { id: '1', parentId: '0' },
+    { id: '2', parentId: '1' },
+  ]
 
-  const defaultMapping = {}
-  for (const key of keys) {
-    defaultMapping[key] = false
+  const defaultNestedStatus = {}
+  for (const node of nodes) {
+    defaultNestedStatus[node.id] = {
+      open: false,
+      ...node,
+    }
   }
-  const [openMapping, setOpenMapping] = useState(defaultMapping)
+  const [nestedStatus, setNestedStatus] = useState(defaultNestedStatus)
 
-  const menuEnter = key => {
-    setOpenMapping(state => ({ ...state, [key]: true }))
+  function closeParent(nestedStatus, node) {
+    if (node.parentId) {
+      const parent = nestedStatus[node.parentId]
+      if (parent.open) {
+        parent.open = false
+      }
+      return closeParent(nestedStatus, parent)
+    }
+
+    return nestedStatus
   }
-  const menuLeave = key => {
-    setOpenMapping(state => ({ ...state, [key]: false }))
+
+  const menuEnter = id => {
+    setNestedStatus(state => {
+      const newState = { ...state }
+      newState[id].open = true
+      return newState
+    })
+  }
+  const menuLeave = id => {
+    setNestedStatus(state => {
+      const newState = { ...state }
+      newState[id].open = false
+      return newState
+    })
+  }
+  const menuClick = id => {
+    setNestedStatus(state => {
+      let newState = { ...state }
+      newState[id].open = false
+      newState = closeParent(newState, newState[id])
+      return newState
+    })
   }
 
   return (
     <Block title="Nested Menu" contentClass="h-[300px] p-4" data-testid="block-nested-menu">
-      <Float show={openMapping.m0} placement="bottom-start">
+      <Float show={nestedStatus['0'].open} placement="bottom-start">
         <button
           type="button"
           className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md"
-          onMouseEnter={() => menuEnter('m0')}
-          onMouseLeave={() => menuLeave('m0')}
+          onMouseEnter={() => menuEnter('0')}
+          onMouseLeave={() => menuLeave('0')}
         >
           Options
         </button>
         <ul
           className="w-48 bg-white border border-gray-200 shadow-lg focus:outline-none"
-          onMouseEnter={() => menuEnter('m0')}
-          onMouseLeave={() => menuLeave('m0')}
+          onMouseEnter={() => menuEnter('0')}
+          onMouseLeave={() => menuLeave('0')}
         >
           <li>
             <button
               type="button"
               className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-              onClick={() => menuLeave('m0')}
+              onClick={() => menuClick('0')}
             >
               Account settings
             </button>
           </li>
           <li>
             <Float
-              show={openMapping.m1}
+              show={nestedStatus['1'].open}
               placement="right-start"
               flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
               shift
@@ -125,22 +160,22 @@ function NestedMenu() {
               <button
                 type="button"
                 className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                onMouseEnter={() => menuEnter('m1')}
-                onMouseLeave={() => menuLeave('m1')}
+                onMouseEnter={() => menuEnter('1')}
+                onMouseLeave={() => menuLeave('1')}
               >
                 Documentation
                 <HeroiconsChevronRight20Solid className="absolute top-2 right-2 w-4 h-4" />
               </button>
               <ul
-                className="w-48 bg-white border border-gray-200 shadow-lg focus:outline-none"
-                onMouseEnter={() => menuEnter('m1')}
-                onMouseLeave={() => menuLeave('m1')}
+                className="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
+                onMouseEnter={() => menuEnter('1')}
+                onMouseLeave={() => menuLeave('1')}
               >
                 <li>
                   <button
                     type="button"
                     className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                    onClick={() => menuLeave('m1')}
+                    onClick={() => menuClick('1')}
                   >
                     Installation
                   </button>
@@ -149,14 +184,14 @@ function NestedMenu() {
                   <button
                     type="button"
                     className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                    onClick={() => menuLeave('m1')}
+                    onClick={() => menuClick('1')}
                   >
                     Usage
                   </button>
                 </li>
                 <li>
                   <Float
-                    show={openMapping.m2}
+                    show={nestedStatus['2'].open}
                     placement="right-start"
                     flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
                     shift
@@ -164,22 +199,22 @@ function NestedMenu() {
                     <button
                       type="button"
                       className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                      onMouseEnter={() => menuEnter('m2')}
-                      onMouseLeave={() => menuLeave('m2')}
+                      onMouseEnter={() => menuEnter('2')}
+                      onMouseLeave={() => menuLeave('2')}
                     >
                       Options
                       <HeroiconsChevronRight20Solid className="absolute top-2 right-2 w-4 h-4" />
                     </button>
                     <ul
-                      className="w-48 bg-white border border-gray-200 shadow-lg focus:outline-none"
-                      onMouseEnter={() => menuEnter('m2')}
-                      onMouseLeave={() => menuLeave('m2')}
+                      className="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
+                      onMouseEnter={() => menuEnter('2')}
+                      onMouseLeave={() => menuLeave('2')}
                     >
                       <li>
                         <button
                           type="button"
                           className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                          onClick={() => menuLeave('m2')}
+                          onClick={() => menuClick('2')}
                         >
                           Option 1
                         </button>
@@ -188,7 +223,7 @@ function NestedMenu() {
                         <button
                           type="button"
                           className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                          onClick={() => menuLeave('m2')}
+                          onClick={() => menuClick('2')}
                         >
                           Option 2
                         </button>
