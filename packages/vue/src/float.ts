@@ -1,5 +1,4 @@
 import {
-  Teleport,
   Transition,
   cloneVNode,
   computed,
@@ -17,6 +16,8 @@ import {
   watch,
 } from 'vue'
 import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
+import { Portal } from '@headlessui/vue'
+import { arrow, useFloating } from '@floating-ui/vue'
 import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
 import type { DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
@@ -25,7 +26,6 @@ import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/fl
 import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
-import { arrow, useFloating } from '@floating-ui/vue'
 import { dom } from './utils/dom'
 import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
@@ -76,7 +76,7 @@ export interface FloatPropsType {
   leaveTo?: string
   originClass?: string | OriginClassResolver
   tailwindcssOriginClass?: boolean
-  portal?: boolean | string
+  portal?: boolean
   transform?: boolean
   adaptiveWidth?: boolean
   middleware?: Middleware[] | ((refs: {
@@ -149,7 +149,7 @@ export const FloatProps = {
     default: false,
   },
   portal: {
-    type: [Boolean, String],
+    type: Boolean,
     default: false,
   },
   transform: {
@@ -433,12 +433,8 @@ export const Float = defineComponent({
         }
 
         function renderPortal(node: VNode) {
-          if (mounted.value &&
-              (props.portal === true || typeof props.portal === 'string')
-          ) {
-            return h(Teleport, {
-              to: props.portal === true ? 'body' : props.portal,
-            }, [node])
+          if (props.portal) {
+            return h(Portal, () => node)
           }
           return node
         }

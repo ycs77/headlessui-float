@@ -17,6 +17,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'vue',
+        '@headlessui/vue',
         '@floating-ui/core',
         '@floating-ui/dom',
         '@floating-ui/vue',

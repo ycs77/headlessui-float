@@ -11,8 +11,7 @@ import {
   useState,
 } from 'react'
 import type { ElementType, MutableRefObject, ReactElement, RefObject } from 'react'
-import { createPortal } from 'react-dom'
-import { Transition } from '@headlessui/react'
+import { Portal, Transition } from '@headlessui/react'
 import { arrow, autoPlacement, autoUpdate, flip, hide, offset, shift, useFloating } from '@floating-ui/react-dom'
 import type { VirtualElement } from '@floating-ui/core'
 import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
@@ -67,7 +66,7 @@ export interface FloatProps {
   leaveTo?: string
   originClass?: string | OriginClassResolver
   tailwindcssOriginClass?: boolean
-  portal?: boolean | string
+  portal?: boolean
   transform?: boolean
   adaptiveWidth?: boolean
   middleware?: Middleware[] | ((refs: {
@@ -313,11 +312,8 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   }
 
   function renderPortal(children: ReactElement) {
-    if (mounted.current && props.portal) {
-      const root = document.querySelector(props.portal === true ? 'body' : props.portal)
-      if (root) {
-        return createPortal(children, root)
-      }
+    if (props.portal) {
+      return <Portal>{children}</Portal>
     }
     return children
   }
