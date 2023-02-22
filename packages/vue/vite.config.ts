@@ -19,6 +19,7 @@ export default defineConfig({
         'vue',
         '@floating-ui/core',
         '@floating-ui/dom',
+        '@floating-ui/vue',
       ],
     },
   },

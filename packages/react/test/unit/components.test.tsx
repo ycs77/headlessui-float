@@ -19,17 +19,21 @@ describe('Render components', () => {
 
     await waitFor()
 
-    expect(screen.queryByRole('menu')).toBeNull()
-
     const button = screen.getByText('Options')
     await waitFor()
     expect(button).toBeInTheDocument()
-    await userEvent.click(button)
+    expect(screen.queryByRole('menu')).toBeNull()
 
+    await userEvent.click(button)
     await waitFor()
 
-    expect(screen.queryByRole('menu')).toBeInTheDocument()
+    expect(screen.queryByRole('menu')).toHaveAttribute('data-headlessui-state', 'open')
     const menuItems = screen.queryAllByRole('menuitem')
     expect(menuItems).toHaveLength(3)
+
+    await userEvent.click(button)
+    await waitFor()
+
+    expect(screen.queryByRole('menu')).toBeNull()
   })
 })

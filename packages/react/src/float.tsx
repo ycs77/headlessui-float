@@ -210,9 +210,9 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
   function useReferenceElResizeObserver() {
     if (props.adaptiveWidth &&
-      env.isClient &&
-      typeof ResizeObserver !== 'undefined' &&
-      refs.reference.current
+        env.isClient &&
+        typeof ResizeObserver !== 'undefined' &&
+        refs.reference.current
     ) {
       const observer = new ResizeObserver(([entry]) => {
         const width = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
@@ -222,6 +222,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
       return () => {
         observer.disconnect()
+        setReferenceElWidth(null)
       }
     }
 
@@ -238,7 +239,10 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   }, [])
 
   useEffect(() => {
-    if (refs.reference.current && refs.floating.current && show) {
+    if (refs.reference.current &&
+        refs.floating.current &&
+        show
+    ) {
       const cleanup = useAutoUpdate()
       events.show()
 

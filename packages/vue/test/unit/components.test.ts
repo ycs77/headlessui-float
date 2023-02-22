@@ -1,7 +1,7 @@
 import { Transition, defineComponent } from 'vue'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Float } from '../../src/float'
-import { render, screen, userEvent } from './utils/testing-library'
+import { render, screen, userEvent, waitTimeout } from './utils/testing-library'
 import { html } from './utils/html'
 
 describe('Render components', () => {
@@ -22,14 +22,20 @@ describe('Render components', () => {
       `,
     }))
 
-    expect(screen.queryByRole('menu')).toBeNull()
-
     const button = screen.getByText('Options')
     expect(button).toBeInTheDocument()
-    await userEvent.click(button)
+    expect(screen.queryByRole('menu')).toBeNull()
 
-    expect(screen.queryByRole('menu')).toBeInTheDocument()
+    await userEvent.click(button)
+    await waitTimeout(50)
+
+    expect(screen.queryByRole('menu')).toHaveAttribute('data-headlessui-state', 'open')
     const menuItems = screen.queryAllByRole('menuitem')
     expect(menuItems).toHaveLength(3)
+
+    await userEvent.click(button)
+    await waitTimeout(50)
+
+    expect(screen.queryByRole('menu')).toBeNull()
   })
 })

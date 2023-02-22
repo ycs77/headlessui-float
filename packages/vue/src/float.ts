@@ -16,16 +16,16 @@ import {
   toRef,
   watch,
 } from 'vue'
-import type { FunctionalComponent, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
+import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, ShallowRef, VNode } from 'vue'
 import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
-import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
+import type { DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
 import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
 import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/flip'
 import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
-import { arrow, useFloating } from './useFloating'
+import { arrow, useFloating } from '@floating-ui/vue'
 import { dom } from './utils/dom'
 import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
@@ -162,8 +162,8 @@ export const FloatProps = {
   },
   middleware: {
     type: [Array, Function] as PropType<Middleware[] | ((refs: {
-      referenceEl: Ref<HTMLElement | null>
-      floatingEl: Ref<HTMLElement | null>
+      referenceEl: Ref<ReferenceElement | null>
+      floatingEl: Ref<FloatingElement | null>
     }) => Middleware[])>,
     default: () => [],
   },
@@ -181,11 +181,13 @@ export const Float = defineComponent({
     const propStrategy = toRef(props, 'strategy')
     const middleware = shallowRef(undefined) as ShallowRef<Middleware[] | undefined>
 
+    const reference = ref(null) as Ref<ReferenceElement | null>
+    const floating = ref(null) as Ref<FloatingElement | null>
     const arrowRef = ref(null) as Ref<HTMLElement | null>
     const arrowX = ref<number | undefined>(undefined)
     const arrowY = ref<number | undefined>(undefined)
 
-    const { x, y, placement, strategy, reference, floating, middlewareData, update } = useFloating({
+    const { x, y, placement, strategy, middlewareData, update } = useFloating(reference, floating, {
       placement: propPlacement,
       strategy: propStrategy,
       middleware,
@@ -202,15 +204,10 @@ export const Float = defineComponent({
       return ''
     })
 
-    const referenceEl = ref(dom(reference)) as Ref<HTMLElement | null>
-    const floatingEl = ref(dom(floating)) as Ref<HTMLElement | null>
+    const referenceEl = computed(() => dom(reference)) as ComputedRef<ReferenceElement | null>
+    const floatingEl = computed(() => dom(floating)) as ComputedRef<FloatingElement | null>
 
     const referenceElWidth = ref<number | null>(null)
-
-    function updateElements() {
-      referenceEl.value = dom(reference)
-      floatingEl.value = dom(floating)
-    }
 
     function updateFloating() {
       if (
@@ -222,15 +219,9 @@ export const Float = defineComponent({
       }
     }
 
-    watch(propPlacement, () => {
-      updateElements()
+    watch([propPlacement, propStrategy, middleware], () => {
       updateFloating()
-    })
-
-    watch(propStrategy, () => {
-      updateElements()
-      updateFloating()
-    })
+    }, { flush: 'sync' })
 
     watch([
       () => props.offset,
@@ -241,7 +232,6 @@ export const Float = defineComponent({
       () => props.hide,
       () => props.middleware,
     ], () => {
-      updateElements()
       const _middleware = []
       if (typeof props.offset === 'number' ||
           typeof props.offset === 'object' ||
@@ -294,8 +284,6 @@ export const Float = defineComponent({
         ))
       }
       middleware.value = _middleware
-
-      updateFloating()
     }, { immediate: true })
 
     watch(middlewareData, () => {
@@ -304,14 +292,12 @@ export const Float = defineComponent({
       arrowY.value = arrowData?.y
     })
 
-    let disposeAutoUpdate: (() => void) | undefined
-
-    function startAutoUpdate() {
+    function useAutoUpdate() {
       if (isVisibleDOMElement(referenceEl) &&
           isVisibleDOMElement(floatingEl) &&
           props.autoUpdate !== false
       ) {
-        disposeAutoUpdate = autoUpdate(
+        return autoUpdate(
           referenceEl.value!,
           floatingEl.value!,
           updateFloating,
@@ -320,70 +306,57 @@ export const Float = defineComponent({
             : undefined
         )
       }
+
+      return () => {}
     }
 
-    function clearAutoUpdate() {
-      if (disposeAutoUpdate) {
-        disposeAutoUpdate()
-        disposeAutoUpdate = undefined
-      }
-    }
+    let cleanupResizeObserver: () => void = () => {}
 
-    let referenceElResizeObserver: ResizeObserver | undefined
-
-    function startReferenceElResizeObserver() {
-      updateElements()
-
+    function useReferenceElResizeObserver() {
       if (props.adaptiveWidth &&
-        env.isClient &&
-        typeof ResizeObserver !== 'undefined' &&
-        referenceEl.value
+          env.isClient &&
+          typeof ResizeObserver !== 'undefined' &&
+          referenceEl.value instanceof HTMLElement
       ) {
-        referenceElResizeObserver = new ResizeObserver(([entry]) => {
+        const observer = new ResizeObserver(([entry]) => {
           referenceElWidth.value = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
         })
-        referenceElResizeObserver.observe(referenceEl.value)
+        observer.observe(referenceEl.value)
+
+        return () => {
+          observer.disconnect()
+          referenceElWidth.value = null
+        }
       }
+
+      return () => {}
     }
 
-    function clearReferenceElResizeObserver() {
-      if (referenceElResizeObserver) {
-        referenceElResizeObserver.disconnect()
-        referenceElResizeObserver = undefined
-        referenceElWidth.value = null
-      }
-    }
-
-    async function handleShow() {
-      await nextTick()
-      updateElements()
-
-      if (isVisibleDOMElement(referenceEl) &&
-          isVisibleDOMElement(floatingEl) &&
-          show.value === true
-      ) {
-        // show...
-        startAutoUpdate()
-        emit('show')
-      } else if (show.value === false && disposeAutoUpdate) {
-        // hide...
-        clearAutoUpdate()
-        emit('hide')
-      }
-    }
-
-    watch(show, handleShow)
-
-    onMounted(async () => {
+    onMounted(() => {
       mounted.value = true
-      startReferenceElResizeObserver()
-      await handleShow()
+      cleanupResizeObserver = useReferenceElResizeObserver()
     })
 
     onBeforeUnmount(() => {
-      clearAutoUpdate()
-      clearReferenceElResizeObserver()
+      cleanupResizeObserver()
     })
+
+    watch(show, async (value, oldValue, onCleanup) => {
+      await nextTick()
+
+      if (isVisibleDOMElement(referenceEl) &&
+          isVisibleDOMElement(floatingEl) &&
+          show.value
+      ) {
+        const cleanup = useAutoUpdate()
+        emit('show')
+
+        onCleanup(() => {
+          cleanup()
+          emit('hide')
+        })
+      }
+    }, { flush: 'post', immediate: true })
 
     const arrowApi = {
       ref: arrowRef,
@@ -420,7 +393,6 @@ export const Float = defineComponent({
           type: props.transitionType,
           ...(!props.transitionName ? transitionClassesProps : {}),
           onBeforeEnter() {
-            updateElements()
             show.value = true
           },
           onAfterLeave() {
@@ -486,7 +458,6 @@ export const Float = defineComponent({
             const el = cloneVNode(floatingNode, contentProps)
 
             if (el.props?.unmount === false) {
-              updateElements()
               updateFloating()
               return el
             }
