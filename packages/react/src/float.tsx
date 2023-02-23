@@ -168,7 +168,7 @@ export function renderFloatingElement(
     ...componentProps,
   } as FloatProps & FloatContentProps
 
-  const originClassValue = useMemo(() => {
+  const originClass = useMemo(() => {
     if (typeof props.originClass === 'function') {
       return props.originClass(placement)
     } else if (typeof props.originClass === 'string') {
@@ -177,14 +177,14 @@ export function renderFloatingElement(
       return tailwindcssOriginClassResolver(placement)
     }
     return ''
-  }, [props.originClass, props.tailwindcssOriginClass])
+  }, [placement, props.originClass, props.tailwindcssOriginClass])
 
   const transitionProps = {
     show: mounted.current ? props.show : false,
-    enter: `${props.enter || ''} ${originClassValue}`,
+    enter: `${props.enter || ''} ${originClass}`,
     enterFrom: `${props.enterFrom || ''}`,
     enterTo: `${props.enterTo || ''}`,
-    leave: `${props.leave || ''} ${originClassValue}`,
+    leave: `${props.leave || ''} ${originClass}`,
     leaveFrom: `${props.leaveFrom || ''}`,
     leaveTo: `${props.leaveTo || ''}`,
     beforeEnter: () => {
