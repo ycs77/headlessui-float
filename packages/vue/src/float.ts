@@ -217,6 +217,38 @@ export const FloatProps = {
   },
 }
 
+function useOriginClass(props: {
+  enter?: string
+  leave?: string
+  originClass?: string | OriginClassResolver
+  tailwindcssOriginClass?: boolean
+}, placement: Ref<Placement>) {
+  const originClassRef = computed(() => {
+    if (typeof props.originClass === 'function') {
+      return props.originClass(placement.value)
+    } else if (typeof props.originClass === 'string') {
+      return props.originClass
+    } else if (props.tailwindcssOriginClass) {
+      return tailwindcssOriginClassResolver(placement.value)
+    }
+    return undefined
+  })
+
+  const enterActiveClassRef = computed(() =>
+    props.enter || originClassRef.value
+      ? `${props.enter || ''} ${originClassRef.value || ''}`
+      : undefined
+  )
+
+  const leaveActiveClassRef = computed(() =>
+    props.leave || originClassRef.value
+      ? `${props.leave || ''} ${originClassRef.value || ''}`
+      : undefined
+  )
+
+  return { originClassRef, enterActiveClassRef, leaveActiveClassRef }
+}
+
 export function renderReferenceElement(
   referenceNode: VNode,
   componentProps: FloatReferencePropsType & Required<Pick<FloatReferencePropsType, 'as'>>,
@@ -244,35 +276,29 @@ export function renderReferenceElement(
 
 export function renderFloatingElement(
   floatingNode: VNode,
-  componentProps: FloatContentPropsType & Required<Pick<FloatContentPropsType, 'as'>>,
+  componentProps: FloatContentPropsType
+  & Required<Pick<FloatContentPropsType, 'as'>>
+  & {
+    enterActiveClassRef: ComputedRef<string | undefined>
+    leaveActiveClassRef: ComputedRef<string | undefined>
+  },
   attrs: SetupContext['attrs'],
   context: FloatingState
 ) {
-  const { floatingRef, props: rootProps, mounted, show, x, y, placement, strategy, updateFloating, referenceElWidth } = context
+  const { floatingRef, props: rootProps, mounted, show, x, y, placement, strategy, referenceElWidth, updateFloating } = context
 
   const props = mergeProps(
     rootProps as Record<string, any>,
     componentProps as Record<string, any>
   ) as FloatPropsType & FloatContentPropsType
 
-  const originClassValue =
-    typeof props.originClass === 'function'
-      ? props.originClass(placement.value)
-      : typeof props.originClass === 'string'
-        ? props.originClass
-        : props.tailwindcssOriginClass
-          ? tailwindcssOriginClassResolver(placement.value)
-          : ''
+  const { enterActiveClassRef, leaveActiveClassRef } = componentProps
 
   const transitionClassesProps = {
-    enterActiveClass: props.enter || originClassValue
-      ? `${props.enter || ''} ${originClassValue}`
-      : undefined,
+    enterActiveClass: enterActiveClassRef.value,
     enterFromClass: props.enterFrom,
     enterToClass: props.enterTo,
-    leaveActiveClass: props.leave || originClassValue
-      ? `${props.leave || ''} ${originClassValue}`
-      : undefined,
+    leaveActiveClass: leaveActiveClassRef.value,
     leaveFromClass: props.leaveFrom,
     leaveToClass: props.leaveTo,
   }
@@ -291,12 +317,12 @@ export function renderFloatingElement(
   }
 
   const transitionChildProps = {
-    enter: transitionClassesProps.enterActiveClass,
-    enterFrom: transitionClassesProps.enterFromClass,
-    enterTo: transitionClassesProps.enterToClass,
-    leave: transitionClassesProps.leaveActiveClass,
-    leaveFrom: transitionClassesProps.leaveFromClass,
-    leaveTo: transitionClassesProps.leaveToClass,
+    enter: enterActiveClassRef.value,
+    enterFrom: props.enterFrom,
+    enterTo: props.enterTo,
+    leave: leaveActiveClassRef.value,
+    leaveFrom: props.leaveFrom,
+    leaveTo: props.leaveTo,
     onBeforeEnter: transitionProps.onBeforeEnter,
     onAfterLeave: transitionProps.onAfterLeave,
   }
@@ -378,6 +404,7 @@ export function renderFloatingElement(
 
     if (props.transitionChild) {
       return h(TransitionChild, {
+        key: `placement-${placement.value}`,
         ...(props.dialog ? { ref: floatingRef } : {}),
         as: 'template',
         ...transitionChildProps,
@@ -425,6 +452,8 @@ export const Float = defineComponent({
     })
 
     const referenceElWidth = ref<number | null>(null)
+
+    const { enterActiveClassRef, leaveActiveClassRef } = useOriginClass(props, placement)
 
     onMounted(() => {
       mounted.value = true
@@ -634,9 +663,7 @@ export const Float = defineComponent({
 
         const referenceElement = renderReferenceElement(
           referenceNode,
-          {
-            as: 'template',
-          },
+          { as: 'template' },
           {},
           referenceApi
         )
@@ -645,6 +672,8 @@ export const Float = defineComponent({
           floatingNode,
           {
             as: props.floatingAs,
+            enterActiveClassRef,
+            leaveActiveClassRef,
           },
           {},
           floatingApi
@@ -733,12 +762,19 @@ export const FloatContent = defineComponent({
   props: FloatContentProps,
   setup(props, { slots, attrs }) {
     const context = useFloatingContext('FloatContent')
+    const { placement } = context
+
+    const { enterActiveClassRef, leaveActiveClassRef } = useOriginClass(props, placement)
 
     return () => {
       if (slots.default) {
         return renderFloatingElement(
           slots.default()[0],
-          props,
+          {
+            ...props,
+            enterActiveClassRef,
+            leaveActiveClassRef,
+          },
           attrs,
           context
         )
