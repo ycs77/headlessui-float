@@ -9,6 +9,7 @@ import HighOrderComponent from '@/pages/high-order-component.vue'
 import Menu from '@/pages/menu.vue'
 import Listbox from '@/pages/listbox.vue'
 import Combobox from '@/pages/combobox.vue'
+import Dialog from '@/pages/dialog.vue'
 import Popover from '@/pages/popover.vue'
 
 export type RouteRecord = RouteRecordRaw & {
@@ -31,7 +32,7 @@ export const componentsRoutes = <RouteRecord[]>[
   { path: '/menu', component: Menu },
   { path: '/listbox', component: Listbox },
   { path: '/combobox', component: Combobox },
-  { path: '/dialog', component: {}, soon: true },
+  { path: '/dialog', component: Dialog },
   { path: '/popover', component: Popover },
   { path: '/contextmenu', component: {}, soon: true },
 ]
