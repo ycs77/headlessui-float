@@ -17,7 +17,7 @@ import {
   watch,
 } from 'vue'
 import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, SetupContext, ShallowRef, VNode } from 'vue'
-import { Portal } from '@headlessui/vue'
+import { Portal, TransitionChild } from '@headlessui/vue'
 import { arrow, useFloating } from '@floating-ui/vue'
 import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
 import type { DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy } from '@floating-ui/dom'
@@ -118,6 +118,7 @@ export interface FloatPropsType {
   transform?: boolean
   adaptiveWidth?: boolean
   composable?: boolean
+  dialog?: boolean
   middleware?: Middleware[] | ((refs: {
     referenceEl: Ref<HTMLElement | null>
     floatingEl: Ref<HTMLElement | null>
@@ -203,6 +204,10 @@ export const FloatProps = {
     type: Boolean,
     default: false,
   },
+  dialog: {
+    type: Boolean,
+    default: false,
+  },
   middleware: {
     type: [Array, Function] as PropType<Middleware[] | ((refs: {
       referenceEl: Ref<ReferenceElement | null>
@@ -214,54 +219,59 @@ export const FloatProps = {
 
 export function renderReferenceElement(
   referenceNode: VNode,
-  renderAs: string | FunctionalComponent,
+  componentProps: FloatReferencePropsType & Required<Pick<FloatReferencePropsType, 'as'>>,
   attrs: SetupContext['attrs'],
   context: ReferenceState
 ) {
   const { referenceRef } = context
 
+  const props = componentProps
+
   const node = cloneVNode(
     referenceNode,
-    mergeProps(renderAs === 'template' ? attrs : {}, {
+    mergeProps(props.as === 'template' ? attrs : {}, {
       ref: referenceRef,
     })
   )
 
-  if (renderAs === 'template') {
+  if (props.as === 'template') {
     return node
-  } else if (typeof renderAs === 'string') {
-    return h(renderAs, attrs, [node])
+  } else if (typeof props.as === 'string') {
+    return h(props.as, attrs, [node])
   }
-  return h(renderAs, attrs, () => [node])
+  return h(props.as, attrs, () => [node])
 }
 
 export function renderFloatingElement(
   floatingNode: VNode,
-  renderAs: string | FunctionalComponent,
+  componentProps: FloatContentPropsType & Required<Pick<FloatContentPropsType, 'as'>>,
   attrs: SetupContext['attrs'],
   context: FloatingState
 ) {
-  const { floatingRef, props, mounted, show, x, y, placement, strategy, updateFloating, referenceElWidth } = context
+  const { floatingRef, props: rootProps, mounted, show, x, y, placement, strategy, updateFloating, referenceElWidth } = context
 
-  const originClassValue = computed(() => {
-    if (typeof props.originClass === 'function') {
-      return props.originClass(placement.value)
-    } else if (typeof props.originClass === 'string') {
-      return props.originClass
-    } else if (props.tailwindcssOriginClass) {
-      return tailwindcssOriginClassResolver(placement.value)
-    }
-    return ''
-  })
+  const props = mergeProps(
+    rootProps as Record<string, any>,
+    componentProps as Record<string, any>
+  ) as FloatPropsType & FloatContentPropsType
+
+  const originClassValue =
+    typeof props.originClass === 'function'
+      ? props.originClass(placement.value)
+      : typeof props.originClass === 'string'
+        ? props.originClass
+        : props.tailwindcssOriginClass
+          ? tailwindcssOriginClassResolver(placement.value)
+          : ''
 
   const transitionClassesProps = {
-    enterActiveClass: props.enter || originClassValue.value
-      ? `${props.enter || ''} ${originClassValue.value}`
+    enterActiveClass: props.enter || originClassValue
+      ? `${props.enter || ''} ${originClassValue}`
       : undefined,
     enterFromClass: props.enterFrom,
     enterToClass: props.enterTo,
-    leaveActiveClass: props.leave || originClassValue.value
-      ? `${props.leave || ''} ${originClassValue.value}`
+    leaveActiveClass: props.leave || originClassValue
+      ? `${props.leave || ''} ${originClassValue}`
       : undefined,
     leaveFromClass: props.leaveFrom,
     leaveToClass: props.leaveTo,
@@ -270,6 +280,7 @@ export function renderFloatingElement(
   const transitionProps = {
     name: props.transitionName,
     type: props.transitionType,
+    appear: true,
     ...(!props.transitionName ? transitionClassesProps : {}),
     onBeforeEnter() {
       show.value = true
@@ -279,9 +290,21 @@ export function renderFloatingElement(
     },
   }
 
+  const transitionChildProps = {
+    enter: transitionClassesProps.enterActiveClass,
+    enterFrom: transitionClassesProps.enterFromClass,
+    enterTo: transitionClassesProps.enterToClass,
+    leave: transitionClassesProps.leaveActiveClass,
+    leaveFrom: transitionClassesProps.leaveFromClass,
+    leaveTo: transitionClassesProps.leaveToClass,
+    onBeforeEnter: transitionProps.onBeforeEnter,
+    onAfterLeave: transitionProps.onAfterLeave,
+  }
+
   const floatingProps = {
     style: {
-      ...(props.transform ? {
+      // If enable dialog mode, then set `transform` to false.
+      ...((props.dialog ? false : props.transform) ? {
         position: strategy.value,
         zIndex: props.zIndex,
         top: '0px',
@@ -309,20 +332,28 @@ export function renderFloatingElement(
   }
 
   function renderFloating(node: VNode) {
-    const props = mergeProps(floatingProps, attrs, { ref: floatingRef })
+    const nodeProps = mergeProps(
+      floatingProps,
+      attrs,
+      !props.dialog ? { ref: floatingRef } : {}
+    )
 
-    if (renderAs === 'template') {
+    if (props.as === 'template') {
       return node
-    } else if (typeof renderAs === 'string') {
-      return h(renderAs, props, node)
+    } else if (typeof props.as === 'string') {
+      return h(props.as, nodeProps, node)
     }
-    return h(renderAs, props, () => node)
+    return h(props.as!, nodeProps, () => node)
   }
 
   function renderFloatingNode() {
     function createFloatingNode() {
-      const contentProps = renderAs === 'template'
-        ? mergeProps(floatingProps, attrs, { ref: floatingRef })
+      const contentProps = props.as === 'template'
+        ? mergeProps(
+          floatingProps,
+          attrs,
+          !props.dialog ? { ref: floatingRef } : {}
+        )
         : null
       const el = cloneVNode(floatingNode, contentProps)
 
@@ -345,7 +376,18 @@ export function renderFloatingElement(
       return createCommentVNode()
     }
 
-    return h(Transition, transitionProps, createFloatingNode)
+    if (props.transitionChild) {
+      return h(TransitionChild, {
+        ...(props.dialog ? { ref: floatingRef } : {}),
+        as: 'template',
+        ...transitionChildProps,
+      }, createFloatingNode)
+    }
+
+    return h(Transition, {
+      ...(props.dialog ? { ref: floatingRef } : {}),
+      ...transitionProps,
+    }, createFloatingNode)
   }
 
   return renderPortal(
@@ -361,28 +403,26 @@ export const Float = defineComponent({
   emits: ['show', 'hide', 'update'],
   setup(props, { emit, slots, attrs }) {
     const mounted = ref(false)
-
     const show = ref(props.show !== null ? props.show : false)
 
     const propPlacement = toRef(props, 'placement')
     const propStrategy = toRef(props, 'strategy')
     const middleware = shallowRef({}) as ShallowRef<Middleware[]>
-
     const reference = ref(null) as Ref<ReferenceElement | null>
     const floating = ref(null) as Ref<FloatingElement | null>
     const arrowRef = ref(null) as Ref<HTMLElement | null>
     const arrowX = ref<number | undefined>(undefined)
     const arrowY = ref<number | undefined>(undefined)
 
-    const floatingContext = useFloating(reference, floating, {
+    const referenceEl = computed(() => dom(reference)) as ComputedRef<ReferenceElement | null>
+    const floatingEl = computed(() => dom(floating)) as ComputedRef<FloatingElement | null>
+
+    const { x, y, placement, strategy, middlewareData, update } = useFloating(referenceEl, floatingEl, {
       placement: propPlacement,
       strategy: propStrategy,
       middleware,
+      whileElementsMounted: () => {},
     })
-    const { x, y, placement, strategy, middlewareData, update } = floatingContext
-
-    const referenceEl = computed(() => dom(reference)) as ComputedRef<ReferenceElement | null>
-    const floatingEl = computed(() => dom(floating)) as ComputedRef<FloatingElement | null>
 
     const referenceElWidth = ref<number | null>(null)
 
@@ -572,7 +612,8 @@ export const Float = defineComponent({
       return h(props.as, attrs, () => children)
     }
 
-    if (props.composable) {
+    // If enable dialog mode, then set `composable` to true..
+    if (props.composable || props.dialog) {
       provide(ReferenceContext, referenceApi)
       provide(FloatingContext, floatingApi)
 
@@ -593,14 +634,18 @@ export const Float = defineComponent({
 
         const referenceElement = renderReferenceElement(
           referenceNode,
-          'template',
+          {
+            as: 'template',
+          },
           {},
           referenceApi
         )
 
         const floatingElement = renderFloatingElement(
           floatingNode,
-          props.floatingAs,
+          {
+            as: props.floatingAs,
+          },
           {},
           floatingApi
         )
@@ -613,6 +658,10 @@ export const Float = defineComponent({
     }
   },
 })
+
+export interface FloatReferencePropsType {
+  as?: string | FunctionalComponent
+}
 
 export const FloatReferenceProps = {
   as: {
@@ -631,7 +680,7 @@ export const FloatReference = defineComponent({
       if (slots.default) {
         return renderReferenceElement(
           slots.default()[0],
-          props.as,
+          props,
           attrs,
           context
         )
@@ -640,10 +689,42 @@ export const FloatReference = defineComponent({
   },
 })
 
+export interface FloatContentPropsType {
+  as?: string | FunctionalComponent
+  transitionName?: string
+  transitionType?: 'transition' | 'animation'
+  enter?: string
+  enterFrom?: string
+  enterTo?: string
+  leave?: string
+  leaveFrom?: string
+  leaveTo?: string
+  originClass?: string | OriginClassResolver
+  tailwindcssOriginClass?: boolean
+  transitionChild?: boolean
+}
+
 export const FloatContentProps = {
   as: {
     type: [String, Function] as PropType<string | FunctionalComponent>,
     default: 'div',
+  },
+  transitionName: String,
+  transitionType: String as PropType<'transition' | 'animation'>,
+  enter: String,
+  enterFrom: String,
+  enterTo: String,
+  leave: String,
+  leaveFrom: String,
+  leaveTo: String,
+  originClass: [String, Function] as PropType<string | OriginClassResolver>,
+  tailwindcssOriginClass: {
+    type: Boolean,
+    default: false,
+  },
+  transitionChild: {
+    type: Boolean,
+    default: false,
   },
 }
 
@@ -657,7 +738,7 @@ export const FloatContent = defineComponent({
       if (slots.default) {
         return renderFloatingElement(
           slots.default()[0],
-          props.as,
+          props,
           attrs,
           context
         )

@@ -110,6 +110,7 @@ export interface FloatProps {
   transform?: boolean
   adaptiveWidth?: boolean
   composable?: boolean
+  dialog?: boolean
   middleware?: Middleware[] | ((refs: {
     referenceEl: MutableRefObject<Element | VirtualElement | null>
     floatingEl: MutableRefObject<HTMLElement | null>
@@ -125,13 +126,15 @@ export interface FloatProps {
 
 export function renderReferenceElement(
   ReferenceNode: ReactElement,
-  renderAs: ElementType,
+  componentProps: FloatReferenceProps & Required<Pick<FloatReferenceProps, 'as'>>,
   attrs: Record<string, any>,
   context: ReferenceState
 ) {
   const { referenceRef } = context
 
-  if (renderAs === Fragment) {
+  const props = componentProps
+
+  if (props.as === Fragment) {
     return (
       <ReferenceNode.type
         {...ReferenceNode.props}
@@ -141,7 +144,7 @@ export function renderReferenceElement(
     )
   }
 
-  const Wrapper = renderAs || 'div'
+  const Wrapper = props.as || 'div'
   return (
     <Wrapper {...attrs}>
       <ReferenceNode.type
@@ -154,11 +157,16 @@ export function renderReferenceElement(
 
 export function renderFloatingElement(
   FloatingNode: ReactElement,
-  renderAs: ElementType,
+  componentProps: FloatContentProps & Required<Pick<FloatContentProps, 'as'>>,
   attrs: Record<string, any>,
   context: FloatingState
 ) {
-  const { floatingRef, props, mounted, setShow, x, y, placement, strategy, referenceElWidth } = context
+  const { floatingRef, props: rootProps, mounted, setShow, x, y, placement, strategy, referenceElWidth } = context
+
+  const props = {
+    ...rootProps,
+    ...componentProps,
+  } as FloatProps & FloatContentProps
 
   const originClassValue = useMemo(() => {
     if (typeof props.originClass === 'function') {
@@ -189,7 +197,8 @@ export function renderFloatingElement(
 
   const floatingProps = {
     style: {
-      ...(props.transform || props.transform === undefined ? {
+      // If enable dialog mode, then set `transform` to false.
+      ...((props.dialog ? false : (props.transform || props.transform === undefined)) ? {
         position: strategy,
         zIndex: props.zIndex || 9999,
         top: '0px',
@@ -217,20 +226,24 @@ export function renderFloatingElement(
   }
 
   function renderFloating(FloatingNode: ReactElement) {
-    if (renderAs === Fragment) {
+    const nodeProps = {
+      ...floatingProps,
+      ...attrs,
+      ref: floatingRef,
+    }
+
+    if (props.as === Fragment) {
       return (
         <FloatingNode.type
           {...FloatingNode.props}
-          {...floatingProps}
-          {...attrs}
-          ref={floatingRef}
+          {...nodeProps}
         />
       )
     }
 
-    const Wrapper = renderAs || 'div'
+    const Wrapper = props.as || 'div'
     return (
-      <Wrapper {...floatingProps} {...attrs} ref={floatingRef}>
+      <Wrapper {...nodeProps}>
         <FloatingNode.type {...FloatingNode.props} />
       </Wrapper>
     )
@@ -242,6 +255,14 @@ export function renderFloatingElement(
         return <FloatingNode.type {...FloatingNode.props} />
       }
       return <Fragment />
+    }
+
+    if (props.transitionChild) {
+      return (
+        <Transition.Child as={Fragment} {...transitionProps}>
+          <FloatingNode.type {...FloatingNode.props} />
+        </Transition.Child>
+      )
     }
 
     return (
@@ -457,7 +478,8 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     )
   }
 
-  if (props.composable) {
+  // If enable dialog mode, then set `composable` to true.
+  if (props.composable || props.dialog) {
     return renderWrapper(
       <ReferenceContext.Provider key="FloatingNode" value={referenceApi}>
         <FloatingContext.Provider value={floatingApi}>
@@ -471,14 +493,14 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 
   const referenceElement = renderReferenceElement(
     ReferenceNode,
-    Fragment,
+    { as: Fragment },
     { key: 'ReferenceNode' },
     referenceApi
   )
 
   const floatingElement = renderFloatingElement(
     FloatingNode,
-    props.floatingAs || 'div',
+    { as: props.floatingAs || 'div' },
     {},
     floatingApi
   )
@@ -503,15 +525,16 @@ function Reference(props: FloatReferenceProps) {
     return <Fragment />
   }
 
-  const attrs = { ...props }
-  delete attrs.as
-  delete attrs.children
+  const attrs = { ...props } as Record<string, any>
+  for (const key of ['as', 'children']) {
+    delete attrs[key]
+  }
 
   const context = useReferenceContext('Float.Reference')
 
   return renderReferenceElement(
     props.children,
-    props.as || Fragment,
+    { ...props, as: props.as || Fragment },
     attrs,
     context
   )
@@ -519,6 +542,15 @@ function Reference(props: FloatReferenceProps) {
 
 export interface FloatContentProps {
   as?: ElementType
+  enter?: string
+  enterFrom?: string
+  enterTo?: string
+  leave?: string
+  leaveFrom?: string
+  leaveTo?: string
+  originClass?: string | OriginClassResolver
+  tailwindcssOriginClass?: boolean
+  transitionChild?: boolean
   className?: string
   children?: ReactElement
 }
@@ -528,15 +560,16 @@ function Content(props: FloatContentProps) {
     return <Fragment />
   }
 
-  const attrs = { ...props }
-  delete attrs.as
-  delete attrs.children
+  const attrs = { ...props } as Record<string, any>
+  for (const key of ['as', 'enter', 'enterFrom', 'enterTo', 'leave', 'leaveFrom', 'leaveTo', 'originClass', 'tailwindcssOriginClass', 'transitionChild', 'children']) {
+    delete attrs[key]
+  }
 
   const context = useFloatingContext('Float.Content')
 
   return renderFloatingElement(
     props.children,
-    props.as || 'div',
+    { ...props, as: props.as || 'div' },
     attrs,
     context
   )

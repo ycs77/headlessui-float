@@ -9,6 +9,7 @@ import HighOrderComponent from '@/pages/high-order-component'
 import Menu from '@/pages/menu'
 import Listbox from '@/pages/listbox'
 import Combobox from '@/pages/combobox'
+import Dialog from '@/pages/dialog'
 import Popover from '@/pages/popover'
 
 export interface RouteRecord {
@@ -34,7 +35,7 @@ export const componentsRoutes = <RouteRecord[]>[
   { path: '/menu', component: Menu },
   { path: '/listbox', component: Listbox },
   { path: '/combobox', component: Combobox },
-  { path: '/dialog', component: null, soon: true },
+  { path: '/dialog', component: Dialog },
   { path: '/popover', component: Popover },
   { path: '/contextmenu', component: null, soon: true },
 ]
