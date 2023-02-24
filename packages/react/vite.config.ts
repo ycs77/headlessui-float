@@ -21,7 +21,7 @@ export default defineConfig({
         '@headlessui/react',
         '@floating-ui/core',
         '@floating-ui/dom',
-        '@floating-ui/react-dom',
+        '@floating-ui/react',
       ],
     },
   },
