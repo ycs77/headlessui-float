@@ -8,7 +8,6 @@ import {
   inject,
   mergeProps,
   nextTick,
-  onBeforeUnmount,
   onMounted,
   provide,
   ref,
@@ -18,8 +17,7 @@ import {
 } from 'vue'
 import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, SetupContext, ShallowRef, VNode } from 'vue'
 import { Portal, TransitionChild } from '@headlessui/vue'
-import { arrow, useFloating } from '@floating-ui/vue'
-import { autoPlacement, autoUpdate, flip, hide, offset, shift } from '@floating-ui/dom'
+import { useFloating } from '@floating-ui/vue'
 import type { DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
 import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
@@ -30,7 +28,11 @@ import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpda
 import { dom } from './utils/dom'
 import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
-import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
+import { type OriginClassResolver } from './origin-class-resolvers'
+import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
+import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
+import { useAutoUpdate } from './hooks/use-auto-update'
+import { useTransitionAndOriginClass } from './hooks/use-transition-and-origin-class'
 
 interface ReferenceState {
   referenceRef: Ref<ReferenceElement | null>
@@ -120,7 +122,7 @@ export interface FloatPropsType {
   composable?: boolean
   dialog?: boolean
   middleware?: Middleware[] | ((refs: {
-    referenceEl: Ref<HTMLElement | null>
+    referenceEl: Ref<ReferenceElement | null>
     floatingEl: Ref<HTMLElement | null>
   }) => Middleware[])
 }
@@ -217,41 +219,11 @@ export const FloatProps = {
   },
 }
 
-function useOriginClass(props: {
-  enter?: string
-  leave?: string
-  originClass?: string | OriginClassResolver
-  tailwindcssOriginClass?: boolean
-}, placement: Ref<Placement>) {
-  const originClassRef = computed(() => {
-    if (typeof props.originClass === 'function') {
-      return props.originClass(placement.value)
-    } else if (typeof props.originClass === 'string') {
-      return props.originClass
-    } else if (props.tailwindcssOriginClass) {
-      return tailwindcssOriginClassResolver(placement.value)
-    }
-    return undefined
-  })
-
-  const enterActiveClassRef = computed(() =>
-    props.enter || originClassRef.value
-      ? `${props.enter || ''} ${originClassRef.value || ''}`
-      : undefined
-  )
-
-  const leaveActiveClassRef = computed(() =>
-    props.leave || originClassRef.value
-      ? `${props.leave || ''} ${originClassRef.value || ''}`
-      : undefined
-  )
-
-  return { originClassRef, enterActiveClassRef, leaveActiveClassRef }
-}
+export type RenderReferenceElementProps = FloatReferencePropsType & Required<Pick<FloatReferencePropsType, 'as'>>
 
 export function renderReferenceElement(
   referenceNode: VNode,
-  componentProps: FloatReferencePropsType & Required<Pick<FloatReferencePropsType, 'as'>>,
+  componentProps: RenderReferenceElementProps,
   attrs: SetupContext['attrs'],
   context: ReferenceState
 ) {
@@ -274,14 +246,18 @@ export function renderReferenceElement(
   return h(props.as, attrs, () => [node])
 }
 
-export function renderFloatingElement(
-  floatingNode: VNode,
-  componentProps: FloatContentPropsType
-  & Required<Pick<FloatContentPropsType, 'as'>>
-  & {
+export type RenderFloatingElementProps =
+  FloatContentPropsType &
+  Required<Pick<FloatContentPropsType, 'as'>> &
+  {
+    show?: boolean | null
     enterActiveClassRef: ComputedRef<string | undefined>
     leaveActiveClassRef: ComputedRef<string | undefined>
-  },
+  }
+
+export function renderFloatingElement(
+  floatingNode: VNode,
+  componentProps: RenderFloatingElementProps,
   attrs: SetupContext['attrs'],
   context: FloatingState
 ) {
@@ -424,212 +400,135 @@ export function renderFloatingElement(
   )
 }
 
+export function useFloat<T extends ReferenceElement>(
+  show: Ref<boolean>,
+  reference: Ref<T | null>,
+  floating: Ref<FloatingElement | null>,
+  props: FloatPropsType,
+  emit: (event: 'show' | 'hide' | 'update', ...args: any[]) => void
+) {
+  const mounted = ref(false)
+
+  const propPlacement = toRef(props, 'placement')
+  const propStrategy = toRef(props, 'strategy')
+  const middleware = shallowRef({}) as ShallowRef<Middleware[]>
+  const arrowRef = ref(null) as Ref<HTMLElement | null>
+  const arrowX = ref<number | undefined>(undefined)
+  const arrowY = ref<number | undefined>(undefined)
+
+  const referenceEl = computed(() => dom(reference)) as ComputedRef<T | null>
+  const floatingEl = computed(() => dom(floating)) as ComputedRef<FloatingElement | null>
+
+  const isVisible = computed(() =>
+    isVisibleDOMElement(referenceEl) &&
+    isVisibleDOMElement(floatingEl)
+  )
+
+  const { x, y, placement, strategy, middlewareData, update } = useFloating<T>(referenceEl, floatingEl, {
+    placement: propPlacement,
+    strategy: propStrategy,
+    middleware,
+    whileElementsMounted: () => {},
+  })
+
+  const referenceElWidth = ref<number | null>(null)
+
+  const { enterActiveClassRef, leaveActiveClassRef } = useTransitionAndOriginClass(props, placement)
+
+  onMounted(() => {
+    mounted.value = true
+  })
+
+  function updateFloating() {
+    if (isVisible.value) {
+      update()
+      emit('update')
+    }
+  }
+
+  watch([propPlacement, propStrategy, middleware], updateFloating, { flush: 'sync' })
+
+  useFloatingMiddlewareFromProps(
+    middleware,
+    referenceEl,
+    floatingEl,
+    arrowRef,
+    props
+  )
+
+  watch(middlewareData, () => {
+    const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
+    arrowX.value = arrowData?.x
+    arrowY.value = arrowData?.y
+  })
+
+  useReferenceElResizeObserver(props.adaptiveWidth, referenceEl, referenceElWidth)
+
+  watch(show, async (value, oldValue, onCleanup) => {
+    await nextTick()
+
+    if (show.value && isVisible.value && props.autoUpdate) {
+      const cleanup = useAutoUpdate(referenceEl, floatingEl, update, props.autoUpdate)
+      emit('show')
+
+      onCleanup(() => {
+        cleanup()
+        emit('hide')
+      })
+    }
+  }, { flush: 'post', immediate: true })
+
+  watch(referenceEl, () => {
+    // only watch on the reference element is virtual element.
+    if (!(referenceEl.value instanceof Element)) {
+      updateFloating()
+    }
+  }, { flush: 'sync' })
+
+  const referenceApi = {
+    referenceRef: reference,
+  } as ReferenceState
+
+  const floatingApi = {
+    floatingRef: floating,
+    props,
+    mounted,
+    show,
+    x,
+    y,
+    placement,
+    strategy,
+    referenceElWidth,
+    updateFloating,
+  } as FloatingState
+
+  const arrowApi = {
+    ref: arrowRef,
+    placement,
+    x: arrowX,
+    y: arrowY,
+  } as ArrowState
+
+  provide(ArrowContext, arrowApi)
+
+  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, referenceEl, floatingEl, middlewareData, update: updateFloating, enterActiveClassRef, leaveActiveClassRef }
+}
+
 export const Float = defineComponent({
   name: 'Float',
   props: FloatProps,
   emits: ['show', 'hide', 'update'],
   setup(props, { emit, slots, attrs }) {
-    const mounted = ref(false)
     const show = ref(props.show !== null ? props.show : false)
+    const reference = ref(null) as Ref<HTMLElement | null>
+    const floating = ref(null) as Ref<HTMLElement | null>
 
-    const propPlacement = toRef(props, 'placement')
-    const propStrategy = toRef(props, 'strategy')
-    const middleware = shallowRef({}) as ShallowRef<Middleware[]>
-    const reference = ref(null) as Ref<ReferenceElement | null>
-    const floating = ref(null) as Ref<FloatingElement | null>
-    const arrowRef = ref(null) as Ref<HTMLElement | null>
-    const arrowX = ref<number | undefined>(undefined)
-    const arrowY = ref<number | undefined>(undefined)
-
-    const referenceEl = computed(() => dom(reference)) as ComputedRef<ReferenceElement | null>
-    const floatingEl = computed(() => dom(floating)) as ComputedRef<FloatingElement | null>
-
-    const { x, y, placement, strategy, middlewareData, update } = useFloating(referenceEl, floatingEl, {
-      placement: propPlacement,
-      strategy: propStrategy,
-      middleware,
-      whileElementsMounted: () => {},
-    })
-
-    const referenceElWidth = ref<number | null>(null)
-
-    const { enterActiveClassRef, leaveActiveClassRef } = useOriginClass(props, placement)
-
-    onMounted(() => {
-      mounted.value = true
-    })
-
-    function updateFloating() {
-      if (
-        isVisibleDOMElement(referenceEl) &&
-        isVisibleDOMElement(floatingEl)
-      ) {
-        update()
-        emit('update')
-      }
-    }
-
-    watch([propPlacement, propStrategy, middleware], updateFloating, { flush: 'sync' })
-
-    watch([
-      () => props.offset,
-      () => props.flip,
-      () => props.shift,
-      () => props.autoPlacement,
-      () => props.arrow,
-      () => props.hide,
-      () => props.middleware,
-    ], () => {
-      const _middleware = []
-      if (typeof props.offset === 'number' ||
-          typeof props.offset === 'object' ||
-          typeof props.offset === 'function'
-      ) {
-        _middleware.push(offset(props.offset))
-      }
-      if (props.flip === true ||
-          typeof props.flip === 'number' ||
-          typeof props.flip === 'object'
-      ) {
-        _middleware.push(flip({
-          padding: typeof props.flip === 'number' ? props.flip : undefined,
-          ...(typeof props.flip === 'object' ? props.flip : {}),
-        }))
-      }
-      if (props.shift === true ||
-          typeof props.shift === 'number' ||
-          typeof props.shift === 'object'
-      ) {
-        _middleware.push(shift({
-          padding: typeof props.shift === 'number' ? props.shift : undefined,
-          ...(typeof props.shift === 'object' ? props.shift : {}),
-        }))
-      }
-      if (props.autoPlacement === true || typeof props.autoPlacement === 'object') {
-        _middleware.push(autoPlacement(
-          typeof props.autoPlacement === 'object'
-            ? props.autoPlacement
-            : undefined
-        ))
-      }
-      if (props.arrow === true || typeof props.arrow === 'number') {
-        _middleware.push(arrow({
-          element: arrowRef,
-          padding: props.arrow === true ? 0 : props.arrow,
-        }))
-      }
-      _middleware.push(...(
-        typeof props.middleware === 'function'
-          ? props.middleware({
-            referenceEl,
-            floatingEl,
-          })
-          : props.middleware
-      ))
-      if (props.hide === true || typeof props.hide === 'object') {
-        _middleware.push(hide(
-          typeof props.hide === 'object' ? props.hide : undefined
-        ))
-      }
-      middleware.value = _middleware
-    }, { immediate: true })
-
-    watch(middlewareData, () => {
-      const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
-      arrowX.value = arrowData?.x
-      arrowY.value = arrowData?.y
-    })
-
-    let cleanupResizeObserver: () => void = () => {}
-
-    onMounted(() => {
-      cleanupResizeObserver = useReferenceElResizeObserver()
-    })
-
-    onBeforeUnmount(() => {
-      cleanupResizeObserver()
-    })
-
-    function useReferenceElResizeObserver() {
-      if (props.adaptiveWidth &&
-          env.isClient &&
-          typeof ResizeObserver !== 'undefined' &&
-          referenceEl.value instanceof HTMLElement
-      ) {
-        const observer = new ResizeObserver(([entry]) => {
-          referenceElWidth.value = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
-        })
-        observer.observe(referenceEl.value)
-
-        return () => {
-          observer.disconnect()
-          referenceElWidth.value = null
-        }
-      }
-
-      return () => {}
-    }
-
-    function useAutoUpdate() {
-      if (isVisibleDOMElement(referenceEl) &&
-          isVisibleDOMElement(floatingEl) &&
-          props.autoUpdate !== false
-      ) {
-        return autoUpdate(
-          referenceEl.value!,
-          floatingEl.value!,
-          updateFloating,
-          typeof props.autoUpdate === 'object'
-            ? props.autoUpdate
-            : undefined
-        )
-      }
-
-      return () => {}
-    }
-
-    watch(show, async (value, oldValue, onCleanup) => {
-      await nextTick()
-
-      if (isVisibleDOMElement(referenceEl) &&
-          isVisibleDOMElement(floatingEl) &&
-          show.value
-      ) {
-        const cleanup = useAutoUpdate()
-        emit('show')
-
-        onCleanup(() => {
-          cleanup()
-          emit('hide')
-        })
-      }
-    }, { flush: 'post', immediate: true })
-
-    const referenceApi = {
-      referenceRef: reference,
-    } as ReferenceState
-
-    const floatingApi = {
-      floatingRef: floating,
-      props,
-      mounted,
-      show,
-      x,
-      y,
-      placement,
-      strategy,
-      referenceElWidth,
-      updateFloating,
-    } as FloatingState
-
-    const arrowApi = {
-      ref: arrowRef,
-      placement,
-      x: arrowX,
-      y: arrowY,
-    } as ArrowState
-
-    provide(ArrowContext, arrowApi)
+    const {
+      referenceApi,
+      floatingApi,
+      enterActiveClassRef,
+      leaveActiveClassRef,
+    } = useFloat(show, reference, floating, props, emit)
 
     function renderWrapper(nodes: VNode | VNode[]) {
       const children = Array.isArray(nodes) ? nodes : [nodes]
@@ -688,9 +587,7 @@ export const Float = defineComponent({
   },
 })
 
-export interface FloatReferencePropsType {
-  as?: string | FunctionalComponent
-}
+export type FloatReferencePropsType = Pick<FloatPropsType, 'as'>
 
 export const FloatReferenceProps = {
   as: {
@@ -718,39 +615,22 @@ export const FloatReference = defineComponent({
   },
 })
 
-export interface FloatContentPropsType {
-  as?: string | FunctionalComponent
-  transitionName?: string
-  transitionType?: 'transition' | 'animation'
-  enter?: string
-  enterFrom?: string
-  enterTo?: string
-  leave?: string
-  leaveFrom?: string
-  leaveTo?: string
-  originClass?: string | OriginClassResolver
-  tailwindcssOriginClass?: boolean
+export type FloatContentPropsType = Pick<FloatPropsType, 'as' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
   transitionChild?: boolean
 }
 
 export const FloatContentProps = {
-  as: {
-    type: [String, Function] as PropType<string | FunctionalComponent>,
-    default: 'div',
-  },
-  transitionName: String,
-  transitionType: String as PropType<'transition' | 'animation'>,
-  enter: String,
-  enterFrom: String,
-  enterTo: String,
-  leave: String,
-  leaveFrom: String,
-  leaveTo: String,
-  originClass: [String, Function] as PropType<string | OriginClassResolver>,
-  tailwindcssOriginClass: {
-    type: Boolean,
-    default: false,
-  },
+  as: FloatProps.as,
+  transitionName: FloatProps.transitionName,
+  transitionType: FloatProps.transitionType,
+  enter: FloatProps.enter,
+  enterFrom: FloatProps.enterFrom,
+  enterTo: FloatProps.enterTo,
+  leave: FloatProps.leave,
+  leaveFrom: FloatProps.leaveFrom,
+  leaveTo: FloatProps.leaveTo,
+  originClass: FloatProps.originClass,
+  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
   transitionChild: {
     type: Boolean,
     default: false,
@@ -764,7 +644,7 @@ export const FloatContent = defineComponent({
     const context = useFloatingContext('FloatContent')
     const { placement } = context
 
-    const { enterActiveClassRef, leaveActiveClassRef } = useOriginClass(props, placement)
+    const { enterActiveClassRef, leaveActiveClassRef } = useTransitionAndOriginClass(props, placement)
 
     return () => {
       if (slots.default) {
@@ -823,7 +703,7 @@ export const FloatArrow = defineComponent({
         return cloneVNode(node, { ref, style })
       }
 
-      return h(props.as, Object.assign({}, attrs, { ref, style }))
+      return h(props.as, mergeProps(attrs, { ref, style }))
     }
   },
 })

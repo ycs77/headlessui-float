@@ -6,13 +6,12 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react'
 import type { Dispatch, ElementType, MutableRefObject, ReactElement, RefObject, SetStateAction } from 'react'
 import { Portal, Transition } from '@headlessui/react'
-import { arrow, autoPlacement, autoUpdate, flip, hide, offset, shift, useFloating } from '@floating-ui/react-dom'
+import { useFloating } from '@floating-ui/react'
 import type { VirtualElement } from '@floating-ui/core'
 import type { DetectOverflowOptions, Middleware, Placement, Strategy } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
@@ -22,7 +21,11 @@ import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/midd
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { env } from './utils/env'
-import { type OriginClassResolver, tailwindcssOriginClassResolver } from './origin-class-resolvers'
+import { type OriginClassResolver } from './origin-class-resolvers'
+import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
+import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
+import { useAutoUpdate } from './hooks/use-auto-update'
+import { useOriginClass } from './hooks/use-origin-class'
 
 interface ReferenceState {
   referenceRef: (node: HTMLElement) => void
@@ -116,7 +119,7 @@ export interface FloatProps {
     floatingEl: MutableRefObject<HTMLElement | null>
   }) => Middleware[])
 
-  className?: string | undefined
+  className?: string
   children: ReactElement[]
 
   onShow?: () => void
@@ -168,16 +171,7 @@ export function renderFloatingElement(
     ...componentProps,
   } as FloatProps & FloatContentProps
 
-  const originClass = useMemo(() => {
-    if (typeof props.originClass === 'function') {
-      return props.originClass(placement)
-    } else if (typeof props.originClass === 'string') {
-      return props.originClass
-    } else if (props.tailwindcssOriginClass) {
-      return tailwindcssOriginClassResolver(placement)
-    }
-    return ''
-  }, [placement, props.originClass, props.tailwindcssOriginClass])
+  const originClass = useOriginClass(props, placement)
 
   const transitionProps = {
     show: mounted.current ? props.show : false,
@@ -279,16 +273,9 @@ export function renderFloatingElement(
   )
 }
 
-const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
+function useFloat([show, setShow]: [boolean, Dispatch<SetStateAction<boolean>>], props: FloatProps) {
   const mounted = useRef(false)
-  const [ReferenceNode, FloatingNode] = props.children
 
-  if (!isValidElement<any>(ReferenceNode)) {
-    console.warn('<Float /> is missing a reference and floating element.')
-    return <Fragment />
-  }
-
-  const [show, setShow] = useState(props.show !== undefined ? props.show : false)
   const [middleware, setMiddleware] = useState<Middleware[]>()
 
   const arrowRef = useRef<HTMLElement>(null)
@@ -316,123 +303,20 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     updateFloating()
   }, [props.placement, props.strategy, middleware])
 
-  useEffect(() => {
-    const _middleware = []
-    if (typeof props.offset === 'number' ||
-        typeof props.offset === 'object' ||
-        typeof props.offset === 'function'
-    ) {
-      _middleware.push(offset(props.offset))
-    }
-    if (props.flip === true ||
-        typeof props.flip === 'number' ||
-        typeof props.flip === 'object'
-    ) {
-      _middleware.push(flip({
-        padding: typeof props.flip === 'number' ? props.flip : undefined,
-        ...(typeof props.flip === 'object' ? props.flip : {}),
-      }))
-    }
-    if (props.shift === true ||
-        typeof props.shift === 'number' ||
-        typeof props.shift === 'object'
-    ) {
-      _middleware.push(shift({
-        padding: typeof props.shift === 'number' ? props.shift : undefined,
-        ...(typeof props.shift === 'object' ? props.shift : {}),
-      }))
-    }
-    if (props.autoPlacement === true || typeof props.autoPlacement === 'object') {
-      _middleware.push(autoPlacement(
-        typeof props.autoPlacement === 'object'
-          ? props.autoPlacement
-          : undefined
-      ))
-    }
-    if (props.arrow === true || typeof props.arrow === 'number') {
-      _middleware.push(arrow({
-        element: arrowRef,
-        padding: props.arrow === true ? 0 : props.arrow,
-      }))
-    }
-    _middleware.push(...(
-      typeof props.middleware === 'function'
-        ? props.middleware({
-          referenceEl: refs.reference,
-          floatingEl: refs.floating,
-        })
-        : props.middleware || []
-    ))
-    if (props.hide === true || typeof props.hide === 'object') {
-      _middleware.push(hide(
-        typeof props.hide === 'object' ? props.hide : undefined
-      ))
-    }
-    setMiddleware(_middleware)
-  }, [
-    props.offset,
-    props.shift,
-    props.flip,
-    props.arrow,
-    props.autoPlacement,
-    props.hide,
-    props.middleware,
-  ])
-
-  function useAutoUpdate() {
-    if (refs.reference.current &&
-        refs.floating.current &&
-        props.autoUpdate !== false
-    ) {
-      return autoUpdate(
-        refs.reference.current,
-        refs.floating.current,
-        updateFloating,
-        typeof props.autoUpdate === 'object'
-          ? props.autoUpdate
-          : undefined
-      )
-    }
-
-    return () => {}
-  }
-
-  function useReferenceElResizeObserver() {
-    if (props.adaptiveWidth &&
-        env.isClient &&
-        typeof ResizeObserver !== 'undefined' &&
-        refs.reference.current
-    ) {
-      const observer = new ResizeObserver(([entry]) => {
-        const width = entry.borderBoxSize.reduce((acc, { inlineSize }) => acc + inlineSize, 0)
-        setReferenceElWidth(width)
-      })
-      observer.observe(refs.reference.current)
-
-      return () => {
-        observer.disconnect()
-        setReferenceElWidth(null)
-      }
-    }
-
-    return () => {}
-  }
+  useFloatingMiddlewareFromProps(setMiddleware, refs, arrowRef, props)
 
   useEffect(() => {
     mounted.current = true
-    const cleanupResizeObserver = useReferenceElResizeObserver()
-
-    return () => {
-      cleanupResizeObserver()
-    }
   }, [])
+
+  useReferenceElResizeObserver(props.adaptiveWidth, refs.reference, setReferenceElWidth)
 
   useEffect(() => {
     if (refs.reference.current &&
         refs.floating.current &&
         show
     ) {
-      const cleanup = useAutoUpdate()
+      const cleanup = useAutoUpdate(refs, updateFloating, props.autoUpdate)
       events.show()
 
       return () => {
@@ -464,6 +348,25 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
     x: middlewareData.arrow?.x,
     y: middlewareData.arrow?.y,
   } as ArrowState
+
+  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, reference, floating, update: updateFloating, refs, middlewareData }
+}
+
+const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
+  const [show, setShow] = useState(props.show !== undefined ? props.show : false)
+
+  const [ReferenceNode, FloatingNode] = props.children
+
+  if (!isValidElement<any>(ReferenceNode)) {
+    console.warn('<Float /> is missing a reference and floating element.')
+    return <Fragment />
+  }
+
+  const {
+    referenceApi,
+    floatingApi,
+    arrowApi,
+  } = useFloat([show, setShow], props)
 
   function renderWrapper(children: ReactElement | ReactElement[]) {
     if (props.as === Fragment || !props.as) {
@@ -540,16 +443,7 @@ function Reference(props: FloatReferenceProps) {
   )
 }
 
-export interface FloatContentProps {
-  as?: ElementType
-  enter?: string
-  enterFrom?: string
-  enterTo?: string
-  leave?: string
-  leaveFrom?: string
-  leaveTo?: string
-  originClass?: string | OriginClassResolver
-  tailwindcssOriginClass?: boolean
+export type FloatContentProps = Pick<FloatProps, 'as' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
   transitionChild?: boolean
   className?: string
   children?: ReactElement
@@ -575,8 +469,7 @@ function Content(props: FloatContentProps) {
   )
 }
 
-export interface FloatArrowProps {
-  as?: ElementType
+export type FloatArrowProps = Pick<FloatProps, 'as'> & {
   offset?: number
   className?: string | ((bag: FloatArrowRenderProp) => string)
   children?: ReactElement | ((slot: FloatArrowRenderProp) => ReactElement)
@@ -588,6 +481,11 @@ export interface FloatArrowRenderProp {
 
 function Arrow(props: FloatArrowProps) {
   const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
+
+  const attrs = { ...props } as Record<string, any>
+  for (const key of ['as', 'offset', 'children']) {
+    delete attrs[key]
+  }
 
   const staticSide = {
     top: 'bottom',
@@ -602,6 +500,7 @@ function Arrow(props: FloatArrowProps) {
     right: undefined,
     bottom: undefined,
     [staticSide]: `${(props.offset ?? 4) * -1}px`,
+    ...attrs.style,
   }
 
   if (props.as === Fragment) {
@@ -615,13 +514,15 @@ function Arrow(props: FloatArrowProps) {
     return <ArrowNode.type {...ArrowNode.props} ref={arrowRef} style={style} />
   }
 
-  const ArrowWrapper = props.as || 'div'
+  const Wrapper = props.as || 'div'
   return (
-    <ArrowWrapper
-      {...props}
+    <Wrapper
       ref={arrowRef as RefObject<HTMLDivElement>}
+      {...attrs}
       style={style}
-    />
+    >
+      {props.children}
+    </Wrapper>
   )
 }
 
