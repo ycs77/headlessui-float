@@ -609,7 +609,9 @@ function Arrow(props: FloatArrowProps) {
     const ArrowNode = typeof props.children === 'function'
       ? props.children(slot)
       : props.children
-    if (!ArrowNode || !isValidElement<any>(ArrowNode)) return
+    if (!ArrowNode || !isValidElement<any>(ArrowNode)) {
+      return <Fragment />
+    }
     return <ArrowNode.type {...ArrowNode.props} ref={arrowRef} style={style} />
   }
 
