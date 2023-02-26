@@ -1,5 +1,5 @@
 <template>
-  <header class="relative z-[10000] py-4 bg-white border-b border-gray-200 md:fixed md:top-0 md:inset-x-0">
+  <header class="relative z-[100] py-4 bg-white border-b border-gray-200 md:fixed md:top-0 md:inset-x-0">
     <h1 class="text-center text-gray-800 text-2xl font-bold">
       Headless UI Float - Vue Example
     </h1>

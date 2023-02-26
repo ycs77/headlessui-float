@@ -1,13 +1,13 @@
-import { Transition, defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Float } from '../../src/float'
-import { render, screen, userEvent, waitTimeout } from './utils/testing-library'
+import { render, screen, userEvent, wait } from './utils/testing-library'
 import { html } from './utils/html'
 
 describe('Render components', () => {
   it('should to render <Float> with <Menu>', async () => {
     render(defineComponent({
-      components: { Menu, MenuButton, MenuItem, MenuItems, Float, Transition },
+      components: { Menu, MenuButton, MenuItem, MenuItems, Float },
       template: html`
         <Menu>
           <Float placement="bottom-start" :offset="4">
@@ -27,14 +27,14 @@ describe('Render components', () => {
     expect(screen.queryByRole('menu')).toBeNull()
 
     await userEvent.click(button)
-    await waitTimeout(50)
+    await wait(50)
 
     expect(screen.queryByRole('menu')).toHaveAttribute('data-headlessui-state', 'open')
     const menuItems = screen.queryAllByRole('menuitem')
     expect(menuItems).toHaveLength(3)
 
     await userEvent.click(button)
-    await waitTimeout(50)
+    await wait(50)
 
     expect(screen.queryByRole('menu')).toBeNull()
   })

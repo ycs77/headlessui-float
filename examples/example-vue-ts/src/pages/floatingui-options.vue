@@ -23,7 +23,7 @@
     </template>
 
     <Menu>
-      <Float show :placement="placement">
+      <Float show :placement="placement" z-index="99">
         <MenuButton class="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
           Options
         </MenuButton>
@@ -60,7 +60,7 @@
     </template>
 
     <Menu>
-      <Float show placement="bottom-start" :offset="offset">
+      <Float show placement="bottom-start" :offset="offset" z-index="99">
         <MenuButton class="flex justify-center items-center mx-auto px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
           Options
         </MenuButton>
@@ -98,7 +98,7 @@
 
     <div class="h-[800px] pt-[382px]">
       <Menu>
-        <Float show placement="right" :shift="shift">
+        <Float show placement="right" :shift="shift" z-index="99">
           <MenuButton class="flex justify-center items-center mx-auto px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </MenuButton>
@@ -137,7 +137,7 @@
 
     <div class="h-[800px] pt-[382px]">
       <Menu>
-        <Float show placement="bottom" :flip="flip">
+        <Float show placement="bottom" :flip="flip" z-index="99">
           <MenuButton class="flex justify-center items-center mx-auto px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </MenuButton>

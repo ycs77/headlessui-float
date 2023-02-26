@@ -2,7 +2,7 @@ import { type ComponentPublicInstance, type Ref, ref as createRef } from 'vue'
 
 // Reference: https://github.com/tailwindlabs/headlessui/blob/426cbf34c50252932f4e26a954226539316ca8bc/packages/%40headlessui-vue/src/utils/dom.ts#L3-L8
 
-export function dom<T>(ref?: Ref<T | ComponentPublicInstance | null>): T | null {
+export function dom<T>(ref?: Ref<T | ComponentPublicInstance | null> | null): T | null {
   if (ref == null) return null
   if (ref.value == null) return null
 

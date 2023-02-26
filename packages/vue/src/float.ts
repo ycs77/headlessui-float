@@ -14,11 +14,13 @@ import {
   shallowRef,
   toRef,
   watch,
+  watchEffect,
 } from 'vue'
 import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, SetupContext, ShallowRef, VNode } from 'vue'
 import { Portal, TransitionChild } from '@headlessui/vue'
 import { useFloating } from '@floating-ui/vue'
-import type { DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy } from '@floating-ui/dom'
+import { autoUpdate } from '@floating-ui/dom'
+import type { DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy, VirtualElement } from '@floating-ui/dom'
 import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
 import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
 import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/flip'
@@ -31,8 +33,10 @@ import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/re
 import { type OriginClassResolver } from './origin-class-resolvers'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
 import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
-import { useAutoUpdate } from './hooks/use-auto-update'
 import { useTransitionAndOriginClass } from './hooks/use-transition-and-origin-class'
+import { useOutsideClick } from './hooks/use-outside-click'
+import { useDocumentEvent } from './hooks/use-document-event'
+import { getOwnerDocument } from './utils/owner'
 
 interface ReferenceState {
   referenceRef: Ref<ReferenceElement | null>
@@ -468,7 +472,14 @@ export function useFloat<T extends ReferenceElement>(
     await nextTick()
 
     if (show.value && isVisible.value && props.autoUpdate) {
-      const cleanup = useAutoUpdate(referenceEl, floatingEl, update, props.autoUpdate)
+      const cleanup = autoUpdate(
+        referenceEl.value!,
+        floatingEl.value!,
+        updateFloating,
+        typeof props.autoUpdate === 'object'
+          ? props.autoUpdate
+          : undefined
+      )
       emit('show')
 
       onCleanup(() => {
@@ -478,10 +489,16 @@ export function useFloat<T extends ReferenceElement>(
     }
   }, { flush: 'post', immediate: true })
 
+  const needForRAF = ref(true)
+
   watch(referenceEl, () => {
     // only watch on the reference element is virtual element.
-    if (!(referenceEl.value instanceof Element)) {
-      updateFloating()
+    if (!(referenceEl.value instanceof Element) && isVisible.value && needForRAF.value) {
+      needForRAF.value = false
+      window.requestAnimationFrame(() => {
+        needForRAF.value = true
+        updateFloating()
+      })
     }
   }, { flush: 'sync' })
 
@@ -516,6 +533,7 @@ export function useFloat<T extends ReferenceElement>(
 
 export const Float = defineComponent({
   name: 'Float',
+  inheritAttrs: false,
   props: FloatProps,
   emits: ['show', 'hide', 'update'],
   setup(props, { emit, slots, attrs }) {
@@ -598,6 +616,7 @@ export const FloatReferenceProps = {
 
 export const FloatReference = defineComponent({
   name: 'FloatReference',
+  inheritAttrs: false,
   props: FloatReferenceProps,
   setup(props, { slots, attrs }) {
     const context = useReferenceContext('FloatReference')
@@ -639,6 +658,7 @@ export const FloatContentProps = {
 
 export const FloatContent = defineComponent({
   name: 'FloatContent',
+  inheritAttrs: false,
   props: FloatContentProps,
   setup(props, { slots, attrs }) {
     const context = useFloatingContext('FloatContent')
@@ -704,6 +724,317 @@ export const FloatArrow = defineComponent({
       }
 
       return h(props.as, mergeProps(attrs, { ref, style }))
+    }
+  },
+})
+
+export type FloatVirtualPropsType = Pick<FloatPropsType, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware'>
+
+export const FloatVirtualProps = {
+  as: FloatProps.as,
+  show: FloatProps.show,
+  placement: FloatProps.placement,
+  strategy: FloatProps.strategy,
+  offset: FloatProps.offset,
+  shift: FloatProps.shift,
+  flip: FloatProps.flip,
+  arrow: FloatProps.arrow,
+  autoPlacement: FloatProps.autoPlacement,
+  hide: FloatProps.hide,
+  autoUpdate: FloatProps.autoUpdate,
+  zIndex: FloatProps.zIndex,
+  transitionName: FloatProps.transitionName,
+  transitionType: FloatProps.transitionType,
+  enter: FloatProps.enter,
+  enterFrom: FloatProps.enterFrom,
+  enterTo: FloatProps.enterTo,
+  leave: FloatProps.leave,
+  leaveFrom: FloatProps.leaveFrom,
+  leaveTo: FloatProps.leaveTo,
+  originClass: FloatProps.originClass,
+  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
+  portal: FloatProps.portal,
+  transform: FloatProps.transform,
+  middleware: FloatProps.middleware,
+}
+
+export interface FloatVirtualInitialProps {
+  show: Ref<boolean>
+  placement: Readonly<Ref<Placement>>
+  reference: Ref<VirtualElement>
+  floating: Ref<HTMLElement | null>
+}
+
+export const FloatVirtual = defineComponent({
+  name: 'FloatVirtual',
+  inheritAttrs: false,
+  props: FloatVirtualProps,
+  emits: ['initial', 'show', 'hide', 'update'],
+  setup(props, { emit, slots, attrs }) {
+    const show = ref(props.show !== null ? props.show : false)
+    const reference = ref({
+      getBoundingClientRect() {
+        return {
+          x: 0,
+          y: 0,
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          width: 0,
+          height: 0,
+        }
+      },
+    }) as Ref<VirtualElement>
+    const floating = ref(null) as Ref<HTMLElement | null>
+
+    const {
+      floatingApi,
+      placement,
+      enterActiveClassRef,
+      leaveActiveClassRef,
+    } = useFloat(show, reference, floating, props, emit)
+
+    function close() {
+      show.value = false
+    }
+
+    emit('initial', {
+      show,
+      placement,
+      reference,
+      floating,
+    } as FloatVirtualInitialProps)
+
+    return () => {
+      if (slots.default) {
+        const slot = { placement, close }
+
+        const [floatingNode] = flattenFragment(slots.default(slot)).filter(isValidElement)
+
+        return renderFloatingElement(
+          floatingNode,
+          {
+            as: props.as,
+            show: show.value,
+            enterActiveClassRef,
+            leaveActiveClassRef,
+          },
+          attrs,
+          floatingApi
+        )
+      }
+    }
+  },
+})
+
+export type FloatContextMenuPropsType = Omit<FloatVirtualPropsType, 'show' | 'portal'>
+
+export const FloatContextMenuProps = {
+  as: FloatProps.as,
+  placement: FloatProps.placement,
+  strategy: FloatProps.strategy,
+  offset: FloatProps.offset,
+  shift: FloatProps.shift,
+  flip: {
+    ...FloatProps.flip,
+    default: true,
+  },
+  arrow: FloatProps.arrow,
+  autoPlacement: FloatProps.autoPlacement,
+  hide: FloatProps.hide,
+  autoUpdate: FloatProps.autoUpdate,
+  zIndex: FloatProps.zIndex,
+  transitionName: FloatProps.transitionName,
+  transitionType: FloatProps.transitionType,
+  enter: FloatProps.enter,
+  enterFrom: FloatProps.enterFrom,
+  enterTo: FloatProps.enterTo,
+  leave: FloatProps.leave,
+  leaveFrom: FloatProps.leaveFrom,
+  leaveTo: FloatProps.leaveTo,
+  originClass: FloatProps.originClass,
+  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
+  transform: FloatProps.transform,
+  middleware: FloatProps.middleware,
+}
+
+export const FloatContextMenu = defineComponent({
+  name: 'FloatContextMenu',
+  inheritAttrs: false,
+  props: FloatContextMenuProps,
+  emits: ['show', 'hide', 'update'],
+  setup(props, { emit, slots, attrs }) {
+    function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
+      useDocumentEvent('contextmenu', e => {
+        e.preventDefault()
+
+        reference.value = {
+          getBoundingClientRect() {
+            return {
+              width: 0,
+              height: 0,
+              x: e.clientX,
+              y: e.clientY,
+              top: e.clientY,
+              left: e.clientX,
+              right: e.clientX,
+              bottom: e.clientY,
+            }
+          },
+        }
+
+        show.value = true
+      })
+
+      useOutsideClick(floating, () => {
+        show.value = false
+      }, computed(() => show.value))
+    }
+
+    return () => {
+      if (slots.default) {
+        return h(FloatVirtual, {
+          ...props,
+          ...attrs,
+          portal: true,
+          onInitial,
+          onShow: () => emit('show'),
+          onHide: () => emit('hide'),
+          onUpdate: () => emit('update'),
+        }, slots.default)
+      }
+    }
+  },
+})
+
+export type FloatCursorPropsType = Omit<FloatVirtualPropsType, 'show' | 'portal'> & {
+  globalHideCursor?: boolean
+}
+
+export const FloatCursorProps = {
+  as: FloatProps.as,
+  placement: FloatProps.placement,
+  strategy: FloatProps.strategy,
+  offset: FloatProps.offset,
+  shift: FloatProps.shift,
+  flip: FloatProps.flip,
+  arrow: FloatProps.arrow,
+  autoPlacement: FloatProps.autoPlacement,
+  hide: FloatProps.hide,
+  autoUpdate: FloatProps.autoUpdate,
+  zIndex: FloatProps.zIndex,
+  transitionName: FloatProps.transitionName,
+  transitionType: FloatProps.transitionType,
+  enter: FloatProps.enter,
+  enterFrom: FloatProps.enterFrom,
+  enterTo: FloatProps.enterTo,
+  leave: FloatProps.leave,
+  leaveFrom: FloatProps.leaveFrom,
+  leaveTo: FloatProps.leaveTo,
+  originClass: FloatProps.originClass,
+  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
+  transform: FloatProps.transform,
+  middleware: FloatProps.middleware,
+  globalHideCursor: {
+    type: Boolean,
+    default: true,
+  },
+}
+
+export const FloatCursor = defineComponent({
+  name: 'FloatCursor',
+  inheritAttrs: false,
+  props: FloatCursorProps,
+  emits: ['show', 'hide', 'update'],
+  setup(
+    { globalHideCursor, ...props },
+    { emit, slots, attrs }
+  ) {
+    function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
+      function open() {
+        show.value = true
+      }
+      function close() {
+        show.value = false
+      }
+
+      function setPosition(position: { clientX: number, clientY: number }) {
+        reference.value = {
+          getBoundingClientRect() {
+            return {
+              width: 0,
+              height: 0,
+              x: position.clientX,
+              y: position.clientY,
+              top: position.clientY,
+              left: position.clientX,
+              right: position.clientX,
+              bottom: position.clientY,
+            }
+          },
+        }
+      }
+
+      function onMouseMove(e: MouseEvent) {
+        open()
+        setPosition(e)
+      }
+
+      function onTouchMove(e: TouchEvent) {
+        open()
+        setPosition(e.touches[0])
+      }
+
+      const ownerDocument = getOwnerDocument(floating)
+      if (!ownerDocument) return
+
+      watchEffect(onCleanup => {
+        if (globalHideCursor &&
+            !ownerDocument.getElementById('headlesui-float-cursor-style')
+        ) {
+          const style = ownerDocument.createElement('style')
+          const head = ownerDocument.head || ownerDocument.getElementsByTagName('head')[0]
+          head.appendChild(style)
+          style.id = 'headlesui-float-cursor-style'
+          style.appendChild(ownerDocument.createTextNode([
+            '*, *::before, *::after {',
+            '  cursor: none !important;',
+            '}',
+            '.headlesui-float-cursor-root {',
+            '  pointer-events: none !important;',
+            '}',
+          ].join('\n')))
+
+          onCleanup(() => ownerDocument.getElementById('headlesui-float-cursor-style')?.remove())
+        }
+      }, { flush: 'post' })
+
+      if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) {
+        useDocumentEvent('touchstart', open)
+        useDocumentEvent('touchend', close)
+        useDocumentEvent('touchmove', onTouchMove)
+      } else {
+        useDocumentEvent('mouseenter', open)
+        useDocumentEvent('mouseleave', close)
+        useDocumentEvent('mousemove', onMouseMove)
+      }
+    }
+
+    return () => {
+      if (slots.default) {
+        return h(FloatVirtual, {
+          ...props,
+          ...attrs,
+          show: true,
+          portal: true,
+          class: 'headlesui-float-cursor-root',
+          onInitial,
+          onShow: () => emit('show'),
+          onHide: () => emit('hide'),
+          onUpdate: () => emit('update'),
+        }, slots.default)
+      }
     }
   },
 })

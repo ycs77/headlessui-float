@@ -11,6 +11,7 @@ import Listbox from '@/pages/listbox.vue'
 import Combobox from '@/pages/combobox.vue'
 import Dialog from '@/pages/dialog.vue'
 import Popover from '@/pages/popover.vue'
+import VirtualElement from '@/pages/virtual-element.vue'
 
 export type RouteRecord = RouteRecordRaw & {
   title?: string
@@ -34,7 +35,7 @@ export const componentsRoutes = <RouteRecord[]>[
   { path: '/combobox', component: Combobox },
   { path: '/dialog', component: Dialog },
   { path: '/popover', component: Popover },
-  { path: '/contextmenu', component: {}, soon: true },
+  { path: '/virtual-element', component: VirtualElement },
 ]
 
 export const routes = <RouteRecord[]>[

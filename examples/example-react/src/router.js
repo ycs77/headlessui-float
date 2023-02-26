@@ -10,6 +10,7 @@ import Listbox from '@/pages/listbox'
 import Combobox from '@/pages/combobox'
 import Dialog from '@/pages/dialog'
 import Popover from '@/pages/popover'
+import VirtualElement from '@/pages/virtual-element'
 
 export const featuresRoutes = [
   { path: '/floatingui-options', component: FloatinguiOptions, title: 'Floating UI options' },
@@ -27,7 +28,7 @@ export const componentsRoutes = [
   { path: '/combobox', component: Combobox },
   { path: '/dialog', component: Dialog },
   { path: '/popover', component: Popover },
-  { path: '/contextmenu', component: null, soon: true },
+  { path: '/virtual-element', component: VirtualElement },
 ]
 
 export const routes = [
