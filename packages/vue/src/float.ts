@@ -3,7 +3,6 @@ import {
   cloneVNode,
   computed,
   createCommentVNode,
-  defineComponent,
   h,
   inject,
   mergeProps,
@@ -130,6 +129,9 @@ export interface FloatProps {
     referenceEl: Ref<ReferenceElement | null>
     floatingEl: Ref<HTMLElement | null>
   }) => Middleware[])
+  onShow?: () => any
+  onHide?: () => any
+  onUpdate?: () => any
 }
 
 export const FloatPropsValidators = {
@@ -224,6 +226,10 @@ export const FloatPropsValidators = {
   },
 }
 
+export interface FloatSlotProps {
+  placement: Placement
+}
+
 export type RenderReferenceElementProps = FloatReferenceProps & Required<Pick<FloatReferenceProps, 'as'>>
 
 export function renderReferenceElement(
@@ -248,7 +254,7 @@ export function renderReferenceElement(
   } else if (typeof props.as === 'string') {
     return h(props.as, attrs, [node])
   }
-  return h(props.as, attrs, () => [node])
+  return h(props.as!, attrs, () => [node])
 }
 
 export type RenderFloatingElementProps =
@@ -533,31 +539,35 @@ export function useFloat<T extends ReferenceElement>(
   return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, referenceEl, floatingEl, middlewareData, update: updateFloating, enterActiveClassRef, leaveActiveClassRef }
 }
 
-export const Float = defineComponent({
+export const Float = {
   name: 'Float',
   inheritAttrs: false,
   props: FloatPropsValidators,
   emits: ['show', 'hide', 'update'],
-  setup(props, { emit, slots, attrs }) {
-    const show = ref(props.show !== null ? props.show : false)
+  setup(props: FloatProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
+    const show = ref(props.show ?? false)
     const reference = ref(null) as Ref<HTMLElement | null>
     const floating = ref(null) as Ref<HTMLElement | null>
 
     const {
       referenceApi,
       floatingApi,
+      placement,
       enterActiveClassRef,
       leaveActiveClassRef,
     } = useFloat(show, reference, floating, props, emit)
 
-    function renderWrapper(nodes: VNode | VNode[]) {
-      const children = Array.isArray(nodes) ? nodes : [nodes]
+    function renderWrapper(children: VNode[]) {
       if (props.as === 'template') {
         return children
       } else if (typeof props.as === 'string') {
         return h(props.as, attrs, children)
       }
-      return h(props.as, attrs, () => children)
+      return h(props.as!, attrs, () => children)
+    }
+
+    const slot: FloatSlotProps = {
+      placement: placement.value,
     }
 
     // If enable dialog mode, then set `composable` to true..
@@ -568,14 +578,14 @@ export const Float = defineComponent({
       return () => {
         if (!slots.default) return
 
-        return renderWrapper(slots.default())
+        return renderWrapper(slots.default(slot))
       }
     }
 
     return () => {
       if (!slots.default) return
 
-      const [referenceNode, floatingNode] = flattenFragment(slots.default()).filter(isValidElement)
+      const [referenceNode, floatingNode] = flattenFragment(slots.default(slot)).filter(isValidElement)
 
       if (!isValidElement(referenceNode)) {
         return
@@ -591,7 +601,7 @@ export const Float = defineComponent({
       const floatingElement = renderFloatingElement(
         floatingNode,
         {
-          as: props.floatingAs,
+          as: props.floatingAs!,
           enterActiveClassRef,
           leaveActiveClassRef,
         },
@@ -605,7 +615,14 @@ export const Float = defineComponent({
       ])
     }
   },
-})
+} as unknown as {
+  new (): {
+    $props: FloatProps
+    $slots: {
+      default(props: FloatSlotProps): any
+    }
+  }
+}
 
 export type FloatReferenceProps = Pick<FloatProps, 'as'>
 
@@ -620,11 +637,11 @@ export interface FloatReferenceSlotProps {
   placement: Placement
 }
 
-export const FloatReference = defineComponent({
+export const FloatReference = {
   name: 'FloatReference',
   inheritAttrs: false,
   props: FloatReferencePropsValidators,
-  setup(props, { slots, attrs }) {
+  setup(props: FloatReferenceProps, { slots, attrs }: SetupContext) {
     const context = useReferenceContext('FloatReference')
     const { placement } = context
 
@@ -637,13 +654,20 @@ export const FloatReference = defineComponent({
 
       return renderReferenceElement(
         slots.default(slot)[0],
-        props,
+        props as Required<FloatReferenceProps>,
         attrs,
         context
       )
     }
   },
-})
+} as unknown as {
+  new (): {
+    $props: FloatReferenceProps
+    $slots: {
+      default(props: FloatReferenceSlotProps): any
+    }
+  }
+}
 
 export type FloatContentProps = Pick<FloatProps, 'as' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
   transitionChild?: boolean
@@ -671,11 +695,11 @@ export interface FloatContentSlotProps {
   placement: Placement
 }
 
-export const FloatContent = defineComponent({
+export const FloatContent = {
   name: 'FloatContent',
   inheritAttrs: false,
   props: FloatContentPropsValidators,
-  setup(props, { slots, attrs }) {
+  setup(props: FloatContentProps, { slots, attrs }: SetupContext) {
     const context = useFloatingContext('FloatContent')
     const { placement } = context
 
@@ -691,7 +715,7 @@ export const FloatContent = defineComponent({
       return renderFloatingElement(
         slots.default(slot)[0],
         {
-          ...props,
+          ...(props as Required<Pick<FloatContentProps, 'as'>> & FloatContentProps),
           enterActiveClassRef,
           leaveActiveClassRef,
         },
@@ -700,11 +724,22 @@ export const FloatContent = defineComponent({
       )
     }
   },
-})
+} as unknown as {
+  new (): {
+    $props: FloatContentProps
+    $slots: {
+      default(props: FloatContentSlotProps): any
+    }
+  }
+}
+
+export type FloatArrowProps = Pick<FloatProps, 'as'> & {
+  offset?: number
+}
 
 export const FloatArrowPropsValidators = {
   as: {
-    type: [String, Function] as PropType<string | FunctionalComponent>,
+    ...FloatPropsValidators.as,
     default: 'div',
   },
   offset: {
@@ -717,10 +752,10 @@ export interface FloatArrowSlotProps {
   placement: Placement
 }
 
-export const FloatArrow = defineComponent({
+export const FloatArrow = {
   name: 'FloatArrow',
   props: FloatArrowPropsValidators,
-  setup(props, { slots, attrs }) {
+  setup(props: FloatArrowProps, { slots, attrs }: SetupContext) {
     const { ref, placement, x, y } = useArrowContext('FloatArrow')
 
     return () => {
@@ -736,7 +771,7 @@ export const FloatArrow = defineComponent({
         top: typeof y.value === 'number' ? `${y.value}px` : undefined,
         right: undefined,
         bottom: undefined,
-        [staticSide]: `${props.offset * -1}px`,
+        [staticSide]: `${props.offset! * -1}px`,
       }
 
       if (props.as === 'template') {
@@ -751,12 +786,21 @@ export const FloatArrow = defineComponent({
         return cloneVNode(node, { ref, style })
       }
 
-      return h(props.as, mergeProps(attrs, { ref, style }))
+      return h(props.as!, mergeProps(attrs, { ref, style }))
     }
   },
-})
+} as unknown as {
+  new (): {
+    $props: FloatArrowProps
+    $slots: {
+      default(props: FloatArrowSlotProps): any
+    }
+  }
+}
 
-export type FloatVirtualProps = Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware'>
+export type FloatVirtualProps = Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> & {
+  onInitial?: (props: FloatVirtualInitialProps) => any
+}
 
 export const FloatVirtualPropsValidators = {
   as: FloatPropsValidators.as,
@@ -798,13 +842,13 @@ export interface FloatVirtualInitialProps {
   floating: Ref<HTMLElement | null>
 }
 
-export const FloatVirtual = defineComponent({
+export const FloatVirtual = {
   name: 'FloatVirtual',
   inheritAttrs: false,
   props: FloatVirtualPropsValidators,
   emits: ['initial', 'show', 'hide', 'update'],
-  setup(props, { emit, slots, attrs }) {
-    const show = ref(props.show !== null ? props.show : false)
+  setup(props: FloatVirtualProps, { emit, slots, attrs }: SetupContext<['initial', 'show', 'hide', 'update']>) {
+    const show = ref(props.show ?? false)
     const reference = ref({
       getBoundingClientRect() {
         return {
@@ -852,7 +896,7 @@ export const FloatVirtual = defineComponent({
       return renderFloatingElement(
         floatingNode,
         {
-          as: props.as,
+          as: props.as!,
           show: show.value,
           enterActiveClassRef,
           leaveActiveClassRef,
@@ -862,7 +906,14 @@ export const FloatVirtual = defineComponent({
       )
     }
   },
-})
+} as unknown as {
+  new (): {
+    $props: FloatVirtualProps
+    $slots: {
+      default(props: FloatVirtualSlotProps): any
+    }
+  }
+}
 
 export type FloatContextMenuProps = Omit<FloatVirtualProps, 'show' | 'portal'>
 
@@ -895,12 +946,12 @@ export const FloatContextMenuPropsValidators = {
   middleware: FloatPropsValidators.middleware,
 }
 
-export const FloatContextMenu = defineComponent({
+export const FloatContextMenu = {
   name: 'FloatContextMenu',
   inheritAttrs: false,
   props: FloatContextMenuPropsValidators,
   emits: ['show', 'hide', 'update'],
-  setup(props, { emit, slots, attrs }) {
+  setup(props: FloatContextMenuProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
     function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
       useDocumentEvent('contextmenu', e => {
         e.preventDefault()
@@ -942,7 +993,14 @@ export const FloatContextMenu = defineComponent({
       }, slots.default)
     }
   },
-})
+} as unknown as {
+  new (): {
+    $props: FloatContextMenuProps
+    $slots: {
+      default(props: FloatVirtualSlotProps): any
+    }
+  }
+}
 
 export type FloatCursorProps = Omit<FloatVirtualProps, 'show' | 'portal'> & {
   globalHideCursor?: boolean
@@ -978,15 +1036,12 @@ export const FloatCursorPropsValidators = {
   },
 }
 
-export const FloatCursor = defineComponent({
+export const FloatCursor = {
   name: 'FloatCursor',
   inheritAttrs: false,
   props: FloatCursorPropsValidators,
   emits: ['show', 'hide', 'update'],
-  setup(
-    { globalHideCursor, ...props },
-    { emit, slots, attrs }
-  ) {
+  setup({ globalHideCursor, ...props }: FloatCursorProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
     function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
       function open() {
         show.value = true
@@ -1073,4 +1128,11 @@ export const FloatCursor = defineComponent({
       }, slots.default)
     }
   },
-})
+} as unknown as {
+  new (): {
+    $props: FloatCursorProps
+    $slots: {
+      default(props: FloatVirtualSlotProps): any
+    }
+  }
+}
