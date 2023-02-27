@@ -124,8 +124,8 @@ export interface FloatProps {
     floatingEl: MutableRefObject<HTMLElement | null>
   }) => Middleware[])
 
-  className?: string
-  children: ReactElement[]
+  className?: string | ((bag: FloatReferenceRenderProp) => string)
+  children: ReactElement[] | ((slot: FloatReferenceRenderProp) => ReactElement[])
 
   onShow?: () => void
   onHide?: () => void
@@ -392,21 +392,30 @@ function useFloat(
   return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, reference, floating, update: updateFloating, refs, middlewareData }
 }
 
+export interface FloatRenderProp {
+  placement: Placement
+}
+
 const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
   const [show, setShow] = useState(props.show ?? false)
-
-  const [ReferenceNode, FloatingNode] = props.children
-
-  if (!isValidElement<any>(ReferenceNode)) {
-    console.warn('<Float /> is missing a reference and floating element.')
-    return <Fragment />
-  }
 
   const {
     referenceApi,
     floatingApi,
     arrowApi,
+    placement,
   } = useFloat([show, setShow], props)
+
+  const slot: FloatRenderProp = { placement }
+
+  const [ReferenceNode, FloatingNode] = typeof props.children === 'function'
+    ? props.children(slot)
+    : props.children
+
+  if (!isValidElement<any>(ReferenceNode)) {
+    console.warn('<Float /> is missing a reference and floating element.')
+    return <Fragment />
+  }
 
   function renderWrapper(children: ReactElement | ReactElement[]) {
     if (props.as === Fragment || !props.as) {
@@ -427,7 +436,9 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
       <ReferenceContext.Provider key="FloatingNode" value={referenceApi}>
         <FloatingContext.Provider value={floatingApi}>
           <ArrowContext.Provider value={arrowApi}>
-            {props.children}
+            {typeof props.children === 'function'
+              ? props.children(slot)
+              : props.children}
           </ArrowContext.Provider>
         </FloatingContext.Provider>
       </ReferenceContext.Provider>
