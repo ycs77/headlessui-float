@@ -1,7 +1,7 @@
 import { type FunctionalComponent, h, mergeProps } from 'vue'
-import { Float, type FloatPropsType } from './float'
+import { Float, type FloatProps } from './float'
 
-export function createHighOrderFloatComponent(props: FloatPropsType): FunctionalComponent<FloatPropsType> {
+export function createHighOrderFloatComponent(props: FloatProps): FunctionalComponent<FloatProps> {
   return (userProps, { slots }) => {
     return h(Float, mergeProps(
       props as Record<string, any>,

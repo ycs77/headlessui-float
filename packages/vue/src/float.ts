@@ -45,7 +45,7 @@ interface ReferenceState {
 
 interface FloatingState {
   floatingRef: Ref<FloatingElement | null>
-  props: FloatPropsType
+  props: FloatProps
   mounted: Ref<boolean>
   show: Ref<boolean>
   x: Readonly<Ref<number | null>>
@@ -97,7 +97,7 @@ function useArrowContext(component: string) {
   return context
 }
 
-export interface FloatPropsType {
+export interface FloatProps {
   as?: string | FunctionalComponent
   floatingAs?: string | FunctionalComponent
   show?: boolean
@@ -132,7 +132,7 @@ export interface FloatPropsType {
   }) => Middleware[])
 }
 
-export const FloatProps = {
+export const FloatPropsValidators = {
   as: {
     type: [String, Function] as PropType<string | FunctionalComponent>,
     default: 'template',
@@ -224,7 +224,7 @@ export const FloatProps = {
   },
 }
 
-export type RenderReferenceElementProps = FloatReferencePropsType & Required<Pick<FloatReferencePropsType, 'as'>>
+export type RenderReferenceElementProps = FloatReferenceProps & Required<Pick<FloatReferenceProps, 'as'>>
 
 export function renderReferenceElement(
   referenceNode: VNode,
@@ -252,8 +252,8 @@ export function renderReferenceElement(
 }
 
 export type RenderFloatingElementProps =
-  FloatContentPropsType &
-  Required<Pick<FloatContentPropsType, 'as'>> &
+  FloatContentProps &
+  Required<Pick<FloatContentProps, 'as'>> &
   {
     show?: boolean | null
     enterActiveClassRef: ComputedRef<string | undefined>
@@ -271,7 +271,7 @@ export function renderFloatingElement(
   const props = mergeProps(
     rootProps as Record<string, any>,
     componentProps as Record<string, any>
-  ) as FloatPropsType & FloatContentPropsType
+  ) as FloatProps & FloatContentProps
 
   const { enterActiveClassRef, leaveActiveClassRef } = componentProps
 
@@ -409,7 +409,7 @@ export function useFloat<T extends ReferenceElement>(
   show: Ref<boolean>,
   reference: Ref<T | null>,
   floating: Ref<FloatingElement | null>,
-  props: FloatPropsType,
+  props: FloatProps,
   emit: (event: 'show' | 'hide' | 'update', ...args: any[]) => void
 ) {
   const mounted = ref(false)
@@ -536,7 +536,7 @@ export function useFloat<T extends ReferenceElement>(
 export const Float = defineComponent({
   name: 'Float',
   inheritAttrs: false,
-  props: FloatProps,
+  props: FloatPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup(props, { emit, slots, attrs }) {
     const show = ref(props.show !== null ? props.show : false)
@@ -607,9 +607,9 @@ export const Float = defineComponent({
   },
 })
 
-export type FloatReferencePropsType = Pick<FloatPropsType, 'as'>
+export type FloatReferenceProps = Pick<FloatProps, 'as'>
 
-export const FloatReferenceProps = {
+export const FloatReferencePropsValidators = {
   as: {
     type: [String, Function] as PropType<string | FunctionalComponent>,
     default: 'template',
@@ -623,7 +623,7 @@ export interface FloatReferenceSlotProps {
 export const FloatReference = defineComponent({
   name: 'FloatReference',
   inheritAttrs: false,
-  props: FloatReferenceProps,
+  props: FloatReferencePropsValidators,
   setup(props, { slots, attrs }) {
     const context = useReferenceContext('FloatReference')
     const { placement } = context
@@ -645,22 +645,22 @@ export const FloatReference = defineComponent({
   },
 })
 
-export type FloatContentPropsType = Pick<FloatPropsType, 'as' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
+export type FloatContentProps = Pick<FloatProps, 'as' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
   transitionChild?: boolean
 }
 
-export const FloatContentProps = {
-  as: FloatProps.as,
-  transitionName: FloatProps.transitionName,
-  transitionType: FloatProps.transitionType,
-  enter: FloatProps.enter,
-  enterFrom: FloatProps.enterFrom,
-  enterTo: FloatProps.enterTo,
-  leave: FloatProps.leave,
-  leaveFrom: FloatProps.leaveFrom,
-  leaveTo: FloatProps.leaveTo,
-  originClass: FloatProps.originClass,
-  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
+export const FloatContentPropsValidators = {
+  as: FloatPropsValidators.as,
+  transitionName: FloatPropsValidators.transitionName,
+  transitionType: FloatPropsValidators.transitionType,
+  enter: FloatPropsValidators.enter,
+  enterFrom: FloatPropsValidators.enterFrom,
+  enterTo: FloatPropsValidators.enterTo,
+  leave: FloatPropsValidators.leave,
+  leaveFrom: FloatPropsValidators.leaveFrom,
+  leaveTo: FloatPropsValidators.leaveTo,
+  originClass: FloatPropsValidators.originClass,
+  tailwindcssOriginClass: FloatPropsValidators.tailwindcssOriginClass,
   transitionChild: {
     type: Boolean,
     default: false,
@@ -674,7 +674,7 @@ export interface FloatContentSlotProps {
 export const FloatContent = defineComponent({
   name: 'FloatContent',
   inheritAttrs: false,
-  props: FloatContentProps,
+  props: FloatContentPropsValidators,
   setup(props, { slots, attrs }) {
     const context = useFloatingContext('FloatContent')
     const { placement } = context
@@ -702,7 +702,7 @@ export const FloatContent = defineComponent({
   },
 })
 
-export const FloatArrowProps = {
+export const FloatArrowPropsValidators = {
   as: {
     type: [String, Function] as PropType<string | FunctionalComponent>,
     default: 'div',
@@ -719,7 +719,7 @@ export interface FloatArrowSlotProps {
 
 export const FloatArrow = defineComponent({
   name: 'FloatArrow',
-  props: FloatArrowProps,
+  props: FloatArrowPropsValidators,
   setup(props, { slots, attrs }) {
     const { ref, placement, x, y } = useArrowContext('FloatArrow')
 
@@ -756,34 +756,34 @@ export const FloatArrow = defineComponent({
   },
 })
 
-export type FloatVirtualPropsType = Pick<FloatPropsType, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware'>
+export type FloatVirtualProps = Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware'>
 
-export const FloatVirtualProps = {
-  as: FloatProps.as,
-  show: FloatProps.show,
-  placement: FloatProps.placement,
-  strategy: FloatProps.strategy,
-  offset: FloatProps.offset,
-  shift: FloatProps.shift,
-  flip: FloatProps.flip,
-  arrow: FloatProps.arrow,
-  autoPlacement: FloatProps.autoPlacement,
-  hide: FloatProps.hide,
-  autoUpdate: FloatProps.autoUpdate,
-  zIndex: FloatProps.zIndex,
-  transitionName: FloatProps.transitionName,
-  transitionType: FloatProps.transitionType,
-  enter: FloatProps.enter,
-  enterFrom: FloatProps.enterFrom,
-  enterTo: FloatProps.enterTo,
-  leave: FloatProps.leave,
-  leaveFrom: FloatProps.leaveFrom,
-  leaveTo: FloatProps.leaveTo,
-  originClass: FloatProps.originClass,
-  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
-  portal: FloatProps.portal,
-  transform: FloatProps.transform,
-  middleware: FloatProps.middleware,
+export const FloatVirtualPropsValidators = {
+  as: FloatPropsValidators.as,
+  show: FloatPropsValidators.show,
+  placement: FloatPropsValidators.placement,
+  strategy: FloatPropsValidators.strategy,
+  offset: FloatPropsValidators.offset,
+  shift: FloatPropsValidators.shift,
+  flip: FloatPropsValidators.flip,
+  arrow: FloatPropsValidators.arrow,
+  autoPlacement: FloatPropsValidators.autoPlacement,
+  hide: FloatPropsValidators.hide,
+  autoUpdate: FloatPropsValidators.autoUpdate,
+  zIndex: FloatPropsValidators.zIndex,
+  transitionName: FloatPropsValidators.transitionName,
+  transitionType: FloatPropsValidators.transitionType,
+  enter: FloatPropsValidators.enter,
+  enterFrom: FloatPropsValidators.enterFrom,
+  enterTo: FloatPropsValidators.enterTo,
+  leave: FloatPropsValidators.leave,
+  leaveFrom: FloatPropsValidators.leaveFrom,
+  leaveTo: FloatPropsValidators.leaveTo,
+  originClass: FloatPropsValidators.originClass,
+  tailwindcssOriginClass: FloatPropsValidators.tailwindcssOriginClass,
+  portal: FloatPropsValidators.portal,
+  transform: FloatPropsValidators.transform,
+  middleware: FloatPropsValidators.middleware,
 }
 
 export interface FloatVirtualSlotProps {
@@ -801,7 +801,7 @@ export interface FloatVirtualInitialProps {
 export const FloatVirtual = defineComponent({
   name: 'FloatVirtual',
   inheritAttrs: false,
-  props: FloatVirtualProps,
+  props: FloatVirtualPropsValidators,
   emits: ['initial', 'show', 'hide', 'update'],
   setup(props, { emit, slots, attrs }) {
     const show = ref(props.show !== null ? props.show : false)
@@ -864,41 +864,41 @@ export const FloatVirtual = defineComponent({
   },
 })
 
-export type FloatContextMenuPropsType = Omit<FloatVirtualPropsType, 'show' | 'portal'>
+export type FloatContextMenuProps = Omit<FloatVirtualProps, 'show' | 'portal'>
 
-export const FloatContextMenuProps = {
-  as: FloatProps.as,
-  placement: FloatProps.placement,
-  strategy: FloatProps.strategy,
-  offset: FloatProps.offset,
-  shift: FloatProps.shift,
+export const FloatContextMenuPropsValidators = {
+  as: FloatPropsValidators.as,
+  placement: FloatPropsValidators.placement,
+  strategy: FloatPropsValidators.strategy,
+  offset: FloatPropsValidators.offset,
+  shift: FloatPropsValidators.shift,
   flip: {
-    ...FloatProps.flip,
+    ...FloatPropsValidators.flip,
     default: true,
   },
-  arrow: FloatProps.arrow,
-  autoPlacement: FloatProps.autoPlacement,
-  hide: FloatProps.hide,
-  autoUpdate: FloatProps.autoUpdate,
-  zIndex: FloatProps.zIndex,
-  transitionName: FloatProps.transitionName,
-  transitionType: FloatProps.transitionType,
-  enter: FloatProps.enter,
-  enterFrom: FloatProps.enterFrom,
-  enterTo: FloatProps.enterTo,
-  leave: FloatProps.leave,
-  leaveFrom: FloatProps.leaveFrom,
-  leaveTo: FloatProps.leaveTo,
-  originClass: FloatProps.originClass,
-  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
-  transform: FloatProps.transform,
-  middleware: FloatProps.middleware,
+  arrow: FloatPropsValidators.arrow,
+  autoPlacement: FloatPropsValidators.autoPlacement,
+  hide: FloatPropsValidators.hide,
+  autoUpdate: FloatPropsValidators.autoUpdate,
+  zIndex: FloatPropsValidators.zIndex,
+  transitionName: FloatPropsValidators.transitionName,
+  transitionType: FloatPropsValidators.transitionType,
+  enter: FloatPropsValidators.enter,
+  enterFrom: FloatPropsValidators.enterFrom,
+  enterTo: FloatPropsValidators.enterTo,
+  leave: FloatPropsValidators.leave,
+  leaveFrom: FloatPropsValidators.leaveFrom,
+  leaveTo: FloatPropsValidators.leaveTo,
+  originClass: FloatPropsValidators.originClass,
+  tailwindcssOriginClass: FloatPropsValidators.tailwindcssOriginClass,
+  transform: FloatPropsValidators.transform,
+  middleware: FloatPropsValidators.middleware,
 }
 
 export const FloatContextMenu = defineComponent({
   name: 'FloatContextMenu',
   inheritAttrs: false,
-  props: FloatContextMenuProps,
+  props: FloatContextMenuPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup(props, { emit, slots, attrs }) {
     function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
@@ -944,34 +944,34 @@ export const FloatContextMenu = defineComponent({
   },
 })
 
-export type FloatCursorPropsType = Omit<FloatVirtualPropsType, 'show' | 'portal'> & {
+export type FloatCursorProps = Omit<FloatVirtualProps, 'show' | 'portal'> & {
   globalHideCursor?: boolean
 }
 
-export const FloatCursorProps = {
-  as: FloatProps.as,
-  placement: FloatProps.placement,
-  strategy: FloatProps.strategy,
-  offset: FloatProps.offset,
-  shift: FloatProps.shift,
-  flip: FloatProps.flip,
-  arrow: FloatProps.arrow,
-  autoPlacement: FloatProps.autoPlacement,
-  hide: FloatProps.hide,
-  autoUpdate: FloatProps.autoUpdate,
-  zIndex: FloatProps.zIndex,
-  transitionName: FloatProps.transitionName,
-  transitionType: FloatProps.transitionType,
-  enter: FloatProps.enter,
-  enterFrom: FloatProps.enterFrom,
-  enterTo: FloatProps.enterTo,
-  leave: FloatProps.leave,
-  leaveFrom: FloatProps.leaveFrom,
-  leaveTo: FloatProps.leaveTo,
-  originClass: FloatProps.originClass,
-  tailwindcssOriginClass: FloatProps.tailwindcssOriginClass,
-  transform: FloatProps.transform,
-  middleware: FloatProps.middleware,
+export const FloatCursorPropsValidators = {
+  as: FloatPropsValidators.as,
+  placement: FloatPropsValidators.placement,
+  strategy: FloatPropsValidators.strategy,
+  offset: FloatPropsValidators.offset,
+  shift: FloatPropsValidators.shift,
+  flip: FloatPropsValidators.flip,
+  arrow: FloatPropsValidators.arrow,
+  autoPlacement: FloatPropsValidators.autoPlacement,
+  hide: FloatPropsValidators.hide,
+  autoUpdate: FloatPropsValidators.autoUpdate,
+  zIndex: FloatPropsValidators.zIndex,
+  transitionName: FloatPropsValidators.transitionName,
+  transitionType: FloatPropsValidators.transitionType,
+  enter: FloatPropsValidators.enter,
+  enterFrom: FloatPropsValidators.enterFrom,
+  enterTo: FloatPropsValidators.enterTo,
+  leave: FloatPropsValidators.leave,
+  leaveFrom: FloatPropsValidators.leaveFrom,
+  leaveTo: FloatPropsValidators.leaveTo,
+  originClass: FloatPropsValidators.originClass,
+  tailwindcssOriginClass: FloatPropsValidators.tailwindcssOriginClass,
+  transform: FloatPropsValidators.transform,
+  middleware: FloatPropsValidators.middleware,
   globalHideCursor: {
     type: Boolean,
     default: true,
@@ -981,7 +981,7 @@ export const FloatCursorProps = {
 export const FloatCursor = defineComponent({
   name: 'FloatCursor',
   inheritAttrs: false,
-  props: FloatCursorProps,
+  props: FloatCursorPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup(
     { globalHideCursor, ...props },
