@@ -566,43 +566,43 @@ export const Float = defineComponent({
       provide(FloatingContext, floatingApi)
 
       return () => {
-        if (slots.default) {
-          return renderWrapper(slots.default())
-        }
+        if (!slots.default) return
+
+        return renderWrapper(slots.default())
       }
     }
 
     return () => {
-      if (slots.default) {
-        const [referenceNode, floatingNode] = flattenFragment(slots.default()).filter(isValidElement)
+      if (!slots.default) return
 
-        if (!isValidElement(referenceNode)) {
-          return
-        }
+      const [referenceNode, floatingNode] = flattenFragment(slots.default()).filter(isValidElement)
 
-        const referenceElement = renderReferenceElement(
-          referenceNode,
-          { as: 'template' },
-          {},
-          referenceApi
-        )
-
-        const floatingElement = renderFloatingElement(
-          floatingNode,
-          {
-            as: props.floatingAs,
-            enterActiveClassRef,
-            leaveActiveClassRef,
-          },
-          {},
-          floatingApi
-        )
-
-        return renderWrapper([
-          referenceElement,
-          floatingElement,
-        ])
+      if (!isValidElement(referenceNode)) {
+        return
       }
+
+      const referenceElement = renderReferenceElement(
+        referenceNode,
+        { as: 'template' },
+        {},
+        referenceApi
+      )
+
+      const floatingElement = renderFloatingElement(
+        floatingNode,
+        {
+          as: props.floatingAs,
+          enterActiveClassRef,
+          leaveActiveClassRef,
+        },
+        {},
+        floatingApi
+      )
+
+      return renderWrapper([
+        referenceElement,
+        floatingElement,
+      ])
     }
   },
 })
@@ -629,18 +629,18 @@ export const FloatReference = defineComponent({
     const { placement } = context
 
     return () => {
-      if (slots.default) {
-        const slot: FloatReferenceSlotProps = {
-          placement: placement.value,
-        }
+      if (!slots.default) return
 
-        return renderReferenceElement(
-          slots.default(slot)[0],
-          props,
-          attrs,
-          context
-        )
+      const slot: FloatReferenceSlotProps = {
+        placement: placement.value,
       }
+
+      return renderReferenceElement(
+        slots.default(slot)[0],
+        props,
+        attrs,
+        context
+      )
     }
   },
 })
@@ -682,22 +682,22 @@ export const FloatContent = defineComponent({
     const { enterActiveClassRef, leaveActiveClassRef } = useTransitionAndOriginClass(props, placement)
 
     return () => {
-      if (slots.default) {
-        const slot: FloatContentSlotProps = {
-          placement: placement.value,
-        }
+      if (!slots.default) return
 
-        return renderFloatingElement(
-          slots.default(slot)[0],
-          {
-            ...props,
-            enterActiveClassRef,
-            leaveActiveClassRef,
-          },
-          attrs,
-          context
-        )
+      const slot: FloatContentSlotProps = {
+        placement: placement.value,
       }
+
+      return renderFloatingElement(
+        slots.default(slot)[0],
+        {
+          ...props,
+          enterActiveClassRef,
+          leaveActiveClassRef,
+        },
+        attrs,
+        context
+      )
     }
   },
 })
@@ -840,26 +840,26 @@ export const FloatVirtual = defineComponent({
     } as FloatVirtualInitialProps)
 
     return () => {
-      if (slots.default) {
-        const slot: FloatVirtualSlotProps = {
-          placement: placement.value,
-          close,
-        }
+      if (!slots.default) return
 
-        const [floatingNode] = flattenFragment(slots.default(slot)).filter(isValidElement)
-
-        return renderFloatingElement(
-          floatingNode,
-          {
-            as: props.as,
-            show: show.value,
-            enterActiveClassRef,
-            leaveActiveClassRef,
-          },
-          attrs,
-          floatingApi
-        )
+      const slot: FloatVirtualSlotProps = {
+        placement: placement.value,
+        close,
       }
+
+      const [floatingNode] = flattenFragment(slots.default(slot)).filter(isValidElement)
+
+      return renderFloatingElement(
+        floatingNode,
+        {
+          as: props.as,
+          show: show.value,
+          enterActiveClassRef,
+          leaveActiveClassRef,
+        },
+        attrs,
+        floatingApi
+      )
     }
   },
 })
@@ -929,17 +929,17 @@ export const FloatContextMenu = defineComponent({
     }
 
     return () => {
-      if (slots.default) {
-        return h(FloatVirtual, {
-          ...props,
-          ...attrs,
-          portal: true,
-          onInitial,
-          onShow: () => emit('show'),
-          onHide: () => emit('hide'),
-          onUpdate: () => emit('update'),
-        }, slots.default)
-      }
+      if (!slots.default) return
+
+      return h(FloatVirtual, {
+        ...props,
+        ...attrs,
+        portal: true,
+        onInitial,
+        onShow: () => emit('show'),
+        onHide: () => emit('hide'),
+        onUpdate: () => emit('update'),
+      }, slots.default)
     }
   },
 })
@@ -1058,19 +1058,19 @@ export const FloatCursor = defineComponent({
     }
 
     return () => {
-      if (slots.default) {
-        return h(FloatVirtual, {
-          ...props,
-          ...attrs,
-          show: true,
-          portal: true,
-          class: 'headlesui-float-cursor-root',
-          onInitial,
-          onShow: () => emit('show'),
-          onHide: () => emit('hide'),
-          onUpdate: () => emit('update'),
-        }, slots.default)
-      }
+      if (!slots.default) return
+
+      return h(FloatVirtual, {
+        ...props,
+        ...attrs,
+        show: true,
+        portal: true,
+        class: 'headlesui-float-cursor-root',
+        onInitial,
+        onShow: () => emit('show'),
+        onHide: () => emit('hide'),
+        onUpdate: () => emit('update'),
+      }, slots.default)
     }
   },
 })
