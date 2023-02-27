@@ -40,6 +40,7 @@ import { getOwnerDocument } from './utils/owner'
 
 interface ReferenceState {
   referenceRef: Ref<ReferenceElement | null>
+  placement: Readonly<Ref<Placement>>
 }
 
 interface FloatingState {
@@ -58,8 +59,8 @@ interface FloatingState {
 interface ArrowState {
   ref: Ref<HTMLElement | null>
   placement: Ref<Placement>
-  x: Ref<number | null>
-  y: Ref<number | null>
+  x: Ref<number | undefined>
+  y: Ref<number | undefined>
 }
 
 const ReferenceContext = Symbol('ReferenceContext') as InjectionKey<ReferenceState>
@@ -502,11 +503,12 @@ export function useFloat<T extends ReferenceElement>(
     }
   }, { flush: 'sync' })
 
-  const referenceApi = {
+  const referenceApi: ReferenceState = {
     referenceRef: reference,
-  } as ReferenceState
+    placement,
+  }
 
-  const floatingApi = {
+  const floatingApi: FloatingState = {
     floatingRef: floating,
     props,
     mounted,
@@ -517,14 +519,14 @@ export function useFloat<T extends ReferenceElement>(
     strategy,
     referenceElWidth,
     updateFloating,
-  } as FloatingState
+  }
 
-  const arrowApi = {
+  const arrowApi: ArrowState = {
     ref: arrowRef,
     placement,
     x: arrowX,
     y: arrowY,
-  } as ArrowState
+  }
 
   provide(ArrowContext, arrowApi)
 
@@ -614,17 +616,26 @@ export const FloatReferenceProps = {
   },
 }
 
+export interface FloatReferenceSlotProps {
+  placement: Placement
+}
+
 export const FloatReference = defineComponent({
   name: 'FloatReference',
   inheritAttrs: false,
   props: FloatReferenceProps,
   setup(props, { slots, attrs }) {
     const context = useReferenceContext('FloatReference')
+    const { placement } = context
 
     return () => {
       if (slots.default) {
+        const slot: FloatReferenceSlotProps = {
+          placement: placement.value,
+        }
+
         return renderReferenceElement(
-          slots.default()[0],
+          slots.default(slot)[0],
           props,
           attrs,
           context
@@ -656,6 +667,10 @@ export const FloatContentProps = {
   },
 }
 
+export interface FloatContentSlotProps {
+  placement: Placement
+}
+
 export const FloatContent = defineComponent({
   name: 'FloatContent',
   inheritAttrs: false,
@@ -668,8 +683,12 @@ export const FloatContent = defineComponent({
 
     return () => {
       if (slots.default) {
+        const slot: FloatContentSlotProps = {
+          placement: placement.value,
+        }
+
         return renderFloatingElement(
-          slots.default()[0],
+          slots.default(slot)[0],
           {
             ...props,
             enterActiveClassRef,
@@ -692,6 +711,10 @@ export const FloatArrowProps = {
     type: Number,
     default: 4,
   },
+}
+
+export interface FloatArrowSlotProps {
+  placement: Placement
 }
 
 export const FloatArrow = defineComponent({
@@ -717,9 +740,14 @@ export const FloatArrow = defineComponent({
       }
 
       if (props.as === 'template') {
-        const slot = { placement: placement.value }
+        const slot: FloatArrowSlotProps = {
+          placement: placement.value,
+        }
+
         const node = slots.default?.(slot)[0]
+
         if (!node || !isValidElement(node)) return
+
         return cloneVNode(node, { ref, style })
       }
 
@@ -756,6 +784,11 @@ export const FloatVirtualProps = {
   portal: FloatProps.portal,
   transform: FloatProps.transform,
   middleware: FloatProps.middleware,
+}
+
+export interface FloatVirtualSlotProps {
+  placement: Placement
+  close: () => void
 }
 
 export interface FloatVirtualInitialProps {
@@ -808,7 +841,10 @@ export const FloatVirtual = defineComponent({
 
     return () => {
       if (slots.default) {
-        const slot = { placement, close }
+        const slot: FloatVirtualSlotProps = {
+          placement: placement.value,
+          close,
+        }
 
         const [floatingNode] = flattenFragment(slots.default(slot)).filter(isValidElement)
 

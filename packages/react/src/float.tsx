@@ -33,11 +33,12 @@ import { getOwnerDocument } from './utils/owner'
 
 interface ReferenceState {
   referenceRef: (node: HTMLElement) => void
+  placement: Placement
 }
 
 interface FloatingState {
   floatingRef: (node: HTMLElement) => void
-  props: FloatProps
+  props: Omit<FloatProps, 'children' | 'className'>
   mounted: MutableRefObject<boolean>
   setShow: Dispatch<SetStateAction<boolean>>
   x: number | null
@@ -364,11 +365,12 @@ function useFloat(
     }
   }, [refs])
 
-  const referenceApi = {
+  const referenceApi: ReferenceState = {
     referenceRef: reference,
-  } as ReferenceState
+    placement,
+  }
 
-  const floatingApi = {
+  const floatingApi: FloatingState = {
     floatingRef: floating,
     props,
     mounted,
@@ -378,14 +380,14 @@ function useFloat(
     placement,
     strategy,
     referenceElWidth,
-  } as FloatingState
+  }
 
-  const arrowApi = {
+  const arrowApi: ArrowState = {
     arrowRef,
     placement,
     x: middlewareData.arrow?.x,
     y: middlewareData.arrow?.y,
-  } as ArrowState
+  }
 
   return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, reference, floating, update: updateFloating, refs, middlewareData }
 }
@@ -457,8 +459,12 @@ FloatRoot.displayName = 'Float'
 
 export interface FloatReferenceProps {
   as?: ElementType
-  className?: string
-  children?: ReactElement
+  className?: string | ((bag: FloatReferenceRenderProp) => string)
+  children?: ReactElement | ((slot: FloatReferenceRenderProp) => ReactElement)
+}
+
+export interface FloatReferenceRenderProp {
+  placement: Placement
 }
 
 function Reference(props: FloatReferenceProps) {
@@ -473,9 +479,14 @@ function Reference(props: FloatReferenceProps) {
   }, [props])
 
   const context = useReferenceContext('Float.Reference')
+  const { placement } = context
+
+  const slot: FloatReferenceRenderProp = { placement }
 
   return renderReferenceElement(
-    props.children,
+    typeof props.children === 'function'
+      ? props.children(slot)
+      : props.children,
     { ...props, as: props.as || Fragment },
     attrs,
     context
@@ -484,8 +495,12 @@ function Reference(props: FloatReferenceProps) {
 
 export type FloatContentProps = Pick<FloatProps, 'as' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
   transitionChild?: boolean
-  className?: string
-  children?: ReactElement
+  className?: string | ((bag: FloatContentRenderProp) => string)
+  children?: ReactElement | ((slot: FloatContentRenderProp) => ReactElement)
+}
+
+export interface FloatContentRenderProp {
+  placement: Placement
 }
 
 function Content(props: FloatContentProps) {
@@ -500,9 +515,14 @@ function Content(props: FloatContentProps) {
   }, [props])
 
   const context = useFloatingContext('Float.Content')
+  const { placement } = context
+
+  const slot: FloatContentRenderProp = { placement }
 
   return renderFloatingElement(
-    props.children,
+    typeof props.children === 'function'
+      ? props.children(slot)
+      : props.children,
     { ...props, as: props.as || 'div' },
     attrs,
     context
@@ -545,14 +565,21 @@ function Arrow(props: FloatArrowProps) {
   }
 
   if (props.as === Fragment) {
-    const slot = { placement }
+    const slot: FloatArrowRenderProp = { placement }
+
     const ArrowNode = typeof props.children === 'function'
       ? props.children(slot)
       : props.children
+
     if (!ArrowNode || !isValidElement<any>(ArrowNode)) {
       return <Fragment />
     }
-    return <ArrowNode.type {...ArrowNode.props} ref={arrowRef} style={style} />
+
+    return <ArrowNode.type
+      {...ArrowNode.props}
+      ref={arrowRef}
+      style={style}
+    />
   }
 
   const Wrapper = props.as || 'div'
@@ -615,7 +642,7 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
     return <Fragment />
   }
 
-  const slot = { placement, close }
+  const slot: FloatVirtualRenderProp = { placement, close }
 
   const floatingElement = renderFloatingElement(
     typeof children === 'function'
