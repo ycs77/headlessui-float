@@ -299,7 +299,7 @@ function useFloat(
     update: props.onUpdate || (() => {}),
   }), [props.onShow, props.onHide, props.onUpdate])
 
-  const { x, y, placement, strategy, reference, floating, update, refs, middlewareData } = useFloating<HTMLElement>({
+  const { x, y, placement, strategy, update, refs, middlewareData } = useFloating<HTMLElement>({
     placement: props.placement || 'bottom-start',
     strategy: props.strategy,
     middleware,
@@ -366,12 +366,12 @@ function useFloat(
   }, [refs])
 
   const referenceApi: ReferenceState = {
-    referenceRef: reference,
+    referenceRef: refs.setReference,
     placement,
   }
 
   const floatingApi: FloatingState = {
-    floatingRef: floating,
+    floatingRef: refs.setFloating,
     props,
     mounted,
     setShow,
@@ -389,7 +389,7 @@ function useFloat(
     y: middlewareData.arrow?.y,
   }
 
-  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, reference, floating, update: updateFloating, refs, middlewareData }
+  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, update: updateFloating, refs, middlewareData }
 }
 
 export interface FloatRenderProp {
