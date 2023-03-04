@@ -16,5 +16,9 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/prefer-ts-expect-error': 'off',
+
+    // yml
+    'yml/plain-scalar': 'off',
+    'yml/no-empty-mapping-value': 'off',
   },
 }

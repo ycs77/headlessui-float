@@ -1,0 +1,18 @@
+name: Functional
+description: Performs functional tests checks
+runs:
+  using: composite
+  steps:
+    - run: npx playwright install --with-deps chromium
+      shell: sh
+    - run: yarn build
+      shell: sh
+    - run: yarn react test:functional
+      shell: sh
+    - run: yarn vue test:functional
+      shell: sh
+    - uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: visual-snapshots-diff
+        path: test-results

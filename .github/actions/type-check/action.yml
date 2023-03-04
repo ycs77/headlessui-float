@@ -1,0 +1,11 @@
+name: Type check
+description: Performs typescript checks
+runs:
+  using: composite
+  steps:
+    - run: yarn lint
+      shell: sh
+    - run: yarn react type-check
+      shell: sh
+    - run: yarn vue type-check
+      shell: sh

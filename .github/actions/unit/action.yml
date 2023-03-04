@@ -1,0 +1,11 @@
+name: Unit
+description: Performs unit tests checks
+runs:
+  using: composite
+  steps:
+    - run: yarn build
+      shell: sh
+    - run: yarn react test:unit
+      shell: sh
+    - run: yarn vue test:unit
+      shell: sh
