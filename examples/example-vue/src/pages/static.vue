@@ -168,7 +168,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { Float, FloatArrow } from '@headlessui-float/vue'
 import Block from '@/components/Block.vue'
 import HeroiconsChevronRight20Solid from '~icons/heroicons/chevron-right-20-solid'
