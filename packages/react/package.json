@@ -39,6 +39,7 @@
   "scripts": {
     "build": "sh scripts/build.sh",
     "watch": "vite build --watch",
+    "type-check": "tsc -p tsconfig.app.json --noEmit",
     "test:unit": "vitest --root test/unit/",
     "test:functional": "playwright test test/functional",
     "test:functional:update": "yarn test:functional -u"
