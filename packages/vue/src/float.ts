@@ -624,13 +624,10 @@ export const Float = {
   }
 }
 
-export type FloatReferenceProps = Pick<FloatProps, 'as'>
+export interface FloatReferenceProps extends Pick<FloatProps, 'as'> {}
 
 export const FloatReferencePropsValidators = {
-  as: {
-    type: [String, Function] as PropType<string | FunctionalComponent>,
-    default: 'template',
-  },
+  as: FloatPropsValidators.as,
 }
 
 export interface FloatReferenceSlotProps {
@@ -669,7 +666,7 @@ export const FloatReference = {
   }
 }
 
-export type FloatContentProps = Pick<FloatProps, 'as' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
+export interface FloatContentProps extends Pick<FloatProps, 'as' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> {
   transitionChild?: boolean
 }
 
@@ -733,7 +730,7 @@ export const FloatContent = {
   }
 }
 
-export type FloatArrowProps = Pick<FloatProps, 'as'> & {
+export interface FloatArrowProps extends Pick<FloatProps, 'as'> {
   offset?: number
 }
 
@@ -798,7 +795,7 @@ export const FloatArrow = {
   }
 }
 
-export type FloatVirtualProps = Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> & {
+export interface FloatVirtualProps extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
   onInitial?: (props: FloatVirtualInitialProps) => any
 }
 
@@ -915,7 +912,7 @@ export const FloatVirtual = {
   }
 }
 
-export type FloatContextMenuProps = Omit<FloatVirtualProps, 'show' | 'portal'>
+export interface FloatContextMenuProps extends Omit<FloatVirtualProps, 'show' | 'portal'> {}
 
 export const FloatContextMenuPropsValidators = {
   as: FloatPropsValidators.as,
@@ -1002,7 +999,7 @@ export const FloatContextMenu = {
   }
 }
 
-export type FloatCursorProps = Omit<FloatVirtualProps, 'show' | 'portal'> & {
+export interface FloatCursorProps extends Omit<FloatVirtualProps, 'show' | 'portal'> {
   globalHideCursor?: boolean
 }
 

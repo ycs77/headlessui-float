@@ -468,8 +468,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
 })
 FloatRoot.displayName = 'Float'
 
-export interface FloatReferenceProps {
-  as?: ElementType
+export interface FloatReferenceProps extends Pick<FloatProps, 'as'> {
   className?: string | ((bag: FloatReferenceRenderProp) => string)
   children?: ReactElement | ((slot: FloatReferenceRenderProp) => ReactElement)
 }
@@ -504,7 +503,7 @@ function Reference(props: FloatReferenceProps) {
   )
 }
 
-export type FloatContentProps = Pick<FloatProps, 'as' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> & {
+export interface FloatContentProps extends Pick<FloatProps, 'as' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> {
   transitionChild?: boolean
   className?: string | ((bag: FloatContentRenderProp) => string)
   children?: ReactElement | ((slot: FloatContentRenderProp) => ReactElement)
@@ -540,7 +539,7 @@ function Content(props: FloatContentProps) {
   )
 }
 
-export type FloatArrowProps = Pick<FloatProps, 'as'> & {
+export interface FloatArrowProps extends Pick<FloatProps, 'as'> {
   offset?: number
   className?: string | ((bag: FloatArrowRenderProp) => string)
   children?: ReactElement | ((slot: FloatArrowRenderProp) => ReactElement)
@@ -605,7 +604,7 @@ function Arrow(props: FloatArrowProps) {
   )
 }
 
-export type FloatVirtualProps = Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> & {
+export interface FloatVirtualProps extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
   onInitial: (props: FloatVirtualInitialProps) => void
   className?: string
   children?: ReactElement | ((slot: FloatVirtualRenderProp) => ReactElement)
@@ -675,7 +674,7 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
   )
 }
 
-export type FloatContextMenuProps = Omit<FloatVirtualProps, 'show' | 'portal' | 'onInitial'>
+export interface FloatContextMenuProps extends Omit<FloatVirtualProps, 'show' | 'portal' | 'onInitial'> {}
 
 function ContextMenu(props: FloatContextMenuProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -717,7 +716,7 @@ function ContextMenu(props: FloatContextMenuProps) {
   )
 }
 
-export type FloatCursorProps = Omit<FloatVirtualProps, 'show' | 'portal' | 'onInitial'> & {
+export interface FloatCursorProps extends Omit<FloatVirtualProps, 'show' | 'portal' | 'onInitial'> {
   globalHideCursor?: boolean
 }
 
