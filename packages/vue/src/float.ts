@@ -126,8 +126,8 @@ export interface FloatProps {
   composable?: boolean
   dialog?: boolean
   middleware?: Middleware[] | ((refs: {
-    referenceEl: Ref<ReferenceElement | null>
-    floatingEl: Ref<HTMLElement | null>
+    referenceEl: ComputedRef<ReferenceElement | null>
+    floatingEl: ComputedRef<HTMLElement | null>
   }) => Middleware[])
   onShow?: () => any
   onHide?: () => any
@@ -219,8 +219,8 @@ export const FloatPropsValidators = {
   },
   middleware: {
     type: [Array, Function] as PropType<Middleware[] | ((refs: {
-      referenceEl: Ref<ReferenceElement | null>
-      floatingEl: Ref<FloatingElement | null>
+      referenceEl: ComputedRef<ReferenceElement | null>
+      floatingEl: ComputedRef<FloatingElement | null>
     }) => Middleware[])>,
     default: () => [],
   },
