@@ -1,14 +1,13 @@
 import { useRef, useState } from 'react'
 import { Float } from '@headlessui-float/react'
 import Block from '@/components/Block'
-import HeroiconsChevronRight20Solid from '~icons/heroicons/chevron-right-20-solid'
+import HoverMenu from '@/components/HoverMenu'
 
-function HoverMenu() {
-  const delay = 150
+function useHoverMenu(delay = 150) {
   const [show, setShow] = useState(false)
   const timer = useRef(null)
 
-  const open = () => {
+  function open() {
     if (timer.current !== null) {
       clearTimeout(timer.current)
       timer.current = null
@@ -16,16 +15,24 @@ function HoverMenu() {
     setShow(true)
   }
 
-  const close = () => setShow(false)
+  function close() {
+    setShow(false)
+  }
 
-  const delayClose = () => {
+  function delayClose() {
     timer.current = setTimeout(() => {
       setShow(false)
     }, delay)
   }
 
+  return { show, setShow, timer, open, close, delayClose }
+}
+
+function HoverArrowMenu() {
+  const { show, open, close, delayClose } = useHoverMenu()
+
   return (
-    <Block title="Hover menu" contentClass="h-[200px] p-4" data-testid="block-hover-menu">
+    <Block title="Hover Arrow menu" contentClass="h-[200px] p-4" data-testid="block-hover-arrow-menu">
       <Float
         show={show}
         placement="bottom-start"
@@ -75,171 +82,94 @@ function HoverMenu() {
 }
 
 function NestedMenu() {
-  const nodes = [
-    { id: '0' },
-    { id: '1', parentId: '0' },
-    { id: '2', parentId: '1' },
+  const items = [
+    {
+      id: '1',
+      label: 'Account settings',
+      children: [
+        {
+          id: '1-1',
+          label: 'Installation',
+        },
+        {
+          id: '1-2',
+          label: 'Usage',
+        },
+        {
+          id: '1-3',
+          label: 'Options',
+          children: [
+            {
+              id: '1-3-1',
+              label: 'Option 1',
+            },
+            {
+              id: '1-3-2',
+              label: 'Option 2',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: '2',
+      label: 'Documentation',
+      children: [
+        {
+          id: '2-1',
+          label: 'Installation',
+        },
+        {
+          id: '2-2',
+          label: 'Usage',
+        },
+        {
+          id: '2-3',
+          label: 'Options',
+          children: [
+            {
+              id: '2-3-1',
+              label: 'Option 1',
+            },
+            {
+              id: '2-3-2',
+              label: 'Option 2',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: '3',
+      label: 'Invite a friend',
+      onClick(close) {
+        // eslint-disable-next-line no-console
+        console.log('Click invite a friend!')
+        close()
+      },
+    },
   ]
 
-  const defaultNestedStatus = {}
-  for (const node of nodes) {
-    defaultNestedStatus[node.id] = {
-      open: false,
-      ...node,
-    }
-  }
-  const [nestedStatus, setNestedStatus] = useState(defaultNestedStatus)
-
-  function closeParent(nestedStatus, node) {
-    if (node.parentId) {
-      const parent = nestedStatus[node.parentId]
-      if (parent.open) {
-        parent.open = false
-      }
-      return closeParent(nestedStatus, parent)
-    }
-
-    return nestedStatus
-  }
-
-  const menuEnter = id => {
-    setNestedStatus(state => {
-      const newState = { ...state }
-      newState[id].open = true
-      return newState
-    })
-  }
-  const menuLeave = id => {
-    setNestedStatus(state => {
-      const newState = { ...state }
-      newState[id].open = false
-      return newState
-    })
-  }
-  const menuClick = id => {
-    setNestedStatus(state => {
-      let newState = { ...state }
-      newState[id].open = false
-      newState = closeParent(newState, newState[id])
-      return newState
-    })
-  }
+  const { show, open, close, delayClose } = useHoverMenu()
 
   return (
     <Block title="Nested Menu" contentClass="h-[300px] p-4" data-testid="block-nested-menu">
-      <Float show={nestedStatus['0'].open} placement="bottom-start">
+      <Float show={show} placement="bottom-start">
         <button
           type="button"
           className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md"
-          onMouseEnter={() => menuEnter('0')}
-          onMouseLeave={() => menuLeave('0')}
+          onMouseEnter={open}
+          onMouseLeave={delayClose}
         >
           Options
         </button>
-        <ul
-          className="w-48 bg-white border border-gray-200 shadow-lg focus:outline-none"
-          onMouseEnter={() => menuEnter('0')}
-          onMouseLeave={() => menuLeave('0')}
-        >
-          <li>
-            <button
-              type="button"
-              className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-              onClick={() => menuClick('0')}
-            >
-              Account settings
-            </button>
-          </li>
-          <li>
-            <Float
-              show={nestedStatus['1'].open}
-              placement="right-start"
-              flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
-              shift
-            >
-              <button
-                type="button"
-                className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                onMouseEnter={() => menuEnter('1')}
-                onMouseLeave={() => menuLeave('1')}
-              >
-                Documentation
-                <HeroiconsChevronRight20Solid className="absolute top-2 right-2 w-4 h-4" />
-              </button>
-              <ul
-                className="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
-                onMouseEnter={() => menuEnter('1')}
-                onMouseLeave={() => menuLeave('1')}
-              >
-                <li>
-                  <button
-                    type="button"
-                    className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                    onClick={() => menuClick('1')}
-                  >
-                    Installation
-                  </button>
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                    onClick={() => menuClick('1')}
-                  >
-                    Usage
-                  </button>
-                </li>
-                <li>
-                  <Float
-                    show={nestedStatus['2'].open}
-                    placement="right-start"
-                    flip={{ fallbackPlacements: ['right', 'left', 'bottom', 'top'] }}
-                    shift
-                  >
-                    <button
-                      type="button"
-                      className="relative block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                      onMouseEnter={() => menuEnter('2')}
-                      onMouseLeave={() => menuLeave('2')}
-                    >
-                      Options
-                      <HeroiconsChevronRight20Solid className="absolute top-2 right-2 w-4 h-4" />
-                    </button>
-                    <ul
-                      className="w-32 bg-white border border-gray-200 shadow-lg focus:outline-none"
-                      onMouseEnter={() => menuEnter('2')}
-                      onMouseLeave={() => menuLeave('2')}
-                    >
-                      <li>
-                        <button
-                          type="button"
-                          className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                          onClick={() => menuClick('2')}
-                        >
-                          Option 1
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          type="button"
-                          className="block w-full px-4 py-1.5 hover:bg-indigo-500 hover:text-white text-left text-sm"
-                          onClick={() => menuClick('2')}
-                        >
-                          Option 2
-                        </button>
-                      </li>
-                    </ul>
-                  </Float>
-                </li>
-              </ul>
-            </Float>
-          </li>
-          <li>
-            <button type="button" className="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default" disabled>
-              Invite a friend (coming soon!)
-            </button>
-          </li>
-        </ul>
+
+        <HoverMenu
+          items={items}
+          onClose={close}
+          onMouseEnter={open}
+          onMouseLeave={delayClose}
+        />
       </Float>
     </Block>
   )
@@ -248,7 +178,7 @@ function NestedMenu() {
 export default function ExampleStatic() {
   return (
     <>
-      <HoverMenu />
+      <HoverArrowMenu />
       <NestedMenu />
     </>
   )
