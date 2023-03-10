@@ -1099,11 +1099,11 @@ export const FloatCursor = {
       }, { flush: 'post' })
 
       if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) {
-        useDocumentEvent('touchstart', open)
+        useDocumentEvent('touchstart', onTouchMove)
         useDocumentEvent('touchend', close)
         useDocumentEvent('touchmove', onTouchMove)
       } else {
-        useDocumentEvent('mouseenter', open)
+        useDocumentEvent('mouseenter', onMouseMove)
         useDocumentEvent('mouseleave', close)
         useDocumentEvent('mousemove', onMouseMove)
       }
@@ -1115,7 +1115,6 @@ export const FloatCursor = {
       return h(FloatVirtual, {
         ...props,
         ...attrs,
-        show: true,
         portal: true,
         class: 'headlesui-float-cursor-root',
         onInitial,
