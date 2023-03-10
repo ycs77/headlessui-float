@@ -782,11 +782,11 @@ function Cursor({ globalHideCursor, ...props }: FloatCursorProps) {
     }, [globalHideCursor])
 
     if (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) {
-      useDocumentEvent('touchstart', open)
+      useDocumentEvent('touchstart', onTouchMove)
       useDocumentEvent('touchend', close)
       useDocumentEvent('touchmove', onTouchMove)
     } else {
-      useDocumentEvent('mouseenter', open)
+      useDocumentEvent('mouseenter', onMouseMove)
       useDocumentEvent('mouseleave', close)
       useDocumentEvent('mousemove', onMouseMove)
     }
@@ -795,7 +795,6 @@ function Cursor({ globalHideCursor, ...props }: FloatCursorProps) {
   return (
     <Virtual
       {...props}
-      show={false}
       portal
       className="headlesui-float-cursor-root"
       onInitial={onInitial}
