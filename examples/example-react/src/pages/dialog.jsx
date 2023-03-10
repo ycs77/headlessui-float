@@ -1,6 +1,6 @@
+import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
-import { Fragment, useState } from 'react'
 import Block from '@/components/Block'
 
 export default function ExampleDialog() {
