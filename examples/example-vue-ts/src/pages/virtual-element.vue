@@ -1,6 +1,6 @@
 <template>
   <Block title="Context Menu" content-class="h-[200px] p-4" data-testid="block-context-menu">
-    <div class="h-full flex justify-center items-center text-gray-500 font-medium italic">
+    <div class="h-full flex justify-center items-center text-gray-500 text-center font-medium italic">
       Click right mouse button to show the Context Menu
     </div>
 
@@ -32,7 +32,7 @@
     </FloatContextMenu>
   </Block>
 
-  <Block title="Custom Cursor" content-class="h-[200px] p-4" data-testid="block-cursor">
+  <Block title="Custom Cursor" content-class="h-[120px] p-4" data-testid="block-cursor">
     <div class="h-full flex justify-center items-center text-gray-500 font-medium italic">
       Move cursor on screen
     </div>
