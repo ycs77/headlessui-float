@@ -14,7 +14,7 @@ export default function ExampleVirtualElement() {
 function ExampleContextMenu() {
   return (
     <Block title="Context Menu" contentClass="h-[200px] p-4" data-testid="block-context-menu">
-      <div className="h-full flex justify-center items-center text-gray-500 font-medium italic">
+      <div className="h-full flex justify-center items-center text-gray-500 text-center font-medium italic">
         Click right mouse button to show the Context Menu
       </div>
 
@@ -59,7 +59,7 @@ function ExampleContextMenu() {
 
 function ExampleCustomCursor() {
   return (
-    <Block title="Custom Cursor" contentClass="h-[200px] p-4" data-testid="block-cursor">
+    <Block title="Custom Cursor" contentClass="h-[120px] p-4" data-testid="block-cursor">
       <div className="h-full flex justify-center items-center text-gray-500 font-medium italic">
         Move cursor on screen
       </div>
