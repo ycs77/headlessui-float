@@ -795,8 +795,8 @@ export const FloatArrow = {
   }
 }
 
-export interface FloatVirtualProps extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
-  onInitial?: (props: FloatVirtualInitialProps) => any
+export interface FloatVirtualProps<FloatingElement = HTMLElement> extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
+  onInitial?: (props: FloatVirtualInitialProps<FloatingElement>) => any
 }
 
 export const FloatVirtualPropsValidators = {
@@ -832,11 +832,11 @@ export interface FloatVirtualSlotProps {
   close: () => void
 }
 
-export interface FloatVirtualInitialProps {
+export interface FloatVirtualInitialProps<FloatingElement = HTMLElement> {
   show: Ref<boolean>
   placement: Readonly<Ref<Placement>>
   reference: Ref<VirtualElement>
-  floating: Ref<HTMLElement | null>
+  floating: Ref<FloatingElement | null>
 }
 
 export const FloatVirtual = {
@@ -909,7 +909,7 @@ export const FloatVirtual = {
   },
 } as unknown as {
   new (): {
-    $props: FloatVirtualProps
+    $props: FloatVirtualProps<any>
     $slots: {
       default(props: FloatVirtualSlotProps): any
     }
