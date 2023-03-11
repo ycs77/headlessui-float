@@ -477,7 +477,7 @@ export function useFloat<T extends ReferenceElement>(
 
   useReferenceElResizeObserver(props.adaptiveWidth, referenceEl, referenceElWidth)
 
-  watch(show, async (value, oldValue, onCleanup) => {
+  watch(show, async (value, oldValue, onInvalidate) => {
     await nextTick()
 
     if (show.value && isVisible.value && props.autoUpdate) {
@@ -491,7 +491,7 @@ export function useFloat<T extends ReferenceElement>(
       )
       emit('show')
 
-      onCleanup(() => {
+      onInvalidate(() => {
         cleanup()
         emit('hide')
       })
@@ -1083,7 +1083,7 @@ export const FloatCursor = {
       const ownerDocument = getOwnerDocument(floating)
       if (!ownerDocument) return
 
-      watchEffect(onCleanup => {
+      watchEffect(onInvalidate => {
         if (globalHideCursor &&
             !ownerDocument.getElementById('headlesui-float-cursor-style')
         ) {
@@ -1100,7 +1100,7 @@ export const FloatCursor = {
             '}',
           ].join('\n')))
 
-          onCleanup(() => ownerDocument.getElementById('headlesui-float-cursor-style')?.remove())
+          onInvalidate(() => ownerDocument.getElementById('headlesui-float-cursor-style')?.remove())
         }
       }, { flush: 'post' })
 
