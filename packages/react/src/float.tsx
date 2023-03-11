@@ -630,6 +630,13 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
     return attrs
   }, [props])
 
+  const {
+    floatingApi,
+    arrowApi,
+    placement,
+    refs,
+  } = useFloat([show, setShow], props)
+
   useEffect(() => {
     setShow(props.show ?? false)
   }, [props.show])
@@ -638,13 +645,6 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
     if (show)
       setShow(false)
   }
-
-  const {
-    floatingApi,
-    arrowApi,
-    placement,
-    refs,
-  } = useFloat([show, setShow], props)
 
   onInitial({ showRef: [show, setShow], placement, refs })
 
