@@ -242,19 +242,21 @@ export function renderReferenceElement(
 
   const props = componentProps
 
+  const nodeProps = mergeProps(attrs, {
+    ref: referenceRef,
+  })
+
   const node = cloneVNode(
     referenceNode,
-    mergeProps(props.as === 'template' ? attrs : {}, {
-      ref: referenceRef,
-    })
+    props.as === 'template' ? nodeProps : {}
   )
 
   if (props.as === 'template') {
     return node
   } else if (typeof props.as === 'string') {
-    return h(props.as, attrs, [node])
+    return h(props.as, nodeProps, [node])
   }
-  return h(props.as!, attrs, () => [node])
+  return h(props.as!, nodeProps, () => [node])
 }
 
 export type RenderFloatingElementProps =
