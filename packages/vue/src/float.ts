@@ -869,6 +869,10 @@ export const FloatVirtual = {
       leaveActiveClassRef,
     } = useFloat(show, reference, floating, props, emit)
 
+    watch(() => props.show, () => {
+      show.value = props.show ?? false
+    })
+
     function close() {
       show.value = false
     }
