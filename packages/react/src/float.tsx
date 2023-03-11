@@ -608,7 +608,8 @@ export interface FloatVirtualProps extends Pick<FloatProps, 'as' | 'show' | 'pla
 }
 
 export interface FloatVirtualInitialProps {
-  showRef: [boolean, Dispatch<SetStateAction<boolean>>]
+  show: boolean
+  setShow: Dispatch<SetStateAction<boolean>>
   placement: Placement
   refs: ExtendedRefs<HTMLElement>
 }
@@ -643,7 +644,7 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
       setShow(false)
   }
 
-  onInitial({ showRef: [show, setShow], placement, refs })
+  onInitial({ show, setShow, placement, refs })
 
   if (!children) {
     return <Fragment />
@@ -674,8 +675,7 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
 export interface FloatContextMenuProps extends Omit<FloatVirtualProps, 'show' | 'portal' | 'onInitial'> {}
 
 function ContextMenu(props: FloatContextMenuProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function onInitial({ showRef: [show, setShow], refs }: FloatVirtualInitialProps) {
+  function onInitial({ setShow, refs }: FloatVirtualInitialProps) {
     useDocumentEvent('contextmenu', e => {
       e.preventDefault()
 
@@ -718,8 +718,7 @@ export interface FloatCursorProps extends Omit<FloatVirtualProps, 'show' | 'port
 }
 
 function Cursor({ globalHideCursor, ...props }: FloatCursorProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function onInitial({ showRef: [show, setShow], refs }: FloatVirtualInitialProps) {
+  function onInitial({ setShow, refs }: FloatVirtualInitialProps) {
     function open() {
       setShow(true)
     }
