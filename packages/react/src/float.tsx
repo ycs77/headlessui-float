@@ -154,11 +154,8 @@ export function renderReferenceElement(
 
   const Wrapper = props.as || 'div'
   return (
-    <Wrapper {...attrs}>
-      <ReferenceNode.type
-        {...ReferenceNode.props}
-        ref={referenceRef}
-      />
+    <Wrapper {...attrs} ref={referenceRef}>
+      <ReferenceNode.type {...ReferenceNode.props} />
     </Wrapper>
   )
 }
