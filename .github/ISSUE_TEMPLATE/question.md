@@ -10,7 +10,7 @@ assignees: ''
 **Use Version**
 Use version when question appear:
  - Headless UI: v1.7.5
- - Headless UI Float: v0.10.1
+ - Headless UI Float: v0.11.0
  - Framework: [e.g. vue v3.2.0, react v18.0]
 
 **Describe the question**
