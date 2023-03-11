@@ -14,18 +14,19 @@
         <MenuItems static class="w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden focus:outline-none">
           <MenuItem v-slot="{ active }">
             <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }" @click="close">
-              Account settings
+              Edit
             </button>
           </MenuItem>
           <MenuItem v-slot="{ active }">
             <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }" @click="close">
-              Documentation
+              Cut
             </button>
           </MenuItem>
-          <MenuItem disabled>
-            <span class="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
-              Invite a friend (coming soon!)
-            </span>
+          <div class="my-1 border-b border-gray-100" />
+          <MenuItem v-slot="{ active }">
+            <button type="button" class="block w-full px-4 py-1.5 text-left text-sm" :class="{ 'bg-indigo-500 text-white': active }" @click="close">
+              Other
+            </button>
           </MenuItem>
         </MenuItems>
       </Menu>

@@ -31,7 +31,7 @@ function ExampleContextMenu() {
                   <button type="button" className={`block w-full px-4 py-1.5 text-left text-sm ${
                     active ? 'bg-indigo-500 text-white' : ''
                   }`} onClick={close}>
-                    Account settings
+                    Edit
                   </button>
                 )}
               </Menu.Item>
@@ -40,14 +40,19 @@ function ExampleContextMenu() {
                   <button type="button" className={`block w-full px-4 py-1.5 text-left text-sm ${
                     active ? 'bg-indigo-500 text-white' : ''
                   }`} onClick={close}>
-                    Documentation
+                    Cut
                   </button>
                 )}
               </Menu.Item>
-              <Menu.Item disabled>
-                <span className="block w-full px-4 py-1.5 text-left text-sm opacity-50 cursor-default">
-                  Invite a friend (coming soon!)
-                </span>
+              <div className="my-1 border-b border-gray-100" />
+              <Menu.Item>
+                {({ active }) => (
+                  <button type="button" className={`block w-full px-4 py-1.5 text-left text-sm ${
+                    active ? 'bg-indigo-500 text-white' : ''
+                  }`} onClick={close}>
+                    Other
+                  </button>
+                )}
               </Menu.Item>
             </Menu.Items>
           </Menu>
