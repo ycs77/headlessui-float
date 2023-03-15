@@ -4,7 +4,7 @@
       :show="showHoverMenu"
       placement="bottom-start"
       :offset="12"
-      arrow
+      :arrow="5"
     >
       <button
         type="button"

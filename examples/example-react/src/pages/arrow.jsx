@@ -6,7 +6,7 @@ function ExampleBasicArrow() {
   return (
     <Block title="Arrow" contentClass="h-[200px] p-4" data-testid="block-arrow">
       <Menu>
-        <Float placement="bottom-start" offset={12} flip arrow>
+        <Float placement="bottom-start" offset={12} flip arrow={5}>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </Menu.Button>

@@ -12,7 +12,7 @@ export default function ExamplePopover() {
           offset={15}
           shift={6}
           flip={10}
-          arrow
+          arrow={5}
           portal
           enter="transition duration-200 ease-out"
           enterFrom="opacity-0 -translate-y-1"
