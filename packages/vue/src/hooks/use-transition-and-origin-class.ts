@@ -1,11 +1,11 @@
 import { type Ref, computed } from 'vue'
 import type { Placement } from '@floating-ui/core'
-import { type OriginClassResolver, tailwindcssOriginClassResolver } from '../origin-class-resolvers'
+import { type ClassResolver, tailwindcssOriginClassResolver } from '../origin-class-resolvers'
 
 export function useTransitionAndOriginClass(props: {
   enter?: string
   leave?: string
-  originClass?: string | OriginClassResolver
+  originClass?: string | ClassResolver
   tailwindcssOriginClass?: boolean
 }, placement: Ref<Placement>) {
   const originClassRef = computed(() => {

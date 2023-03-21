@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import type { Placement } from '@floating-ui/core'
-import { type OriginClassResolver, tailwindcssOriginClassResolver } from '../origin-class-resolvers'
+import { type ClassResolver, tailwindcssOriginClassResolver } from '../origin-class-resolvers'
 
 export function useOriginClass(props: {
-  originClass?: string | OriginClassResolver
+  originClass?: string | ClassResolver
   tailwindcssOriginClass?: boolean
 }, placement: Placement) {
   return useMemo(() => {

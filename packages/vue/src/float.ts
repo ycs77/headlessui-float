@@ -30,7 +30,7 @@ import { dom } from './utils/dom'
 import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { getOwnerDocument } from './utils/owner'
-import { type OriginClassResolver } from './origin-class-resolvers'
+import type { ClassResolver } from './origin-class-resolvers'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
 import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
 import { useTransitionAndOriginClass } from './hooks/use-transition-and-origin-class'
@@ -118,7 +118,7 @@ export interface FloatProps {
   leave?: string
   leaveFrom?: string
   leaveTo?: string
-  originClass?: string | OriginClassResolver
+  originClass?: string | ClassResolver
   tailwindcssOriginClass?: boolean
   portal?: boolean
   transform?: boolean
@@ -192,7 +192,7 @@ export const FloatPropsValidators = {
   leave: String,
   leaveFrom: String,
   leaveTo: String,
-  originClass: [String, Function] as PropType<string | OriginClassResolver>,
+  originClass: [String, Function] as PropType<string | ClassResolver>,
   tailwindcssOriginClass: {
     type: Boolean,
     default: false,

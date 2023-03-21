@@ -1,3 +1,6 @@
 import type { Placement } from '@floating-ui/dom'
 
-export type OriginClassResolver = (placement: Placement) => string
+export type ClassResolver = (placement: Placement) => string
+
+/** @deprecated Replace to using `ClassResolver` */
+export type OriginClassResolver = ClassResolver
