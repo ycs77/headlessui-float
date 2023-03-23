@@ -23,7 +23,7 @@ import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/midd
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { env } from './utils/env'
-import type { ClassResolver } from './origin-class-resolvers'
+import type { ClassResolver } from './class-resolvers'
 import { useId } from './hooks/use-id'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
 import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'

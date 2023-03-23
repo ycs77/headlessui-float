@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { Placement } from '@floating-ui/core'
-import { type ClassResolver, tailwindcssOriginClassResolver } from '../origin-class-resolvers'
+import { type ClassResolver, tailwindcssOriginClassResolver } from '../class-resolvers'
 
 export function useOriginClass(props: {
   originClass?: string | ClassResolver
