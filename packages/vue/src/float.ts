@@ -493,7 +493,8 @@ export function useFloat<T extends ReferenceElement>(
 
       onInvalidate(() => {
         cleanup()
-        emit('hide')
+        if (!show.value)
+          emit('hide')
       })
     }
   }, { flush: 'post', immediate: true })
