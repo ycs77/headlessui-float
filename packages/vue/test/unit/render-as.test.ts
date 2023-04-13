@@ -59,7 +59,8 @@ describe('Render as component for wrapper', () => {
       `,
     }))
 
-    const [button, content] = container.children
+    const button = container.children[0]
+    const content = container.children[1]
     expect(button.tagName).toBe('BUTTON')
     expect(content.tagName).toBe('DIV')
   })

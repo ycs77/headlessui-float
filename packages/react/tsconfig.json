@@ -1,11 +1,30 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.test.json"
-    }
+  "compilerOptions": {
+    "composite": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
+    "isolatedModules": true,
+    "esModuleInterop": false,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "skipLibCheck": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "node",
+      "vite/client",
+      "vitest/globals"
+    ]
+  },
+  "exclude": [
+    "**/dist",
+    "**/node_modules",
+    "**/test-results",
+    "**/scripts"
   ]
 }

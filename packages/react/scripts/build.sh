@@ -2,10 +2,11 @@ set -e
 
 rm dist -rf
 
-tsc -p tsconfig.app.json --noEmit && \
+tsc --noEmit && \
 vite build && \
-tsc -p tsconfig.app.json --declaration --emitDeclarationOnly --outDir ./dist
+tsc --declaration --emitDeclarationOnly --outDir ./dist
 
-rm dist/tsconfig.app.tsbuildinfo
+rm dist/tsconfig.tsbuildinfo dist/*.d.ts
+rm dist/test -rf
 mv dist/src/* dist
 rm dist/src -rf

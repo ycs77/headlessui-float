@@ -26,8 +26,8 @@ describe('Portal elements', () => {
 
     const menu = screen.queryByRole('menu')
     expect(menu).toBeInTheDocument()
-    expect(menu.closest('#headlessui-portal-root')).toBeTruthy()
-    expect(menu.innerHTML).toContain('Account settings')
-    expect(menu.innerHTML).toContain('Documentation')
+    expect(menu?.closest('#headlessui-portal-root')).toBeTruthy()
+    expect(menu?.innerHTML).toContain('Account settings')
+    expect(menu?.innerHTML).toContain('Documentation')
   })
 })
