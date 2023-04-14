@@ -1,9 +1,6 @@
 module.exports = {
   extends: '@ycs77',
   rules: {
-    // basic
-    'multiline-ternary': 'off',
-
     // react
     'react/prop-types': 'off',
 
@@ -14,11 +11,6 @@ module.exports = {
 
     // typescript
     '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/prefer-ts-expect-error': 'off',
-
-    // yml
-    'yml/plain-scalar': 'off',
-    'yml/no-empty-mapping-value': 'off',
   },
 }

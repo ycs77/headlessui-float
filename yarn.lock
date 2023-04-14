@@ -1165,10 +1165,10 @@
     "@vue/compiler-dom" "^3.0.1"
     "@vue/server-renderer" "^3.0.1"
 
-"@ycs77/eslint-config-basic@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-basic/-/eslint-config-basic-0.1.3.tgz#efc0004e7205c66197d4a32ef1171a681150db49"
-  integrity sha512-WWKUCNtyWCbFk/c95bw5gN7fhC6VcxQj86W9y5pj0HmXTBJh88UBOiLqewcU+m6CyxroA2lZXsD0YGcGnyXSgg==
+"@ycs77/eslint-config-basic@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-basic/-/eslint-config-basic-0.1.4.tgz#a66616de152aa16f909afeadcd8ff40d01156f62"
+  integrity sha512-jqsi3artTqNWliYxcAYBiSaZFhPd+n38TBUQU+QYKzKipytuBMuOKY2NhjqypwijofxKgCegAtSAmfGJ/kBfPA==
   dependencies:
     eslint-plugin-eslint-comments "^3.2.0"
     eslint-plugin-html "^6.2.0"
@@ -1182,40 +1182,40 @@
     jsonc-eslint-parser "^2.1.0"
     yaml-eslint-parser "^1.0.1"
 
-"@ycs77/eslint-config-react@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-react/-/eslint-config-react-0.1.3.tgz#01f84c1de0b4847bcc080e7782b2252a4acb10f3"
-  integrity sha512-yxaOuxzIgSDzX+EOLsqXG2dxBKG5S8NSdyAudud6wx67Cktq5+y/hgEU9DSBLXFB1cElA6pHBPtH/1HeFpI6/g==
+"@ycs77/eslint-config-react@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-react/-/eslint-config-react-0.1.4.tgz#ebc56be740f057e84e1310893c609d1f2f6c8596"
+  integrity sha512-iqjoj/ExRdw4i85bGCv4GiZKo0ibMeUaeEFr1mAp0tVThD4WUf9YS8NUX4h4AkepdNBkpgUFYY8sIAXkXArLmg==
   dependencies:
-    "@ycs77/eslint-config-ts" "0.1.3"
+    "@ycs77/eslint-config-ts" "0.1.4"
     eslint-plugin-react "^7.30.0"
 
-"@ycs77/eslint-config-ts@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-ts/-/eslint-config-ts-0.1.3.tgz#10742990b5b9837858c66ee4dab7bd54e783567a"
-  integrity sha512-Q7AQANwxjpPHFADHNuodceOxK462T4shX5D0TB9aKomQ+8m8NAr+neWXhOgyBjgiSTibIT1sYPIogF5hvMJFUw==
+"@ycs77/eslint-config-ts@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-ts/-/eslint-config-ts-0.1.4.tgz#b76049fc9152124d8930a8d5b4e631dbac3d61fa"
+  integrity sha512-jfh0yxXBtFavT6yki6BG2PDvqEGC/rN6oVEfbRr43VCOxtMxXXnhR3/XSyymETEWdv3h4o/H7h25GpVSW2bJ1Q==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.26.0"
     "@typescript-eslint/parser" "^5.26.0"
-    "@ycs77/eslint-config-basic" "0.1.3"
+    "@ycs77/eslint-config-basic" "0.1.4"
 
-"@ycs77/eslint-config-vue@0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-vue/-/eslint-config-vue-0.1.3.tgz#fc7d4d26b50ac97ba6be48519c696a52a6f2f540"
-  integrity sha512-F7pyR7kpbMMWAd2sVdlJL1q0mlhh/wgVGG7J4oXC5DoP0yNkIRJ+mJHSFhvNOzcMnnv8KB6dtPt/LphyakLEFQ==
+"@ycs77/eslint-config-vue@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config-vue/-/eslint-config-vue-0.1.4.tgz#0a45b35d9c7f78a65081ca6ce23a160c69cea346"
+  integrity sha512-PW9yb+TiTAs5ilHulk9y1/sXIGcaoej7pMSBZYkAzQ6VKxylfBXJLhL4iDnhTk8/3hgFxL0MYDV1RaT9uaXgzg==
   dependencies:
-    "@ycs77/eslint-config-ts" "0.1.3"
+    "@ycs77/eslint-config-ts" "0.1.4"
     eslint-plugin-vue "^9.0.1"
 
-"@ycs77/eslint-config@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config/-/eslint-config-0.1.3.tgz#f92e07d2fbd82e79b6ac762c4f4d64965bd99296"
-  integrity sha512-qZ1IrGgdDKi1PHInldgsh+b58aJa9AO4vLxsFzmiEgZKkXvrqHmIl51vJN4wLJ+Jbsz0OPHEuilCjFxZF9KyOQ==
+"@ycs77/eslint-config@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@ycs77/eslint-config/-/eslint-config-0.1.4.tgz#aa0796936942f62c252040156ba5f49a38a06ea2"
+  integrity sha512-TuhLyXyJN2Ij1dorBfYXCjhBLJ6L2Ki6n9GTmsSC3vSBv3Bp5NEePsJTjpxlTJ0Gw14IG5Trkas1XTdeoijD0A==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.26.0"
     "@typescript-eslint/parser" "^5.26.0"
-    "@ycs77/eslint-config-react" "0.1.3"
-    "@ycs77/eslint-config-vue" "0.1.3"
+    "@ycs77/eslint-config-react" "0.1.4"
+    "@ycs77/eslint-config-vue" "0.1.4"
     eslint-plugin-eslint-comments "^3.2.0"
     eslint-plugin-html "^6.2.0"
     eslint-plugin-import "^2.26.0"

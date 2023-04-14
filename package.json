@@ -37,7 +37,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@ycs77/eslint-config": "^0.1.3",
+    "@ycs77/eslint-config": "^0.1.4",
     "eslint": "^8.20.0",
     "npm-run-all": "^4.1.5"
   }
