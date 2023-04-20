@@ -5,7 +5,7 @@ import { fireEvent, render, screen, userEvent, wait } from './utils/testing-libr
 import { html } from './utils/html'
 
 describe('Render virtual elements', () => {
-  it('should to render <FloatVirtual>', async () => {
+  it('should to render <FloatVirtual>', () => {
     render(defineComponent({
       components: { FloatVirtual },
       methods: {

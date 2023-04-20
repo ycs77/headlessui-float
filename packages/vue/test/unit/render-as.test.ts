@@ -18,7 +18,7 @@ const FloatingWrapper: FunctionalComponent = (props, { slots }) => {
 }
 
 describe('Render as component for wrapper', () => {
-  it('should to render wrapper as HTML tag', async () => {
+  it('should to render wrapper as HTML tag', () => {
     const { container } = render(defineComponent({
       components: { Float },
       template: html`
@@ -33,7 +33,7 @@ describe('Render as component for wrapper', () => {
     expect(wrapper.tagName).toBe('ARTICLE')
   })
 
-  it('should to render floating wrapper as HTML tag', async () => {
+  it('should to render floating wrapper as HTML tag', () => {
     const { container } = render(defineComponent({
       components: { Float },
       template: html`
@@ -48,7 +48,7 @@ describe('Render as component for wrapper', () => {
     expect(wrapper.tagName).toBe('ARTICLE')
   })
 
-  it('should to render wrapper as template', async () => {
+  it('should to render wrapper as template', () => {
     const { container } = render(defineComponent({
       components: { Float },
       template: html`
@@ -65,7 +65,7 @@ describe('Render as component for wrapper', () => {
     expect(content.tagName).toBe('DIV')
   })
 
-  it('should to render floating wrapper as template', async () => {
+  it('should to render floating wrapper as template', () => {
     const { container } = render(defineComponent({
       components: { Float },
       template: html`
@@ -80,7 +80,7 @@ describe('Render as component for wrapper', () => {
     expect(wrapper.innerHTML).toBe('content')
   })
 
-  it('should to render wrapper as component', async () => {
+  it('should to render wrapper as component', () => {
     const { container } = render(defineComponent({
       components: { Float },
       data: () => ({ Wrapper }),
@@ -97,7 +97,7 @@ describe('Render as component for wrapper', () => {
     expect(wrapper).toHaveAttribute('data-label', 'wrapper label')
   })
 
-  it('should to render floating wrapper as component', async () => {
+  it('should to render floating wrapper as component', () => {
     const { container } = render(defineComponent({
       components: { Float },
       data: () => ({ FloatingWrapper }),
@@ -117,7 +117,7 @@ describe('Render as component for wrapper', () => {
 })
 
 describe('Render composable component for wrapper', () => {
-  it('should to render other element on composable mode', async () => {
+  it('should to render other element on composable mode', () => {
     const { container } = render(defineComponent({
       components: { Float, FloatReference, FloatContent },
       template: html`
@@ -139,7 +139,7 @@ describe('Render composable component for wrapper', () => {
     expect(wrapper.innerHTML).toBe('look me!')
   })
 
-  it('should to render <FloatReference> wrapper as HTML tag', async () => {
+  it('should to render <FloatReference> wrapper as HTML tag', () => {
     const { container } = render(defineComponent({
       components: { Float, FloatReference, FloatContent },
       template: html`
@@ -161,7 +161,7 @@ describe('Render composable component for wrapper', () => {
     expect(wrapper.tagName).toBe('ARTICLE')
   })
 
-  it('should to render <FloatContent> wrapper as HTML tag', async () => {
+  it('should to render <FloatContent> wrapper as HTML tag', () => {
     const { container } = render(defineComponent({
       components: { Float, FloatReference, FloatContent },
       template: html`
@@ -183,7 +183,7 @@ describe('Render composable component for wrapper', () => {
     expect(wrapper.tagName).toBe('ARTICLE')
   })
 
-  it('should to render <FloatReference> wrapper as template', async () => {
+  it('should to render <FloatReference> wrapper as template', () => {
     const { container } = render(defineComponent({
       components: { Float, FloatReference, FloatContent },
       template: html`
@@ -205,7 +205,7 @@ describe('Render composable component for wrapper', () => {
     expect(wrapper.innerHTML).toBe('button')
   })
 
-  it('should to render <FloatContent> wrapper as template', async () => {
+  it('should to render <FloatContent> wrapper as template', () => {
     const { container } = render(defineComponent({
       components: { Float, FloatReference, FloatContent },
       template: html`
@@ -227,7 +227,7 @@ describe('Render composable component for wrapper', () => {
     expect(wrapper.innerHTML).toBe('content')
   })
 
-  it('should to render <FloatReference> wrapper as component', async () => {
+  it('should to render <FloatReference> wrapper as component', () => {
     const { container } = render(defineComponent({
       components: { Float, FloatReference, FloatContent },
       data: () => ({ Wrapper }),
@@ -251,7 +251,7 @@ describe('Render composable component for wrapper', () => {
     expect(wrapper).toHaveAttribute('data-label', 'wrapper label')
   })
 
-  it('should to render <FloatContent> wrapper as component', async () => {
+  it('should to render <FloatContent> wrapper as component', () => {
     const { container } = render(defineComponent({
       components: { Float, FloatReference, FloatContent },
       data: () => ({ FloatingWrapper }),
