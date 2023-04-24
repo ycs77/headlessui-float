@@ -202,11 +202,10 @@ export function renderFloatingElement(
       ...((props.dialog ? false : (props.transform || props.transform === undefined)) ? {
         position: strategy,
         zIndex: props.zIndex || 9999,
-        top: '0px',
-        left: '0px',
+        top: y || 0,
+        left: x || 0,
         right: 'auto',
         bottom: 'auto',
-        transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
       } : {
         position: strategy,
         zIndex: props.zIndex || 9999,
