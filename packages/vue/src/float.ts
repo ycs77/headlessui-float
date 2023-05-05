@@ -29,13 +29,13 @@ import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpda
 import { dom } from './utils/dom'
 import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
+import { getOwnerDocument } from './utils/owner'
 import { type OriginClassResolver } from './origin-class-resolvers'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
 import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
 import { useTransitionAndOriginClass } from './hooks/use-transition-and-origin-class'
 import { useOutsideClick } from './hooks/use-outside-click'
 import { useDocumentEvent } from './hooks/use-document-event'
-import { getOwnerDocument } from './utils/owner'
 
 interface ReferenceState {
   referenceRef: Ref<ReferenceElement | null>
@@ -262,11 +262,7 @@ export function renderReferenceElement(
 export type RenderFloatingElementProps =
   FloatContentProps &
   Required<Pick<FloatContentProps, 'as'>> &
-  {
-    show?: boolean | null
-    enterActiveClassRef: ComputedRef<string | undefined>
-    leaveActiveClassRef: ComputedRef<string | undefined>
-  }
+  { show?: boolean | null }
 
 export function renderFloatingElement(
   floatingNode: VNode,
@@ -277,11 +273,11 @@ export function renderFloatingElement(
   const { floatingRef, props: rootProps, mounted, show, x, y, placement, strategy, referenceElWidth, updateFloating } = context
 
   const props = mergeProps(
-    rootProps as Record<string, any>,
+    { ...rootProps, as: rootProps.floatingAs } as Record<string, any>,
     componentProps as Record<string, any>
   ) as FloatProps & FloatContentProps
 
-  const { enterActiveClassRef, leaveActiveClassRef } = componentProps
+  const { enterActiveClassRef, leaveActiveClassRef } = useTransitionAndOriginClass(props, placement)
 
   const transitionClassesProps = {
     enterActiveClass: enterActiveClassRef.value,
@@ -446,8 +442,6 @@ export function useFloat<T extends ReferenceElement>(
 
   const referenceElWidth = ref<number | null>(null)
 
-  const { enterActiveClassRef, leaveActiveClassRef } = useTransitionAndOriginClass(props, placement)
-
   onMounted(() => {
     mounted.value = true
   })
@@ -539,7 +533,7 @@ export function useFloat<T extends ReferenceElement>(
 
   provide(ArrowContext, arrowApi)
 
-  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, referenceEl, floatingEl, middlewareData, update: updateFloating, enterActiveClassRef, leaveActiveClassRef }
+  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, referenceEl, floatingEl, middlewareData, update: updateFloating }
 }
 
 export const Float = {
@@ -556,8 +550,6 @@ export const Float = {
       referenceApi,
       floatingApi,
       placement,
-      enterActiveClassRef,
-      leaveActiveClassRef,
     } = useFloat(show, reference, floating, props, emit)
 
     function renderWrapper(children: VNode[]) {
@@ -603,11 +595,7 @@ export const Float = {
 
       const floatingElement = renderFloatingElement(
         floatingNode,
-        {
-          as: props.floatingAs!,
-          enterActiveClassRef,
-          leaveActiveClassRef,
-        },
+        { as: props.floatingAs! },
         {},
         floatingApi
       )
@@ -703,8 +691,6 @@ export const FloatContent = {
     const context = useFloatingContext('FloatContent')
     const { placement } = context
 
-    const { enterActiveClassRef, leaveActiveClassRef } = useTransitionAndOriginClass(props, placement)
-
     return () => {
       if (!slots.default) return
 
@@ -712,13 +698,20 @@ export const FloatContent = {
         placement: placement.value,
       }
 
+      const filteredProps = Object.entries(props).reduce((props, [key, value]) => {
+        const propsDefined = FloatContentPropsValidators as Record<string, any>
+        const isDefault = (
+          typeof propsDefined[key] === 'object' &&
+          value === propsDefined[key].default
+        ) || value === undefined
+        if (isDefault)
+          delete props[key]
+        return props
+      }, { ...props } as Record<string, any>) as Required<Pick<FloatContentProps, 'as'>> & FloatContentProps
+
       return renderFloatingElement(
         slots.default(slot)[0],
-        {
-          ...(props as Required<Pick<FloatContentProps, 'as'>> & FloatContentProps),
-          enterActiveClassRef,
-          leaveActiveClassRef,
-        },
+        filteredProps as Required<Pick<FloatContentProps, 'as'>> & FloatContentProps,
         attrs,
         context
       )
@@ -868,8 +861,6 @@ export const FloatVirtual = {
     const {
       floatingApi,
       placement,
-      enterActiveClassRef,
-      leaveActiveClassRef,
     } = useFloat(show, reference, floating, props, emit)
 
     watch(() => props.show, () => {
@@ -902,8 +893,6 @@ export const FloatVirtual = {
         {
           as: props.as!,
           show: show.value,
-          enterActiveClassRef,
-          leaveActiveClassRef,
         },
         attrs,
         floatingApi
