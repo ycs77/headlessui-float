@@ -1,6 +1,7 @@
-const { tailwindcssOriginSafelist } = require('@headlessui-float/react')
+import type { Config } from 'tailwindcss'
+import { tailwindcssOriginSafelist } from '@headlessui-float/vue'
 
-module.exports = {
+export default {
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -10,4 +11,4 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+} as Config

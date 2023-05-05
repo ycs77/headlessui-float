@@ -14,7 +14,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.8.0",
-    "tailwindcss": "^3.0.23"
+    "tailwindcss": "^3.3.0"
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.1.10",
