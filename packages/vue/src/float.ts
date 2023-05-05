@@ -674,7 +674,7 @@ export interface FloatContentProps extends Pick<FloatProps, 'as' | 'transitionNa
 }
 
 export const FloatContentPropsValidators = {
-  as: FloatPropsValidators.as,
+  as: FloatPropsValidators.floatingAs,
   transitionName: FloatPropsValidators.transitionName,
   transitionType: FloatPropsValidators.transitionType,
   enter: FloatPropsValidators.enter,
