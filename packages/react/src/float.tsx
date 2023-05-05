@@ -419,7 +419,7 @@ const FloatRoot = forwardRef<ElementType, FloatProps>((props, ref) => {
       return <Fragment>{children}</Fragment>
     }
 
-    const Wrapper = props.as || 'div'
+    const Wrapper = props.as
     return (
       <Wrapper ref={ref} className={props.className}>
         {children}
