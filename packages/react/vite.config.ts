@@ -1,5 +1,3 @@
-/// <reference types="vitest" />
-
 import path from 'path'
 import { defineConfig } from 'vite'
 import React from '@vitejs/plugin-react'
@@ -24,10 +22,5 @@ export default defineConfig({
         '@floating-ui/react',
       ],
     },
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './setup.ts',
   },
 })

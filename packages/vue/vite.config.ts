@@ -1,5 +1,3 @@
-/// <reference types="vitest" />
-
 import path from 'path'
 import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
@@ -22,14 +20,6 @@ export default defineConfig({
         '@floating-ui/dom',
         '@floating-ui/vue',
       ],
-    },
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './setup.ts',
-    deps: {
-      inline: ['vue'],
     },
   },
 })
