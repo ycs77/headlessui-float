@@ -9,8 +9,10 @@ export default mergeConfig(
       globals: true,
       environment: 'jsdom',
       setupFiles: './setup.ts',
-      deps: {
-        inline: ['vue'],
+      server: {
+        deps: {
+          inline: ['vue'],
+        },
       },
     }
   })
