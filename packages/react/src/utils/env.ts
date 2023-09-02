@@ -1,18 +1,24 @@
-// Reference: https://github.com/tailwindlabs/headlessui/blob/c7f6bc60ed2ab6c84fb080b0f419ed16824c880d/packages/%40headlessui-react/src/utils/env.ts
+// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-react/src/utils/env.ts
 
 export type RenderEnv = 'client' | 'server'
 
 class Env {
   current: RenderEnv = this.detect()
+  currentId = 0
 
   set(env: RenderEnv): void {
     if (this.current === env) return
 
+    this.currentId = 0
     this.current = env
   }
 
   reset(): void {
     this.set(this.detect())
+  }
+
+  nextId() {
+    return ++this.currentId
   }
 
   get isServer(): boolean {

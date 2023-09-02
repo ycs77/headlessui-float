@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Float } from '../../src/float'
 import { render, screen, userEvent, wait } from './utils/testing-library'
 import { html } from './utils/html'
@@ -53,6 +53,61 @@ describe('Events', () => {
     await wait(50)
     expect(onShow).toHaveBeenCalledTimes(2)
     expect(onHide).toHaveBeenCalledTimes(2)
+  })
+
+  it('don\'t fire show & hide events on input <Combobox>', async () => {
+    const onShow = vi.fn()
+    const onHide = vi.fn()
+
+    render(defineComponent({
+      components: { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Float },
+      methods: { onShow, onHide },
+      template: html`
+        <Combobox value="option">
+          <Float
+            @show="onShow"
+            @hide="onHide"
+          >
+            <div>
+              <ComboboxInput @change="() => {}" />
+              <ComboboxButton>button</ComboboxButton>
+            </div>
+            <ComboboxOptions>
+              <ComboboxOption value="option">option</ComboboxOption>
+            </ComboboxOptions>
+          </Float>
+        </Combobox>
+      `,
+    }))
+
+    const input = screen.getByRole('combobox')
+    expect(screen.queryByRole('listbox')).toBeNull()
+    expect(onShow).toHaveBeenCalledTimes(0)
+    expect(onHide).toHaveBeenCalledTimes(0)
+
+    // typing
+    await userEvent.type(input, 'A')
+    await wait(50)
+    expect(onShow).toHaveBeenCalledTimes(1)
+    expect(onHide).toHaveBeenCalledTimes(0)
+
+    // typing
+    await userEvent.type(input, 'B')
+    await wait(50)
+    expect(onShow).toHaveBeenCalledTimes(1)
+    expect(onHide).toHaveBeenCalledTimes(0)
+
+    // typing
+    await userEvent.type(input, 'C')
+    await wait(50)
+    expect(onShow).toHaveBeenCalledTimes(1)
+    expect(onHide).toHaveBeenCalledTimes(0)
+
+    // typing
+    await userEvent.click(document.body)
+    await wait(50)
+    expect(onShow).toHaveBeenCalledTimes(1)
+    expect(onHide).toHaveBeenCalledTimes(1)
   })
 
   it('should fire update events', async () => {
