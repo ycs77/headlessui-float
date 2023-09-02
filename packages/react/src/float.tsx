@@ -24,6 +24,7 @@ import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hi
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { env } from './utils/env'
 import { type OriginClassResolver } from './origin-class-resolvers'
+import { useId } from './hooks/use-id'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
 import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
 import { useOriginClass } from './hooks/use-origin-class'
@@ -54,6 +55,8 @@ interface ArrowState {
   x: number | undefined
   y: number | undefined
 }
+
+const showStateMap = new Map<ReturnType<typeof useId>, boolean>()
 
 const ReferenceContext = createContext<ReferenceState | null>(null)
 ReferenceContext.displayName = 'ReferenceContext'
@@ -284,6 +287,8 @@ function useFloat(
   [show, setShow]: [boolean, Dispatch<SetStateAction<boolean>>],
   props: Omit<FloatProps, 'children' | 'className'>
 ) {
+  const id = useId()
+
   const mounted = useRef(false)
 
   const [middleware, setMiddleware] = useState<Middleware[]>()
@@ -304,6 +309,20 @@ function useFloat(
 
   const [referenceElWidth, setReferenceElWidth] = useState<number | null>(null)
 
+  useEffect(() => {
+    mounted.current = true
+  }, [])
+
+  useEffect(() => {
+    if (show && !showStateMap.get(id)) {
+      showStateMap.set(id, true)
+      events.show()
+    } else if (!show && showStateMap.get(id)) {
+      showStateMap.delete(id)
+      events.hide()
+    }
+  }, [show])
+
   const updateFloating = useCallback(() => {
     update()
     events.update()
@@ -313,10 +332,6 @@ function useFloat(
 
   useFloatingMiddlewareFromProps(setMiddleware, refs, arrowRef, props)
 
-  useEffect(() => {
-    mounted.current = true
-  }, [])
-
   useReferenceElResizeObserver(props.adaptiveWidth, refs.reference, setReferenceElWidth)
 
   useEffect(() => {
@@ -324,23 +339,16 @@ function useFloat(
         refs.floating.current &&
         show
     ) {
-      const cleanup =
-        props.autoUpdate !== false
-          ? autoUpdate(
-            refs.reference.current!,
-            refs.floating.current!,
-            updateFloating,
-            typeof props.autoUpdate === 'object'
-              ? props.autoUpdate
-              : undefined
-          )
-          : () => {}
-      events.show()
-
-      return () => {
-        cleanup()
-        events.hide()
-      }
+      return props.autoUpdate !== false
+        ? autoUpdate(
+          refs.reference.current!,
+          refs.floating.current!,
+          updateFloating,
+          typeof props.autoUpdate === 'object'
+            ? props.autoUpdate
+            : undefined
+        )
+        : () => {}
     }
   }, [show, updateFloating, refs])
 

@@ -446,6 +446,14 @@ export function useFloat<T extends ReferenceElement>(
     mounted.value = true
   })
 
+  watch(show, (show, oldShow) => {
+    if (show && !oldShow) {
+      emit('show')
+    } else if (!show && oldShow) {
+      emit('hide')
+    }
+  })
+
   function updateFloating() {
     if (isVisible.value) {
       update()
@@ -483,13 +491,8 @@ export function useFloat<T extends ReferenceElement>(
           ? props.autoUpdate
           : undefined
       )
-      emit('show')
 
-      onInvalidate(() => {
-        cleanup()
-        if (!show.value)
-          emit('hide')
-      })
+      onInvalidate(cleanup)
     }
   }, { flush: 'post', immediate: true })
 
