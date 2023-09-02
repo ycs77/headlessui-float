@@ -452,7 +452,7 @@ export function useFloat<T extends ReferenceElement>(
     } else if (!show && oldShow) {
       emit('hide')
     }
-  })
+  }, { immediate: true })
 
   function updateFloating() {
     if (isVisible.value) {

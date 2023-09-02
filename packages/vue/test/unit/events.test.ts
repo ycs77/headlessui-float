@@ -55,6 +55,26 @@ describe('Events', () => {
     expect(onHide).toHaveBeenCalledTimes(2)
   })
 
+  it('should fire show when <Float> enabled show', async () => {
+    const onShow = vi.fn()
+
+    render(defineComponent({
+      components: { Menu, MenuButton, MenuItem, MenuItems, Float },
+      methods: { onShow },
+      template: html`
+        <Menu>
+          <Float show @show="onShow">
+            <MenuButton>button</MenuButton>
+            <MenuItems static>content</MenuItems>
+          </Float>
+        </Menu>
+      `,
+    }))
+
+    expect(screen.queryByRole('menu')).toBeInTheDocument()
+    expect(onShow).toHaveBeenCalledTimes(1)
+  })
+
   it('don\'t fire show & hide events on input <Combobox>', async () => {
     const onShow = vi.fn()
     const onHide = vi.fn()

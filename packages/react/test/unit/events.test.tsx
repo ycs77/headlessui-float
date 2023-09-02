@@ -56,6 +56,26 @@ describe('Events', () => {
 
   // this test is failed because the <Transition>'s beforeEnter and
   // afterLeave event is can't correct fired in testing.
+  it.skip('should fire show when <Float> enabled show', async () => {
+    const onShow = vi.fn()
+
+    render(
+      <Menu>
+        <Float show onShow={() => onShow()}>
+          <Menu.Button>button</Menu.Button>
+          <Menu.Items static>content</Menu.Items>
+        </Float>
+      </Menu>
+    )
+
+    await waitFor()
+
+    expect(screen.queryByRole('menu')).toBeInTheDocument()
+    expect(onShow).toHaveBeenCalledTimes(1)
+  })
+
+  // this test is failed because the <Transition>'s beforeEnter and
+  // afterLeave event is can't correct fired in testing.
   it.skip('don\'t fire show & hide events on input <Combobox>', async () => {
     const onShow = vi.fn()
     const onHide = vi.fn()
