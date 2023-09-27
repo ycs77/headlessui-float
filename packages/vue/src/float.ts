@@ -203,7 +203,7 @@ export const FloatPropsValidators = {
   },
   transform: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   adaptiveWidth: {
     type: Boolean,

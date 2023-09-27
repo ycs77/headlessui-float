@@ -49,7 +49,7 @@ function ExamplePlacement() {
       }
     >
       <Menu>
-        <Float show placement={placement} zIndex={99}>
+        <Float show placement={placement} zIndex={99} transform>
           <Menu.Button className="flex justify-center items-center px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </Menu.Button>
@@ -108,7 +108,7 @@ function ExampleOffset() {
       }
     >
       <Menu>
-        <Float show placement="bottom-start" offset={offset} zIndex={99}>
+        <Float show placement="bottom-start" offset={offset} zIndex={99} transform>
           <Menu.Button className="flex justify-center items-center mx-auto px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
             Options
           </Menu.Button>
@@ -168,7 +168,7 @@ function ExampleShift() {
     >
       <div className="h-[800px] pt-[382px]">
         <Menu>
-          <Float show placement="right" shift={shift} zIndex={99}>
+          <Float show placement="right" shift={shift} zIndex={99} transform>
             <Menu.Button className="flex justify-center items-center mx-auto px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
               Options
             </Menu.Button>
@@ -229,7 +229,7 @@ function ExampleFlip() {
     >
       <div className="h-[800px] pt-[382px]">
         <Menu>
-          <Float show placement="bottom" flip={flip} zIndex={99}>
+          <Float show placement="bottom" flip={flip} zIndex={99} transform>
             <Menu.Button className="flex justify-center items-center mx-auto px-5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-500 text-sm rounded-md">
               Options
             </Menu.Button>

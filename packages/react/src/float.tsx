@@ -202,7 +202,7 @@ export function renderFloatingElement(
   const floatingProps = {
     style: {
       // If enable dialog mode, then set `transform` to false.
-      ...((props.dialog ? false : (props.transform || props.transform === undefined)) ? {
+      ...((props.dialog ? false : props.transform) ? {
         position: strategy,
         zIndex: props.zIndex || 9999,
         top: '0px',
