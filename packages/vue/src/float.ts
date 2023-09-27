@@ -27,6 +27,7 @@ import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/midd
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { dom } from './utils/dom'
+import { roundByDPR } from './utils/dpr'
 import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { getOwnerDocument } from './utils/owner'
@@ -322,12 +323,12 @@ export function renderFloatingElement(
         left: '0px',
         right: 'auto',
         bottom: 'auto',
-        transform: `translate(${Math.round(x.value || 0)}px,${Math.round(y.value || 0)}px)`,
+        transform: `translate(${roundByDPR(x.value || 0)}px,${roundByDPR(y.value || 0)}px)`,
       } : {
         position: strategy.value,
         zIndex: props.zIndex,
-        top: `${y.value || 0}px`,
-        left: `${x.value || 0}px`,
+        top: `${roundByDPR(y.value || 0)}px`,
+        left: `${roundByDPR(x.value || 0)}px`,
       }),
       width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
         ? `${referenceElWidth.value}px`
@@ -763,8 +764,8 @@ export const FloatArrow = {
       }[placement.value.split('-')[0]]!
 
       const style = {
-        left: typeof x.value === 'number' ? `${x.value}px` : undefined,
-        top: typeof y.value === 'number' ? `${y.value}px` : undefined,
+        left: typeof x.value === 'number' ? `${roundByDPR(x.value)}px` : undefined,
+        top: typeof y.value === 'number' ? `${roundByDPR(y.value)}px` : undefined,
         right: undefined,
         bottom: undefined,
         [staticSide]: `${props.offset! * -1}px`,
