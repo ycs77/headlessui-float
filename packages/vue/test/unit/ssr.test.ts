@@ -19,7 +19,7 @@ describe('SSR', () => {
 
     expect(contents).toContain('button')
     expect(contents).not.toContain('content')
-    expect(contents).toContain('<div style="position:absolute;z-index:9999;top:0px;left:0px;right:auto;bottom:auto;transform:translate(0px,0px);">')
+    expect(contents).toContain('<div style="position:absolute;z-index:9999;top:0px;left:0px;">')
   })
 
   it('should to hydrate <Float> with show content', async () => {
@@ -27,7 +27,7 @@ describe('SSR', () => {
 
     expect(contents).toContain('button')
     expect(contents).toContain('content')
-    expect(contents).toContain('<div style="position: absolute; z-index: 9999; top: 0px; left: 0px; transform: translate(0px,0px);">')
+    expect(contents).toContain('<div style="position: absolute; z-index: 9999; top: 0px; left: 0px;">')
   })
 
   it('should to hydrate <Float> with not show content', async () => {
@@ -35,6 +35,6 @@ describe('SSR', () => {
 
     expect(contents).toContain('button')
     expect(contents).not.toContain('content')
-    expect(contents).toContain('<div style="position: absolute; z-index: 9999; top: 0px; left: 0px; transform: translate(0px,0px);">')
+    expect(contents).toContain('<div style="position: absolute; z-index: 9999; top: 0px; left: 0px;">')
   })
 })

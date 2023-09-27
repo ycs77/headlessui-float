@@ -59,7 +59,9 @@ describe('Render virtual elements', () => {
     expect(menu).toBeInTheDocument()
     expect(menu.innerHTML).toContain('Account settings')
     expect(menu.innerHTML).toContain('Documentation')
-    expect(menu.style.transform).toBe('translate(200px,170px)')
+    expect(menu.style.position).toBe('absolute')
+    expect(menu.style.top).toBe('170px')
+    expect(menu.style.left).toBe('200px')
 
     await userEvent.click(button)
     await wait(50)
@@ -84,6 +86,8 @@ describe('Render virtual elements', () => {
 
     const element = screen.getByTestId('content')
     expect(element.innerHTML).toBe('cursor content')
-    expect(element.style.transform).toBe('translate(200px,170px)')
+    expect(element.style.position).toBe('absolute')
+    expect(element.style.top).toBe('170px')
+    expect(element.style.left).toBe('200px')
   })
 })
