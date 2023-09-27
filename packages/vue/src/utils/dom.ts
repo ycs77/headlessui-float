@@ -1,12 +1,34 @@
+import type { VirtualElement } from '@floating-ui/core'
 import { type ComponentPublicInstance, type Ref, ref as createRef } from 'vue'
 
-// Reference: https://github.com/tailwindlabs/headlessui/blob/426cbf34c50252932f4e26a954226539316ca8bc/packages/%40headlessui-vue/src/utils/dom.ts#L3-L8
+// Reference: https://github.com/tailwindlabs/headlessui/blob/d4a94cb5647d9e11ffc72d92033d43cbc3361da7/packages/%40headlessui-vue/src/utils/dom.ts
 
-export function dom<T>(ref?: Ref<T | ComponentPublicInstance | null> | null): T | null {
+type AsElement<T extends HTMLElement | VirtualElement | ComponentPublicInstance> =
+  | (T extends HTMLElement ? T : HTMLElement)
+  | null
+
+export function dom<T extends HTMLElement | VirtualElement | ComponentPublicInstance>(
+  ref?: Ref<T | null> | null
+): AsElement<T> | null {
   if (ref == null) return null
   if (ref.value == null) return null
 
-  const el = ((ref.value as { $el?: T }).$el ?? ref.value) as T | null
-  if ((el as { $el?: T }).$el) return dom(createRef(el) as any)
-  return el
+  // In this case we check for `Node` because returning `null` from a
+  // component renders a `Comment` which is a `Node` but not `Element`
+  // The types don't encode this possibility but we handle it here at runtime
+  if (ref.value instanceof Node) {
+    return ref.value as AsElement<T>
+  }
+
+  // Recursion call dom to get element in nested component
+  if ('$el' in ref.value && ref.value.$el) {
+    return dom(createRef(ref.value.$el))
+  }
+
+  // Pass `VirtualElement` for Floating UI
+  if ('getBoundingClientRect' in ref.value) {
+    return ref.value as AsElement<T>
+  }
+
+  return null
 }
