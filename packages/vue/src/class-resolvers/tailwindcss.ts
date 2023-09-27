@@ -34,6 +34,6 @@ export const tailwindcssOriginClassResolver: ClassResolver = placement => {
     case 'bottom-end':
       return 'origin-top-right'
     default:
-      return ''
+      return 'origin-center'
   }
 }
