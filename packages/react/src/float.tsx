@@ -22,6 +22,7 @@ import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/fl
 import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
 import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
+import { roundByDPR } from './utils/dpr'
 import { env } from './utils/env'
 import type { ClassResolver } from './class-resolvers'
 import { useId } from './hooks/use-id'
@@ -209,12 +210,12 @@ export function renderFloatingElement(
         left: '0px',
         right: 'auto',
         bottom: 'auto',
-        transform: `translate(${Math.round(x || 0)}px,${Math.round(y || 0)}px)`,
+        transform: `translate(${roundByDPR(x || 0)}px,${roundByDPR(y || 0)}px)`,
       } : {
         position: strategy,
         zIndex: props.zIndex || 9999,
-        top: `${y || 0}px`,
-        left: `${x || 0}px`,
+        top: `${roundByDPR(y || 0)}px`,
+        left: `${roundByDPR(x || 0)}px`,
       }),
       width: props.adaptiveWidth && typeof referenceElWidth === 'number'
         ? `${referenceElWidth}px`
@@ -571,8 +572,8 @@ function Arrow(props: FloatArrowProps) {
   }[placement.split('-')[0]]!
 
   const style = {
-    left: typeof x === 'number' ? `${x}px` : undefined,
-    top: typeof y === 'number' ? `${y}px` : undefined,
+    left: typeof x === 'number' ? `${roundByDPR(x)}px` : undefined,
+    top: typeof y === 'number' ? `${roundByDPR(y)}px` : undefined,
     right: undefined,
     bottom: undefined,
     [staticSide]: `${(props.offset ?? 4) * -1}px`,
