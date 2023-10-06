@@ -23,7 +23,7 @@
     "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.6",
+    "postcss": "^8.4.31",
     "typescript": "^4.9.0",
     "unplugin-icons": "^0.16.0",
     "vite": "^4.4.0"
