@@ -20,12 +20,12 @@ import { Portal, TransitionChild } from '@headlessui/vue'
 import { useFloating } from '@floating-ui/vue'
 import { autoUpdate } from '@floating-ui/dom'
 import type { DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy, VirtualElement } from '@floating-ui/dom'
-import type { Options as OffsetOptions } from '@floating-ui/core/src/middleware/offset'
-import type { Options as ShiftOptions } from '@floating-ui/core/src/middleware/shift'
-import type { Options as FlipOptions } from '@floating-ui/core/src/middleware/flip'
-import type { Options as AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
-import type { Options as HideOptions } from '@floating-ui/core/src/middleware/hide'
-import type { Options as AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
+import type { OffsetOptions } from '@floating-ui/core/src/middleware/offset'
+import type { ShiftOptions } from '@floating-ui/core/src/middleware/shift'
+import type { FlipOptions } from '@floating-ui/core/src/middleware/flip'
+import type { AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
+import type { HideOptions } from '@floating-ui/core/src/middleware/hide'
+import type { AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { dom } from './utils/dom'
 import { roundByDPR } from './utils/dpr'
 import { env } from './utils/env'
@@ -438,7 +438,6 @@ export function useFloat<T extends ReferenceElement>(
     placement: propPlacement,
     strategy: propStrategy,
     middleware,
-    whileElementsMounted: () => {},
   })
 
   const referenceElWidth = ref<number | null>(null)
