@@ -18,7 +18,7 @@ Please provide enough information and a minimal reproducible example, otherwise,
 **Use Version**
 Use version when bugs appear:
  - Headless UI: v1.7.5
- - Headless UI Float: v0.11.4
+ - Headless UI Float: v0.12.0
  - Framework: [e.g. vue v3.3.0, react v18.0]
  - `@floating-ui/core`: v1.0.0
  - `@floating-ui/dom`: v1.0.0
