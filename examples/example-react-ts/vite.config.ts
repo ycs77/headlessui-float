@@ -1,4 +1,4 @@
-import { URL, fileURLToPath } from 'url'
+import { URL, fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import React from '@vitejs/plugin-react'
 import Icons from 'unplugin-icons/vite'

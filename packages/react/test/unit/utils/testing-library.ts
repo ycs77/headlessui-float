@@ -1,4 +1,3 @@
-/* eslint-disable import/export */
 import type { ReactElement } from 'react'
 import { cleanup, render, waitFor } from '@testing-library/react'
 import type { Queries } from '@testing-library/dom'

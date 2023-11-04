@@ -19,7 +19,7 @@ jobs:
         shell: sh
       - uses: EndBug/add-and-commit@v7
         with:
-          add: '.'
-          author_name: 'GitHub Actions'
-          author_email: 'github-actions@github.com'
+          add: .
+          author_name: GitHub Actions
+          author_email: github-actions@github.com
           message: '(test): Update visual snapshots'

@@ -37,7 +37,7 @@ for (const scrollTo of ['82', '240', '482']) {
   test(`shift - scrollto-${scrollTo}`, async ({ page }) => {
     await page.goto('http://localhost:3032/floatingui-options')
     await page.getByTestId('block-shift').evaluate((el, scrollTo) => {
-      el.scrollTo(0, parseInt(scrollTo))
+      el.scrollTo(0, Number.parseInt(scrollTo))
     }, scrollTo)
     expect(await page.getByTestId('block-shift').screenshot()).toMatchSnapshot(`shift-scrollto-${scrollTo}.png`)
   })
@@ -47,7 +47,7 @@ for (const scrollTo of ['482', '250', '160']) {
   test(`flip - scrollto-${scrollTo}`, async ({ page }) => {
     await page.goto('http://localhost:3032/floatingui-options')
     await page.getByTestId('block-flip').evaluate((el, scrollTo) => {
-      el.scrollTo(0, parseInt(scrollTo))
+      el.scrollTo(0, Number.parseInt(scrollTo))
     }, scrollTo)
     expect(await page.getByTestId('block-flip').screenshot()).toMatchSnapshot(`flip-scrollto-${scrollTo}.png`)
   })

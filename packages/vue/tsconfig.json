@@ -2,21 +2,21 @@
   "compilerOptions": {
     "composite": true,
     "target": "ESNext",
+    "jsx": "preserve",
+    "lib": ["ESNext", "DOM"],
+    "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "preserve",
     "resolveJsonModule": true,
-    "useDefineForClassFields": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true,
     "types": [
       "node",
       "vite/client",
       "vitest/globals"
-    ]
+    ],
+    "strict": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "**/dist",

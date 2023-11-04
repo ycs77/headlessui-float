@@ -24,8 +24,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/headlessui-float.cjs",
-      "import": "./dist/headlessui-float.mjs"
+      "import": "./dist/headlessui-float.mjs",
+      "require": "./dist/headlessui-float.cjs"
     }
   },
   "main": "./dist/headlessui-float.cjs",

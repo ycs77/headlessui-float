@@ -489,7 +489,7 @@ function Reference(props: FloatReferenceProps) {
   }
 
   const attrs = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line unused-imports/no-unused-vars
     const { as, children, ...attrs } = props
     return attrs
   }, [props])
@@ -525,7 +525,7 @@ function Content(props: FloatContentProps) {
   }
 
   const attrs = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line unused-imports/no-unused-vars
     const { as, enter, enterFrom, enterTo, leave, leaveFrom, leaveTo, originClass, tailwindcssOriginClass, transitionChild, children, ...attrs } = props
     return attrs
   }, [props])
@@ -559,7 +559,7 @@ function Arrow(props: FloatArrowProps) {
   const { arrowRef, placement, x, y } = useArrowContext('Float.Arrow')
 
   const attrs = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line unused-imports/no-unused-vars
     const { as, offset, children, ...attrs } = props
     return attrs
   }, [props])
@@ -591,11 +591,13 @@ function Arrow(props: FloatArrowProps) {
       return <Fragment />
     }
 
-    return <ArrowNode.type
-      {...ArrowNode.props}
-      ref={arrowRef}
-      style={style}
-    />
+    return (
+      <ArrowNode.type
+        {...ArrowNode.props}
+        ref={arrowRef}
+        style={style}
+      />
+    )
   }
 
   const Wrapper = props.as || 'div'
@@ -632,7 +634,7 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
   const [show, setShow] = useState(props.show ?? false)
 
   const attrs = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line unused-imports/no-unused-vars
     const { as, show, placement, strategy, offset, shift, flip, arrow, autoPlacement, hide, autoUpdate, zIndex, enter, enterFrom, enterTo, leave, leaveFrom, leaveTo, originClass, tailwindcssOriginClass, portal, transform, middleware, onShow, onHide, onUpdate, ...attrs } = props
     return attrs
   }, [props])

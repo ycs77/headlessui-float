@@ -50,4 +50,5 @@ If you think this package has helped you, please consider [Becoming a sponsor](h
 * This package is inspired by the [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
 
 ## License
+
 Under the [MIT LICENSE](LICENSE.md)

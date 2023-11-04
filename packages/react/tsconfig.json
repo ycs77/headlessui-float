@@ -2,24 +2,24 @@
   "compilerOptions": {
     "composite": true,
     "target": "ESNext",
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "react-jsx",
     "resolveJsonModule": true,
-    "useDefineForClassFields": true,
-    "isolatedModules": true,
-    "esModuleInterop": false,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "skipLibCheck": true,
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
     "types": [
       "node",
       "vite/client",
       "vitest/globals"
-    ]
+    ],
+    "allowJs": false,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "**/dist",

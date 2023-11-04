@@ -14,6 +14,6 @@ export default mergeConfig(
           inline: ['vue'],
         },
       },
-    }
-  })
+    },
+  }),
 )

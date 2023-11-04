@@ -1,5 +1,5 @@
 import { type ComputedRef, type Ref, onBeforeUnmount, onMounted } from 'vue'
-import { type ReferenceElement } from '@floating-ui/dom'
+import type { ReferenceElement } from '@floating-ui/dom'
 import { env } from '../utils/env'
 
 export function useReferenceElResizeObserver(

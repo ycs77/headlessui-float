@@ -22,7 +22,7 @@ function ExamplePlacement() {
       title="Placement"
       contentClass="relative h-[320px] flex justify-center items-center border rounded"
       data-testid="block-placement"
-      form={
+      form={(
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
             <div className="mr-2">placement</div>
@@ -47,7 +47,7 @@ function ExamplePlacement() {
             </select>
           </div>
         </div>
-      }
+      )}
     >
       <Menu>
         <Float show placement={placement} zIndex={99} transform>
@@ -93,7 +93,7 @@ function ExampleOffset() {
       title="Offset"
       contentClass="relative h-[320px] border rounded"
       data-testid="block-offset"
-      form={
+      form={(
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
             <div className="mr-2">offset</div>
@@ -101,12 +101,12 @@ function ExampleOffset() {
               type="number"
               className="w-[100px] px-2 py-1 border border-gray-300 rounded"
               value={offset}
-              onChange={event => setOffset(parseInt(event.target.value))}
+              onChange={event => setOffset(Number.parseInt(event.target.value))}
               data-testid="offset-input"
             />
           </div>
         </div>
-      }
+      )}
     >
       <Menu>
         <Float show placement="bottom-start" offset={offset} zIndex={99} transform>
@@ -152,7 +152,7 @@ function ExampleShift() {
       title="Shift"
       contentClass="relative h-[320px] overflow-y-auto border rounded"
       data-testid="block-shift"
-      form={
+      form={(
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
             <div className="mr-2">shift</div>
@@ -160,12 +160,12 @@ function ExampleShift() {
               type="number"
               className="w-[100px] px-2 py-1 border border-gray-300 rounded"
               value={shift}
-              onChange={event => setShift(parseInt(event.target.value))}
+              onChange={event => setShift(Number.parseInt(event.target.value))}
               data-testid="shift-input"
             />
           </div>
         </div>
-      }
+      )}
     >
       <div className="h-[800px] pt-[382px]">
         <Menu>
@@ -213,7 +213,7 @@ function ExampleFlip() {
       title="Flip"
       contentClass="relative h-[320px] overflow-y-auto border rounded"
       data-testid="block-flip"
-      form={
+      form={(
         <div className="absolute top-0 right-0">
           <div className="flex items-center">
             <div className="mr-2">flip</div>
@@ -221,12 +221,12 @@ function ExampleFlip() {
               type="number"
               className="w-[100px] px-2 py-1 border border-gray-300 rounded"
               value={flip}
-              onChange={event => setFlip(parseInt(event.target.value))}
+              onChange={event => setFlip(Number.parseInt(event.target.value))}
               data-testid="flip-input"
             />
           </div>
         </div>
-      }
+      )}
     >
       <div className="h-[800px] pt-[382px]">
         <Menu>
