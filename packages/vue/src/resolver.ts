@@ -4,6 +4,8 @@ import type { ComponentResolver } from 'unplugin-vue-components'
 const components = [
   'Float',
   'FloatArrow',
+  'FloatReference',
+  'FloatContent'
 ]
 
 export interface HeadlessUiFloatResolverOptions {
