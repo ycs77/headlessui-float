@@ -46,6 +46,7 @@
     "test:functional:update": "yarn test:functional -u"
   },
   "peerDependencies": {
+    "@headlessui/vue": "^1.0.0",
     "vue": "^3.0.0"
   },
   "dependencies": {
@@ -54,6 +55,7 @@
     "@floating-ui/vue": "^1.0.0"
   },
   "devDependencies": {
+    "@headlessui/vue": "^1.7.16",
     "@playwright/test": "^1.30.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/user-event": "^14.4.3",

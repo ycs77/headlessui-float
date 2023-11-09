@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@headlessui-float/react": "*",
-    "@headlessui/react": "^1.7.4",
+    "@headlessui/react": "^1.7.17",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.8.0",
