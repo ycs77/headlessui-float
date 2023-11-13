@@ -338,7 +338,10 @@ export function renderFloatingElement(
 
   function renderPortal(node: VNode) {
     if (props.portal) {
-      return h(Portal, () => node)
+      if (mounted.value) {
+        return h(Portal, () => node)
+      }
+      return createCommentVNode()
     }
     return node
   }

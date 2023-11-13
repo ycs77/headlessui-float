@@ -225,7 +225,10 @@ export function renderFloatingElement(
 
   function renderPortal(children: ReactElement) {
     if (props.portal) {
-      return <Portal>{children}</Portal>
+      if (mounted.current) {
+        return <Portal>{children}</Portal>
+      }
+      return <Fragment />
     }
     return children
   }
