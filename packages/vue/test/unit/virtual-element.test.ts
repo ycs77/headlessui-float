@@ -5,7 +5,7 @@ import { fireEvent, render, screen, userEvent, wait } from './utils/testing-libr
 import { html } from './utils/html'
 
 describe('Render virtual elements', () => {
-  it('should to render <FloatVirtual>', () => {
+  it('should to render <FloatVirtual>', async () => {
     render(defineComponent({
       components: { FloatVirtual },
       methods: {
@@ -32,6 +32,8 @@ describe('Render virtual elements', () => {
         </FloatVirtual>
       `,
     }))
+
+    await wait(50)
 
     expect(screen.getByTestId('content').innerHTML).toBe('content')
   })

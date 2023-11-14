@@ -71,6 +71,7 @@ describe('Events', () => {
       `,
     }))
 
+    await wait(50)
     expect(screen.queryByRole('menu')).toBeInTheDocument()
     expect(onShow).toHaveBeenCalledTimes(1)
   })

@@ -23,7 +23,6 @@ import type { AutoPlacementOptions } from '@floating-ui/core/src/middleware/auto
 import type { HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { roundByDPR } from './utils/dpr'
-import { env } from './utils/env'
 import type { ClassResolver } from './class-resolvers'
 import { useId } from './hooks/use-id'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
@@ -240,6 +239,10 @@ export function renderFloatingElement(
       ref: floatingRef,
     }
 
+    if (FloatingNode.type === Fragment) {
+      return <Fragment />
+    }
+
     if (props.as === Fragment) {
       return (
         <FloatingNode.type
@@ -258,10 +261,7 @@ export function renderFloatingElement(
   }
 
   function renderFloatingNode() {
-    if (env.isServer) {
-      if (mounted.current && props.show) {
-        return <FloatingNode.type {...FloatingNode.props} />
-      }
+    if (!mounted.current) {
       return <Fragment />
     }
 

@@ -28,7 +28,6 @@ import type { HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { dom } from './utils/dom'
 import { roundByDPR } from './utils/dpr'
-import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { getOwnerDocument } from './utils/owner'
 import type { ClassResolver } from './class-resolvers'
@@ -384,10 +383,7 @@ export function renderFloatingElement(
       return createCommentVNode()
     }
 
-    if (env.isServer) {
-      if (mounted.value && props.show) {
-        return createFloatingNode()
-      }
+    if (!mounted.value) {
       return createCommentVNode()
     }
 
