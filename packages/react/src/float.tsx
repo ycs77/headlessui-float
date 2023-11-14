@@ -23,7 +23,6 @@ import type { AutoPlacementOptions } from '@floating-ui/core/src/middleware/auto
 import type { HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { roundByDPR } from './utils/dpr'
-import { env } from './utils/env'
 import type { ClassResolver } from './class-resolvers'
 import { useId } from './hooks/use-id'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
@@ -225,7 +224,10 @@ export function renderFloatingElement(
 
   function renderPortal(children: ReactElement) {
     if (props.portal) {
-      return <Portal>{children}</Portal>
+      if (mounted.current) {
+        return <Portal>{children}</Portal>
+      }
+      return <Fragment />
     }
     return children
   }
@@ -235,6 +237,10 @@ export function renderFloatingElement(
       ...floatingProps,
       ...attrs,
       ref: floatingRef,
+    }
+
+    if (FloatingNode.type === Fragment) {
+      return <Fragment />
     }
 
     if (props.as === Fragment) {
@@ -255,10 +261,7 @@ export function renderFloatingElement(
   }
 
   function renderFloatingNode() {
-    if (env.isServer) {
-      if (mounted.current && props.show) {
-        return <FloatingNode.type {...FloatingNode.props} />
-      }
+    if (!mounted.current) {
       return <Fragment />
     }
 
@@ -686,6 +689,8 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
 export interface FloatContextMenuProps extends Omit<FloatVirtualProps, 'show' | 'portal' | 'onInitial'> {}
 
 function ContextMenu(props: FloatContextMenuProps) {
+  const mounted = useRef(false)
+
   function onInitial({ setShow, refs }: FloatVirtualInitialProps) {
     useDocumentEvent('contextmenu', e => {
       e.preventDefault()
@@ -713,6 +718,14 @@ function ContextMenu(props: FloatContextMenuProps) {
     })
   }
 
+  useEffect(() => {
+    mounted.current = true
+  }, [])
+
+  if (!mounted.current) {
+    return <Fragment />
+  }
+
   return (
     <Virtual
       flip
@@ -729,6 +742,8 @@ export interface FloatCursorProps extends Omit<FloatVirtualProps, 'show' | 'port
 }
 
 function Cursor({ globalHideCursor, ...props }: FloatCursorProps) {
+  const mounted = useRef(false)
+
   function onInitial({ setShow, refs }: FloatVirtualInitialProps) {
     function open() {
       setShow(true)
@@ -797,6 +812,14 @@ function Cursor({ globalHideCursor, ...props }: FloatCursorProps) {
       useDocumentEvent('mouseleave', close)
       useDocumentEvent('mousemove', onMouseMove)
     }
+  }
+
+  useEffect(() => {
+    mounted.current = true
+  }, [])
+
+  if (!mounted.current) {
+    return <Fragment />
   }
 
   return (

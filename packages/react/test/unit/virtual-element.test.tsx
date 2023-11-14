@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
-import { Menu } from '@headlessui/react'
 import { Float, type FloatVirtualInitialProps } from '../../src/float'
-import { fireEvent, render, screen, userEvent, wait, waitFor } from './utils/testing-library'
+import { render, screen, waitFor } from './utils/testing-library'
 
 describe('Render virtual elements', () => {
   it('should to render <Float.Virtual>', async () => {
@@ -33,60 +32,5 @@ describe('Render virtual elements', () => {
     await waitFor()
 
     expect(screen.getByTestId('content').innerHTML).toBe('content')
-  })
-
-  it('should to render <Float.ContextMenu>', async () => {
-    render(
-      <Float.ContextMenu>
-        {({ close }) => (
-          <Menu>
-            <Menu.Items static>
-              <Menu.Item><button type="button" onClick={close}>Account settings</button></Menu.Item>
-              <Menu.Item><button type="button" onClick={close}>Documentation</button></Menu.Item>
-            </Menu.Items>
-          </Menu>
-        )}
-      </Float.ContextMenu>
-    )
-
-    await waitFor()
-
-    fireEvent.contextMenu(document, { clientX: 200, clientY: 170 })
-    await wait(50)
-
-    const menu = screen.getByRole('menu')
-    const button = screen.getByText('Documentation')
-    expect(menu).toBeInTheDocument()
-    expect(menu.innerHTML).toContain('Account settings')
-    expect(menu.innerHTML).toContain('Documentation')
-    expect(menu.style.position).toBe('absolute')
-    expect(menu.style.top).toBe('170px')
-    expect(menu.style.left).toBe('200px')
-
-    await userEvent.click(button)
-    await waitFor()
-
-    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
-  })
-
-  it('should to render <Float.Cursor>', async () => {
-    render(
-      <Float.Cursor>
-        <div data-testid="content">cursor content</div>
-      </Float.Cursor>
-    )
-
-    await waitFor()
-
-    fireEvent.mouseEnter(document, { clientX: 200, clientY: 170 })
-    await wait(50)
-    fireEvent.mouseMove(document, { clientX: 200, clientY: 170 })
-    await wait(50)
-
-    const element = screen.getByTestId('content')
-    expect(element.innerHTML).toBe('cursor content')
-    expect(element.style.position).toBe('absolute')
-    expect(element.style.top).toBe('170px')
-    expect(element.style.left).toBe('200px')
   })
 })

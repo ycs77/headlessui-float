@@ -26,7 +26,7 @@ describe('SSR', () => {
     const { contents } = await renderHydrate(Example, { show: true })
 
     expect(contents).toContain('button')
-    expect(contents).toContain('content')
+    expect(contents).not.toContain('content')
     expect(contents).toContain('<div style="position: absolute; z-index: 9999; top: 0px; left: 0px;">')
   })
 

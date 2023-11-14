@@ -28,7 +28,6 @@ import type { HideOptions } from '@floating-ui/core/src/middleware/hide'
 import type { AutoUpdateOptions } from '@floating-ui/dom/src/autoUpdate'
 import { dom } from './utils/dom'
 import { roundByDPR } from './utils/dpr'
-import { env } from './utils/env'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { getOwnerDocument } from './utils/owner'
 import type { ClassResolver } from './class-resolvers'
@@ -338,7 +337,10 @@ export function renderFloatingElement(
 
   function renderPortal(node: VNode) {
     if (props.portal) {
-      return h(Portal, () => node)
+      if (mounted.value) {
+        return h(Portal, () => node)
+      }
+      return createCommentVNode()
     }
     return node
   }
@@ -381,10 +383,7 @@ export function renderFloatingElement(
       return createCommentVNode()
     }
 
-    if (env.isServer) {
-      if (mounted.value && props.show) {
-        return createFloatingNode()
-      }
+    if (!mounted.value) {
       return createCommentVNode()
     }
 
@@ -948,6 +947,8 @@ export const FloatContextMenu = {
   props: FloatContextMenuPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup(props: FloatContextMenuProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
+    const mounted = ref(false)
+
     function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
       useDocumentEvent('contextmenu', e => {
         e.preventDefault()
@@ -975,8 +976,13 @@ export const FloatContextMenu = {
       }, computed(() => show.value))
     }
 
+    onMounted(() => {
+      mounted.value = true
+    })
+
     return () => {
       if (!slots.default) return
+      if (!mounted.value) return
 
       return h(FloatVirtual, {
         ...props,
@@ -1038,6 +1044,8 @@ export const FloatCursor = {
   props: FloatCursorPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup({ globalHideCursor, ...props }: FloatCursorProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
+    const mounted = ref(false)
+
     function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
       function open() {
         show.value = true
@@ -1108,8 +1116,13 @@ export const FloatCursor = {
       }
     }
 
+    onMounted(() => {
+      mounted.value = true
+    })
+
     return () => {
       if (!slots.default) return
+      if (!mounted.value) return
 
       return h(FloatVirtual, {
         ...props,
