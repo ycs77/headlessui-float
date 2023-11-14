@@ -947,6 +947,8 @@ export const FloatContextMenu = {
   props: FloatContextMenuPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup(props: FloatContextMenuProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
+    const mounted = ref(false)
+
     function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
       useDocumentEvent('contextmenu', e => {
         e.preventDefault()
@@ -974,8 +976,13 @@ export const FloatContextMenu = {
       }, computed(() => show.value))
     }
 
+    onMounted(() => {
+      mounted.value = true
+    })
+
     return () => {
       if (!slots.default) return
+      if (!mounted.value) return
 
       return h(FloatVirtual, {
         ...props,
@@ -1037,6 +1044,8 @@ export const FloatCursor = {
   props: FloatCursorPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup({ globalHideCursor, ...props }: FloatCursorProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
+    const mounted = ref(false)
+
     function onInitial({ show, reference, floating }: FloatVirtualInitialProps) {
       function open() {
         show.value = true
@@ -1107,8 +1116,13 @@ export const FloatCursor = {
       }
     }
 
+    onMounted(() => {
+      mounted.value = true
+    })
+
     return () => {
       if (!slots.default) return
+      if (!mounted.value) return
 
       return h(FloatVirtual, {
         ...props,

@@ -689,6 +689,8 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
 export interface FloatContextMenuProps extends Omit<FloatVirtualProps, 'show' | 'portal' | 'onInitial'> {}
 
 function ContextMenu(props: FloatContextMenuProps) {
+  const mounted = useRef(false)
+
   function onInitial({ setShow, refs }: FloatVirtualInitialProps) {
     useDocumentEvent('contextmenu', e => {
       e.preventDefault()
@@ -716,6 +718,14 @@ function ContextMenu(props: FloatContextMenuProps) {
     })
   }
 
+  useEffect(() => {
+    mounted.current = true
+  }, [])
+
+  if (!mounted.current) {
+    return <Fragment />
+  }
+
   return (
     <Virtual
       flip
@@ -732,6 +742,8 @@ export interface FloatCursorProps extends Omit<FloatVirtualProps, 'show' | 'port
 }
 
 function Cursor({ globalHideCursor, ...props }: FloatCursorProps) {
+  const mounted = useRef(false)
+
   function onInitial({ setShow, refs }: FloatVirtualInitialProps) {
     function open() {
       setShow(true)
@@ -800,6 +812,14 @@ function Cursor({ globalHideCursor, ...props }: FloatCursorProps) {
       useDocumentEvent('mouseleave', close)
       useDocumentEvent('mousemove', onMouseMove)
     }
+  }
+
+  useEffect(() => {
+    mounted.current = true
+  }, [])
+
+  if (!mounted.current) {
+    return <Fragment />
   }
 
   return (
