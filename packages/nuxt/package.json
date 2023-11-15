@@ -1,0 +1,58 @@
+{
+  "name": "@headlessui-float/nuxt",
+  "type": "module",
+  "version": "0.12.0",
+  "description": "Easily use Headless UI for Nuxt 3 with Floating UI (Popper.js)",
+  "license": "MIT",
+  "homepage": "https://headlessui-float.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ycs77/headlessui-float.git",
+    "directory": "packages/nuxt"
+  },
+  "keywords": [
+    "floating",
+    "popper",
+    "popover",
+    "tooltip",
+    "dropdown",
+    "headless",
+    "headlessui",
+    "vue",
+    "nuxt"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "npm run dev:prepare && nuxt-module-build build",
+    "prepack": "npm run build",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground"
+  },
+  "dependencies": {
+    "@headlessui-float/vue": "^0.12.0",
+    "@nuxt/kit": "^3.8.1"
+  },
+  "devDependencies": {
+    "@headlessui/vue": "^1.7.16",
+    "@nuxt/module-builder": "^0.5.4",
+    "@nuxt/schema": "^3.8.1",
+    "@nuxtjs/tailwindcss": "^6.9.4",
+    "@types/node": "^20.0.0",
+    "nuxt": "^3.8.1"
+  }
+}
