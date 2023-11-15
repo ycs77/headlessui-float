@@ -13,6 +13,7 @@
     "build": "npm-run-all -p build:*",
     "build:react": "yarn react build",
     "build:vue": "yarn vue build",
+    "build:nuxt": "yarn nuxt build",
     "watch": "npm-run-all -p watch:*",
     "watch:react": "yarn react watch",
     "watch:vue": "yarn vue watch",
@@ -34,6 +35,7 @@
     "vue": "yarn workspace @headlessui-float/vue",
     "vue:example": "yarn workspace headlessui-float-example-vue",
     "vue-ts:example": "yarn workspace headlessui-float-example-vue-ts",
+    "nuxt": "yarn workspace @headlessui-float/nuxt",
     "lint": "eslint ."
   },
   "devDependencies": {
