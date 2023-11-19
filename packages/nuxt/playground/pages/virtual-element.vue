@@ -46,4 +46,5 @@
 
 <script setup lang="ts">
 import { Menu, MenuItem, MenuItems } from '@headlessui/vue'
+import { FloatContextMenu, FloatCursor } from '@headlessui-float/vue'
 </script>
