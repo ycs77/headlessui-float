@@ -47,10 +47,14 @@ interface FloatingState {
   props: FloatProps
   mounted: Ref<boolean>
   show: Ref<boolean>
-  x: Readonly<Ref<number | null>>
-  y: Readonly<Ref<number | null>>
   placement: Readonly<Ref<Placement>>
-  strategy: Readonly<Ref<Strategy>>
+  floatingStyles: Ref<{
+    position: Strategy
+    top: string
+    left: string
+    transform?: string
+    willChange?: string
+  }>
   referenceElWidth: Ref<number | null>
   updateFloating: () => void
 }
@@ -270,7 +274,7 @@ export function renderFloatingElement(
   attrs: SetupContext['attrs'],
   context: FloatingState
 ) {
-  const { floatingRef, props: rootProps, mounted, show, x, y, placement, strategy, referenceElWidth, updateFloating } = context
+  const { floatingRef, props: rootProps, mounted, show, placement, floatingStyles, referenceElWidth, updateFloating } = context
 
   const props = mergeProps(
     { ...rootProps, as: rootProps.floatingAs } as Record<string, any>,
@@ -314,21 +318,8 @@ export function renderFloatingElement(
 
   const floatingProps = {
     style: {
-      // If enable dialog mode, then set `transform` to false.
-      ...((props.dialog ? false : props.transform) ? {
-        position: strategy.value,
-        zIndex: props.zIndex,
-        top: '0px',
-        left: '0px',
-        right: 'auto',
-        bottom: 'auto',
-        transform: `translate(${roundByDPR(x.value || 0)}px,${roundByDPR(y.value || 0)}px)`,
-      } : {
-        position: strategy.value,
-        zIndex: props.zIndex,
-        top: `${roundByDPR(y.value || 0)}px`,
-        left: `${roundByDPR(x.value || 0)}px`,
-      }),
+      ...floatingStyles.value,
+      zIndex: props.zIndex,
       width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
         ? `${referenceElWidth.value}px`
         : undefined,
@@ -433,10 +424,11 @@ export function useFloat<T extends ReferenceElement>(
     isVisibleDOMElement(floatingEl)
   )
 
-  const { x, y, placement, strategy, middlewareData, update } = useFloating<T>(referenceEl, floatingEl, {
+  const { placement, middlewareData, floatingStyles, update } = useFloating<T>(referenceEl, floatingEl, {
     placement: propPlacement,
     strategy: propStrategy,
     middleware,
+    transform: props.dialog ? false : props.transform, // If enable dialog mode, then set `transform` to false.
   })
 
   const referenceElWidth = ref<number | null>(null)
@@ -518,10 +510,8 @@ export function useFloat<T extends ReferenceElement>(
     props,
     mounted,
     show,
-    x,
-    y,
     placement,
-    strategy,
+    floatingStyles,
     referenceElWidth,
     updateFloating,
   }
@@ -535,7 +525,7 @@ export function useFloat<T extends ReferenceElement>(
 
   provide(ArrowContext, arrowApi)
 
-  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, referenceEl, floatingEl, middlewareData, update: updateFloating }
+  return { referenceApi, floatingApi, arrowApi, placement, referenceEl, floatingEl, middlewareData, update: updateFloating }
 }
 
 export const Float = {
@@ -762,8 +752,12 @@ export const FloatArrow = {
       }[placement.value.split('-')[0]]!
 
       const style = {
-        left: typeof x.value === 'number' ? `${roundByDPR(x.value)}px` : undefined,
-        top: typeof y.value === 'number' ? `${roundByDPR(y.value)}px` : undefined,
+        left: ref.value && typeof x.value === 'number'
+          ? `${roundByDPR(ref.value, x.value)}px`
+          : undefined,
+        top: ref.value && typeof y.value === 'number'
+          ? `${roundByDPR(ref.value, y.value)}px`
+          : undefined,
         right: undefined,
         bottom: undefined,
         [staticSide]: `${props.offset! * -1}px`,

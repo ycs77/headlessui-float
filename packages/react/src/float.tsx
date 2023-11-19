@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import type { Dispatch, ElementType, MutableRefObject, ReactElement, RefObject, SetStateAction } from 'react'
+import type { CSSProperties, Dispatch, ElementType, MutableRefObject, ReactElement, RefObject, SetStateAction } from 'react'
 import { Portal, Transition } from '@headlessui/react'
 import { type ExtendedRefs, useFloating } from '@floating-ui/react'
 import type { VirtualElement } from '@floating-ui/core'
@@ -42,10 +42,8 @@ interface FloatingState {
   props: Omit<FloatProps, 'children' | 'className'>
   mounted: MutableRefObject<boolean>
   setShow: Dispatch<SetStateAction<boolean>>
-  x: number | null
-  y: number | null
   placement: Placement
-  strategy: Strategy
+  floatingStyles: CSSProperties
   referenceElWidth: number | null
 }
 
@@ -174,7 +172,7 @@ export function renderFloatingElement(
   attrs: Record<string, any>,
   context: FloatingState
 ) {
-  const { floatingRef, props: rootProps, mounted, setShow, x, y, placement, strategy, referenceElWidth } = context
+  const { floatingRef, props: rootProps, mounted, setShow, placement, floatingStyles, referenceElWidth } = context
 
   const props = {
     ...rootProps,
@@ -201,21 +199,8 @@ export function renderFloatingElement(
 
   const floatingProps = {
     style: {
-      // If enable dialog mode, then set `transform` to false.
-      ...((props.dialog ? false : props.transform) ? {
-        position: strategy,
-        zIndex: props.zIndex || 9999,
-        top: '0px',
-        left: '0px',
-        right: 'auto',
-        bottom: 'auto',
-        transform: `translate(${roundByDPR(x || 0)}px,${roundByDPR(y || 0)}px)`,
-      } : {
-        position: strategy,
-        zIndex: props.zIndex || 9999,
-        top: `${roundByDPR(y || 0)}px`,
-        left: `${roundByDPR(x || 0)}px`,
-      }),
+      ...floatingStyles,
+      zIndex: props.zIndex || 9999,
       width: props.adaptiveWidth && typeof referenceElWidth === 'number'
         ? `${referenceElWidth}px`
         : undefined,
@@ -305,10 +290,11 @@ function useFloat(
     update: props.onUpdate || (() => {}),
   }), [props.onShow, props.onHide, props.onUpdate])
 
-  const { x, y, placement, strategy, update, refs, middlewareData } = useFloating<HTMLElement>({
+  const { placement, update, refs, floatingStyles, middlewareData } = useFloating<HTMLElement>({
     placement: props.placement || 'bottom-start',
     strategy: props.strategy,
     middleware,
+    transform: props.dialog ? false : props.transform ?? false, // If enable dialog mode, then set `transform` to false.
   })
 
   const [referenceElWidth, setReferenceElWidth] = useState<number | null>(null)
@@ -384,10 +370,8 @@ function useFloat(
     props,
     mounted,
     setShow,
-    x,
-    y,
     placement,
-    strategy,
+    floatingStyles,
     referenceElWidth,
   }
 
@@ -398,7 +382,7 @@ function useFloat(
     y: middlewareData.arrow?.y,
   }
 
-  return { referenceApi, floatingApi, arrowApi, x, y, placement, strategy, update: updateFloating, refs, middlewareData }
+  return { referenceApi, floatingApi, arrowApi, placement, update: updateFloating, refs, middlewareData }
 }
 
 export interface FloatRenderProp {
@@ -575,8 +559,12 @@ function Arrow(props: FloatArrowProps) {
   }[placement.split('-')[0]]!
 
   const style = {
-    left: typeof x === 'number' ? `${roundByDPR(x)}px` : undefined,
-    top: typeof y === 'number' ? `${roundByDPR(y)}px` : undefined,
+    left: arrowRef.current && typeof x === 'number'
+      ? `${roundByDPR(arrowRef.current, x)}px`
+      : undefined,
+    top: arrowRef.current && typeof y === 'number'
+      ? `${roundByDPR(arrowRef.current, y)}px`
+      : undefined,
     right: undefined,
     bottom: undefined,
     [staticSide]: `${(props.offset ?? 4) * -1}px`,
