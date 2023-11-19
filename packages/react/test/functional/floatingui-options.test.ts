@@ -52,3 +52,13 @@ for (const scrollTo of ['482', '250', '160']) {
     expect(await page.getByTestId('block-flip').screenshot()).toMatchSnapshot(`flip-scrollto-${scrollTo}.png`)
   })
 }
+
+for (const scrollTo of ['220', '400', '50', '0']) {
+  test(`hide - scrollto-${scrollTo}`, async ({ page }) => {
+    await page.goto('http://localhost:3031/floatingui-options')
+    await page.getByTestId('block-hide-scrollable').evaluate((el, scrollTo) => {
+      el.scrollTo(0, Number.parseInt(scrollTo))
+    }, scrollTo)
+    expect(await page.getByTestId('block-hide').screenshot()).toMatchSnapshot(`hide-scrollto-${scrollTo}.png`)
+  })
+}
