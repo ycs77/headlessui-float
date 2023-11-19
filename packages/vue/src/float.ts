@@ -470,7 +470,7 @@ export function useFloat<T extends ReferenceElement>(
 
   useReferenceElResizeObserver(props.adaptiveWidth, referenceEl, referenceElWidth)
 
-  watch(show, async (value, oldValue, onInvalidate) => {
+  watch([show, isVisible], async (value, oldValue, onInvalidate) => {
     await nextTick()
 
     if (show.value && isVisible.value && props.autoUpdate) {
