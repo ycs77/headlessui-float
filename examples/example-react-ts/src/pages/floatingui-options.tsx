@@ -273,7 +273,7 @@ function ExampleHide() {
 
   useEffect(() => {
     blockHideRef.current?.scrollTo(0, 220)
-  }, [blockHideRef])
+  }, [])
 
   return (
     <Block
