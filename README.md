@@ -25,16 +25,21 @@
 | ------------------------------------------ | ----------------------------------------------- | --------------------------------------------------- |
 | [`@headlessui-float/react`][react-link-gh] | [![NPM Version][react-version]][react-link-npm] | [![NPM Downloads][react-downloads]][react-link-npm] |
 | [`@headlessui-float/vue`][vue-link-gh]     | [![NPM Version][vue-version]][vue-link-npm]     | [![NPM Downloads][vue-downloads]][vue-link-npm]     |
+| [`@headlessui-float/nuxt`][nuxt-link-gh]   | [![NPM Version][nuxt-version]][nuxt-link-npm]   | [![NPM Downloads][nuxt-downloads]][nuxt-link-npm]   |
 
 [react-version]: https://img.shields.io/npm/v/@headlessui-float/react?style=flat-square
 [react-downloads]: https://img.shields.io/npm/dt/@headlessui-float/react?style=flat-square
 [vue-version]: https://img.shields.io/npm/v/@headlessui-float/vue?style=flat-square
 [vue-downloads]: https://img.shields.io/npm/dt/@headlessui-float/vue?style=flat-square
+[nuxt-version]: https://img.shields.io/npm/v/@headlessui-float/nuxt?style=flat-square
+[nuxt-downloads]: https://img.shields.io/npm/dt/@headlessui-float/nuxt?style=flat-square
 
 [react-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/react
 [react-link-npm]: https://www.npmjs.com/package/@headlessui-float/react
 [vue-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/vue
 [vue-link-npm]: https://www.npmjs.com/package/@headlessui-float/vue
+[nuxt-link-gh]: https://github.com/ycs77/headlessui-float/tree/main/packages/nuxt
+[nuxt-link-npm]: https://www.npmjs.com/package/@headlessui-float/nuxt
 
 ## Sponsor
 
