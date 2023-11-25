@@ -624,7 +624,7 @@ function Arrow(props: FloatArrowProps) {
   )
 }
 
-export interface FloatVirtualProps extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'hide' | 'autoUpdate' | 'zIndex' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
+export interface FloatVirtualProps extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'autoUpdate' | 'zIndex' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
   onInitial: (props: FloatVirtualInitialProps) => void
   className?: string
   children?: ReactElement | ((slot: FloatVirtualRenderProp) => ReactElement)
@@ -647,7 +647,7 @@ function Virtual({ onInitial, children, ...props }: FloatVirtualProps) {
 
   const attrs = useMemo(() => {
     // eslint-disable-next-line unused-imports/no-unused-vars
-    const { as, show, placement, strategy, offset, shift, flip, arrow, autoPlacement, hide, autoUpdate, zIndex, enter, enterFrom, enterTo, leave, leaveFrom, leaveTo, originClass, tailwindcssOriginClass, portal, transform, middleware, onShow, onHide, onUpdate, ...attrs } = props
+    const { as, show, placement, strategy, offset, shift, flip, arrow, autoPlacement, autoUpdate, zIndex, enter, enterFrom, enterTo, leave, leaveFrom, leaveTo, originClass, tailwindcssOriginClass, portal, transform, middleware, onShow, onHide, onUpdate, ...attrs } = props
     return attrs
   }, [props])
 
