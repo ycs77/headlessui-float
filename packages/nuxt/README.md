@@ -21,10 +21,6 @@
 * 🚪 Support Portal (Teleport)
 * ➡️ Support Arrow
 
-## Demo
-
-[**Online Demo**](https://stackblitz.com/github/ycs77/headlessui-float/tree/main/examples/example-vue?file=src%2FApp.vue)
-
 ## Documentation
 
 [Documentation](https://headlessui-float.vercel.app/) | [繁體中文文檔](https://headlessui-float.vercel.app/zh-tw/)
