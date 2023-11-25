@@ -1,7 +1,7 @@
 {
   "name": "@headlessui-float/nuxt",
   "type": "module",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Easily use Headless UI for Nuxt 3 with Floating UI (Popper.js)",
   "license": "MIT",
   "homepage": "https://headlessui-float.vercel.app",
@@ -44,7 +44,7 @@
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground"
   },
   "dependencies": {
-    "@headlessui-float/vue": "^0.12.0",
+    "@headlessui-float/vue": "^0.13.0",
     "@headlessui/vue": "^1.7.0",
     "@nuxt/kit": "^3.8.1"
   },
