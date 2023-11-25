@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Menu } from '@headlessui/react'
+import { useEffect, useRef, useState } from 'react'
+import { Menu, Popover } from '@headlessui/react'
 import { Float } from '@headlessui-float/react'
 import type { Placement } from '@floating-ui/core'
 import Block from '@/components/Block'
@@ -11,6 +11,7 @@ export default function ExampleFloatinguiOptions() {
       <ExampleOffset />
       <ExampleShift />
       <ExampleFlip />
+      <ExampleHide />
     </>
   )
 }
@@ -262,6 +263,50 @@ function ExampleFlip() {
             </Menu.Items>
           </Float>
         </Menu>
+      </div>
+    </Block>
+  )
+}
+
+function ExampleHide() {
+  const blockHideRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    blockHideRef.current?.scrollTo(0, 220)
+  }, [])
+
+  return (
+    <Block
+      title="Hide"
+      contentClass="relative pb-[150px]"
+      data-testid="block-hide"
+    >
+      <div
+        ref={blockHideRef}
+        className="h-[320px] overflow-y-auto border rounded"
+        data-testid="block-hide-scrollable"
+      >
+        <div className="h-[720px] pt-[330px]">
+          <Popover>
+            <Float
+              show
+              placement="bottom"
+              hide={[{}, { strategy: 'escaped' }]}
+              referenceHiddenClass="invisible"
+              escapedClass="opacity-50"
+              zIndex="99"
+              transform
+            >
+              <Popover.Button className="w-16 h-16 flex justify-center items-center mx-auto px-5 py-2 bg-indigo-500 text-white">
+                Box
+              </Popover.Button>
+
+              <Popover.Panel static className="px-3 py-1.5 bg-red-500 text-white focus:outline-none">
+                Floating
+              </Popover.Panel>
+            </Float>
+          </Popover>
+        </div>
       </div>
     </Block>
   )

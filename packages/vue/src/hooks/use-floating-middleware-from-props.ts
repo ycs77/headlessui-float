@@ -19,7 +19,7 @@ export function useFloatingMiddlewareFromProps(
     flip?: boolean | number | Partial<FlipOptions & DetectOverflowOptions>
     arrow?: boolean | number
     autoPlacement?: boolean | Partial<AutoPlacementOptions & DetectOverflowOptions>
-    hide?: boolean | Partial<HideOptions & DetectOverflowOptions>
+    hide?: boolean | Partial<HideOptions & DetectOverflowOptions> | Partial<HideOptions & DetectOverflowOptions>[]
     middleware?: Middleware[] | ((refs: {
       referenceEl: ComputedRef<ReferenceElement | null>
       floatingEl: ComputedRef<HTMLElement | null>
@@ -81,10 +81,12 @@ export function useFloatingMiddlewareFromProps(
         })
         : props.middleware || []
     ))
-    if (props.hide === true || typeof props.hide === 'object') {
-      _middleware.push(hide(
-        typeof props.hide === 'object' ? props.hide : undefined
-      ))
+    if (props.hide === true || typeof props.hide === 'object' || Array.isArray(props.hide)) {
+      (Array.isArray(props.hide) ? props.hide : [props.hide]).forEach(hideOptions => {
+        _middleware.push(hide(
+          typeof hideOptions === 'object' ? hideOptions : undefined
+        ))
+      })
     }
     middleware.value = _middleware
   }, { immediate: true })

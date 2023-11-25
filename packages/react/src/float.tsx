@@ -42,6 +42,8 @@ interface FloatingState {
   props: Omit<FloatProps, 'children' | 'className'>
   mounted: MutableRefObject<boolean>
   setShow: Dispatch<SetStateAction<boolean>>
+  referenceHidden: boolean | undefined
+  escaped: boolean | undefined
   placement: Placement
   floatingStyles: CSSProperties
   referenceElWidth: number | null
@@ -104,7 +106,9 @@ export interface FloatProps {
   flip?: boolean | number | Partial<FlipOptions & DetectOverflowOptions>
   arrow?: boolean | number
   autoPlacement?: boolean | Partial<AutoPlacementOptions & DetectOverflowOptions>
-  hide?: boolean | Partial<HideOptions & DetectOverflowOptions>
+  hide?: boolean | Partial<HideOptions & DetectOverflowOptions> | Partial<HideOptions & DetectOverflowOptions>[]
+  referenceHiddenClass?: string
+  escapedClass?: string
   autoUpdate?: boolean | Partial<AutoUpdateOptions>
   zIndex?: number | string
   enter?: string
@@ -172,7 +176,7 @@ export function renderFloatingElement(
   attrs: Record<string, any>,
   context: FloatingState
 ) {
-  const { floatingRef, props: rootProps, mounted, setShow, placement, floatingStyles, referenceElWidth } = context
+  const { floatingRef, props: rootProps, mounted, setShow, referenceHidden, escaped, placement, floatingStyles, referenceElWidth } = context
 
   const props = {
     ...rootProps,
@@ -198,6 +202,11 @@ export function renderFloatingElement(
   }
 
   const floatingProps = {
+    className: [
+      referenceHidden ? props.referenceHiddenClass : undefined,
+      escaped ? props.escapedClass : undefined,
+    ].filter(c => !!c).join(' '),
+
     style: {
       ...floatingStyles,
       zIndex: props.zIndex || 9999,
@@ -282,6 +291,9 @@ function useFloat(
 
   const [middleware, setMiddleware] = useState<Middleware[]>()
 
+  const [referenceHidden, setReferenceHidden] = useState<boolean | undefined>(undefined)
+  const [escaped, setEscaped] = useState<boolean | undefined>(undefined)
+
   const arrowRef = useRef<HTMLElement>(null)
 
   const events = useMemo(() => ({
@@ -290,7 +302,7 @@ function useFloat(
     update: props.onUpdate || (() => {}),
   }), [props.onShow, props.onHide, props.onUpdate])
 
-  const { placement, update, refs, floatingStyles, middlewareData } = useFloating<HTMLElement>({
+  const { placement, update, refs, floatingStyles, isPositioned, middlewareData } = useFloating<HTMLElement>({
     placement: props.placement || 'bottom-start',
     strategy: props.strategy,
     middleware,
@@ -321,6 +333,13 @@ function useFloat(
   useEffect(updateFloating, [props.placement, props.strategy, middleware])
 
   useFloatingMiddlewareFromProps(setMiddleware, refs, arrowRef, props)
+
+  useEffect(() => {
+    if (props.hide === true || typeof props.hide === 'object' || Array.isArray(props.hide)) {
+      setReferenceHidden(middlewareData.hide?.referenceHidden || !isPositioned)
+      setEscaped(middlewareData.hide?.escaped)
+    }
+  }, [middlewareData, props.hide, isPositioned])
 
   useReferenceElResizeObserver(props.adaptiveWidth, refs.reference, setReferenceElWidth)
 
@@ -370,6 +389,8 @@ function useFloat(
     props,
     mounted,
     setShow,
+    referenceHidden,
+    escaped,
     placement,
     floatingStyles,
     referenceElWidth,

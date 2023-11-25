@@ -163,14 +163,46 @@
       </Menu>
     </div>
   </Block>
+
+  <Block title="Hide" content-class="relative pb-[150px]" data-testid="block-hide">
+    <div ref="blockHideRef" class="h-[320px] overflow-y-auto border rounded" data-testid="block-hide-scrollable">
+      <div class="h-[720px] pt-[330px]">
+        <Popover>
+          <Float
+            show
+            placement="bottom"
+            :hide="[{}, { strategy: 'escaped' }]"
+            reference-hidden-class="invisible"
+            escaped-class="opacity-50"
+            z-index="99"
+            transform
+          >
+            <PopoverButton class="w-16 h-16 flex justify-center items-center mx-auto px-5 py-2 bg-indigo-500 text-white">
+              Box
+            </PopoverButton>
+
+            <PopoverPanel static class="px-3 py-1.5 bg-red-500 text-white focus:outline-none">
+              Floating
+            </PopoverPanel>
+          </Float>
+        </Popover>
+      </div>
+    </div>
+  </Block>
 </template>
 
 <script setup lang="ts">
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Menu, MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import type { Placement } from '@floating-ui/core'
+
+const blockHideRef = ref() as Ref<HTMLElement>
 
 const placement = ref('bottom-start') as Ref<Placement>
 const offset = ref(4)
 const shift = ref(4)
 const flip = ref(0)
+
+onMounted(() => {
+  blockHideRef.value.scrollTo(0, 220)
+})
 </script>

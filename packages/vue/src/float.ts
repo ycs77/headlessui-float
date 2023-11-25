@@ -47,6 +47,8 @@ interface FloatingState {
   props: FloatProps
   mounted: Ref<boolean>
   show: Ref<boolean>
+  referenceHidden: Ref<boolean | undefined>
+  escaped: Ref<boolean | undefined>
   placement: Readonly<Ref<Placement>>
   floatingStyles: Ref<{
     position: Strategy
@@ -111,7 +113,9 @@ export interface FloatProps {
   flip?: boolean | number | Partial<FlipOptions & DetectOverflowOptions>
   arrow?: boolean | number
   autoPlacement?: boolean | Partial<AutoPlacementOptions & DetectOverflowOptions>
-  hide?: boolean | Partial<HideOptions & DetectOverflowOptions>
+  hide?: boolean | Partial<HideOptions & DetectOverflowOptions> | Partial<HideOptions & DetectOverflowOptions>[]
+  referenceHiddenClass?: string
+  escapedClass?: string
   autoUpdate?: boolean | Partial<AutoUpdateOptions>
   zIndex?: number | string
   transitionName?: string
@@ -177,9 +181,11 @@ export const FloatPropsValidators = {
     default: false,
   },
   hide: {
-    type: [Boolean, Object] as PropType<boolean | Partial<HideOptions & DetectOverflowOptions>>,
+    type: [Boolean, Object, Array] as PropType<boolean | Partial<HideOptions & DetectOverflowOptions> | Partial<HideOptions & DetectOverflowOptions>[]>,
     default: false,
   },
+  referenceHiddenClass: String,
+  escapedClass: String,
   autoUpdate: {
     type: [Boolean, Object] as PropType<boolean | Partial<AutoUpdateOptions>>,
     default: true,
@@ -274,7 +280,7 @@ export function renderFloatingElement(
   attrs: SetupContext['attrs'],
   context: FloatingState
 ) {
-  const { floatingRef, props: rootProps, mounted, show, placement, floatingStyles, referenceElWidth, updateFloating } = context
+  const { floatingRef, props: rootProps, mounted, show, referenceHidden, escaped, placement, floatingStyles, referenceElWidth, updateFloating } = context
 
   const props = mergeProps(
     { ...rootProps, as: rootProps.floatingAs } as Record<string, any>,
@@ -317,6 +323,11 @@ export function renderFloatingElement(
   }
 
   const floatingProps = {
+    class: [
+      referenceHidden.value ? props.referenceHiddenClass : undefined,
+      escaped.value ? props.escapedClass : undefined,
+    ].filter(c => !!c).join(' '),
+
     style: {
       ...floatingStyles.value,
       zIndex: props.zIndex,
@@ -411,7 +422,12 @@ export function useFloat<T extends ReferenceElement>(
 
   const propPlacement = toRef(props, 'placement')
   const propStrategy = toRef(props, 'strategy')
+
   const middleware = shallowRef({}) as ShallowRef<Middleware[]>
+
+  const referenceHidden = ref<boolean | undefined>(undefined)
+  const escaped = ref<boolean | undefined>(undefined)
+
   const arrowRef = ref(null) as Ref<HTMLElement | null>
   const arrowX = ref<number | undefined>(undefined)
   const arrowY = ref<number | undefined>(undefined)
@@ -424,7 +440,7 @@ export function useFloat<T extends ReferenceElement>(
     isVisibleDOMElement(floatingEl)
   )
 
-  const { placement, middlewareData, floatingStyles, update } = useFloating<T>(referenceEl, floatingEl, {
+  const { placement, middlewareData, isPositioned, floatingStyles, update } = useFloating<T>(referenceEl, floatingEl, {
     placement: propPlacement,
     strategy: propStrategy,
     middleware,
@@ -462,8 +478,15 @@ export function useFloat<T extends ReferenceElement>(
     props
   )
 
+  watch([middlewareData, () => props.hide, isPositioned], () => {
+    if (props.hide === true || typeof props.hide === 'object' || Array.isArray(props.hide)) {
+      referenceHidden.value = middlewareData.value.hide?.referenceHidden || !isPositioned.value
+      escaped.value = middlewareData.value.hide?.escaped
+    }
+  })
+
   watch(middlewareData, () => {
-    const arrowData = middlewareData.value.arrow as { x?: number, y?: number }
+    const arrowData = middlewareData.value.arrow as { x?: number, y?: number } | undefined
     arrowX.value = arrowData?.x
     arrowY.value = arrowData?.y
   })
@@ -510,6 +533,8 @@ export function useFloat<T extends ReferenceElement>(
     props,
     mounted,
     show,
+    referenceHidden,
+    escaped,
     placement,
     floatingStyles,
     referenceElWidth,
