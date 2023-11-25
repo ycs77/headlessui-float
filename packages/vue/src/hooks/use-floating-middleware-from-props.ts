@@ -67,12 +67,6 @@ export function useFloatingMiddlewareFromProps(
           : undefined
       ))
     }
-    if (props.arrow === true || typeof props.arrow === 'number') {
-      _middleware.push(arrow({
-        element: arrowRef,
-        padding: props.arrow === true ? 0 : props.arrow,
-      }))
-    }
     _middleware.push(...(
       typeof props.middleware === 'function'
         ? props.middleware({
@@ -81,6 +75,12 @@ export function useFloatingMiddlewareFromProps(
         })
         : props.middleware || []
     ))
+    if (props.arrow === true || typeof props.arrow === 'number') {
+      _middleware.push(arrow({
+        element: arrowRef,
+        padding: props.arrow === true ? 0 : props.arrow,
+      }))
+    }
     if (props.hide === true || typeof props.hide === 'object' || Array.isArray(props.hide)) {
       (Array.isArray(props.hide) ? props.hide : [props.hide]).forEach(hideOptions => {
         _middleware.push(hide(
