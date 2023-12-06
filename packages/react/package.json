@@ -43,7 +43,8 @@
     "type-check": "tsc --noEmit",
     "test:unit": "vitest --root test/unit/",
     "test:functional": "playwright test test/functional",
-    "test:functional:update": "yarn test:functional -u"
+    "test:functional:update": "yarn test:functional -u",
+    "prepack": "npm run build"
   },
   "peerDependencies": {
     "@headlessui/react": "^1.0.0",

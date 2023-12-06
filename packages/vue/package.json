@@ -43,7 +43,8 @@
     "type-check": "vue-tsc --noEmit",
     "test:unit": "vitest --root test/unit/",
     "test:functional": "playwright test test/functional",
-    "test:functional:update": "yarn test:functional -u"
+    "test:functional:update": "yarn test:functional -u",
+    "prepack": "npm run build"
   },
   "peerDependencies": {
     "@headlessui/vue": "^1.0.0",
