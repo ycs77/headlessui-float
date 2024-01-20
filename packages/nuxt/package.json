@@ -46,13 +46,13 @@
   "dependencies": {
     "@headlessui-float/vue": "^0.13.0",
     "@headlessui/vue": "^1.7.0",
-    "@nuxt/kit": "^3.8.1"
+    "@nuxt/kit": "^3.9.0"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "^0.5.4",
-    "@nuxt/schema": "^3.8.1",
-    "@nuxtjs/tailwindcss": "^6.9.4",
+    "@nuxt/module-builder": "^0.5.5",
+    "@nuxt/schema": "^3.9.0",
+    "@nuxtjs/tailwindcss": "^6.10.0",
     "@types/node": "^20.0.0",
-    "nuxt": "^3.8.1"
+    "nuxt": "^3.9.0"
   }
 }
