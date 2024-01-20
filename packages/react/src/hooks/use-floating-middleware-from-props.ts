@@ -1,12 +1,7 @@
 import { type Dispatch, type MutableRefObject, type SetStateAction, useEffect } from 'react'
 import { autoPlacement, flip, hide, offset, shift } from '@floating-ui/dom'
-import type { VirtualElement } from '@floating-ui/core'
+import type { AutoPlacementOptions, FlipOptions, HideOptions, OffsetOptions, ShiftOptions, VirtualElement } from '@floating-ui/core'
 import type { DetectOverflowOptions, Middleware } from '@floating-ui/dom'
-import type { OffsetOptions } from '@floating-ui/core/src/middleware/offset'
-import type { ShiftOptions } from '@floating-ui/core/src/middleware/shift'
-import type { FlipOptions } from '@floating-ui/core/src/middleware/flip'
-import type { AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
-import type { HideOptions } from '@floating-ui/core/src/middleware/hide'
 import { type ExtendedRefs, arrow } from '@floating-ui/react'
 
 export function useFloatingMiddlewareFromProps(

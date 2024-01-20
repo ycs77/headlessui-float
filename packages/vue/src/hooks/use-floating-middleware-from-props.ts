@@ -1,11 +1,7 @@
 import { type ComputedRef, type Ref, type ShallowRef, watch } from 'vue'
+import type { AutoPlacementOptions, FlipOptions, HideOptions, OffsetOptions, ShiftOptions } from '@floating-ui/core'
 import { autoPlacement, flip, hide, offset, shift } from '@floating-ui/dom'
 import type { DetectOverflowOptions, Middleware, ReferenceElement } from '@floating-ui/dom'
-import type { OffsetOptions } from '@floating-ui/core/src/middleware/offset'
-import type { ShiftOptions } from '@floating-ui/core/src/middleware/shift'
-import type { FlipOptions } from '@floating-ui/core/src/middleware/flip'
-import type { AutoPlacementOptions } from '@floating-ui/core/src/middleware/autoPlacement'
-import type { HideOptions } from '@floating-ui/core/src/middleware/hide'
 import { arrow } from '@floating-ui/vue'
 
 export function useFloatingMiddlewareFromProps(
