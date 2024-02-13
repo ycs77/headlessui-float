@@ -439,8 +439,14 @@ export function useFloat<T extends ReferenceElement>(
     placement: propPlacement,
     strategy: propStrategy,
     middleware,
-    transform: props.dialog ? false : props.transform, // If enable dialog mode, then set `transform` to false.
-    whileElementsMounted: () => () => {}, // Fix transition not smooth bug.
+    // If enable dialog mode, then set `transform` to false.
+    transform: props.dialog
+      ? false
+      : props.transform,
+    // Fix transition not smooth bug when dialog mode enabled.
+    whileElementsMounted: props.dialog
+      ? () => () => {}
+      : undefined,
   })
 
   const referenceElWidth = ref<number | null>(null)
