@@ -181,6 +181,7 @@ export function renderFloatingElement(
 
   const transitionProps = {
     show: mounted.current ? props.show : false,
+    unmount: FloatingNode.props.unmount === false ? false : undefined,
     enter: `${props.enter || ''} ${originClass}`,
     enterFrom: `${props.enterFrom || ''}`,
     enterTo: `${props.enterTo || ''}`,

@@ -307,6 +307,7 @@ export function renderFloatingElement(
   }
 
   const transitionChildProps = {
+    unmount: floatingNode.props?.unmount === false ? false : undefined,
     enter: enterActiveClassRef.value,
     enterFrom: props.enterFrom,
     enterTo: props.enterTo,
@@ -368,7 +369,7 @@ export function renderFloatingElement(
         : null
       const el = cloneVNode(floatingNode, contentProps)
 
-      if (el.props?.unmount === false) {
+      if (floatingNode.props?.unmount === false) {
         updateFloating()
         return el
       }
