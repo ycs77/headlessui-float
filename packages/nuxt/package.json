@@ -40,7 +40,7 @@
     "build": "npm run dev:prepare && nuxt-module-build build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "dev:prepare": "nuxt-module-build build --stub && cross-env NUXT_TELEMETRY_DISABLED=1 nuxt-module-build prepare && nuxi prepare playground",
     "prepack": "npm run build"
   },
   "dependencies": {
@@ -53,6 +53,7 @@
     "@nuxt/schema": "~3.10.0",
     "@nuxtjs/tailwindcss": "^6.11.0",
     "@types/node": "^20.0.0",
+    "cross-env": "^7.0.3",
     "nuxt": "~3.10.0"
   }
 }

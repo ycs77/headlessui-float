@@ -8,4 +8,5 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { redirect: '/floatingui-options' },
   },
+  telemetry: false,
 })
