@@ -25,6 +25,7 @@ import { dom } from './utils/dom'
 import { roundByDPR } from './utils/dpr'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { getOwnerDocument } from './utils/owner'
+import { showVueTransitionWarn } from './utils/warn'
 import type { ClassResolver } from './class-resolvers'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
 import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
@@ -573,6 +574,8 @@ export const Float = {
   props: FloatPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup(props: FloatProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
+    showVueTransitionWarn('Float', props)
+
     const show = ref(props.show ?? false)
     const reference = ref(null) as Ref<HTMLElement | null>
     const floating = ref(null) as Ref<HTMLElement | null>
@@ -720,6 +723,8 @@ export const FloatContent = {
   inheritAttrs: false,
   props: FloatContentPropsValidators,
   setup(props: FloatContentProps, { slots, attrs }: SetupContext) {
+    showVueTransitionWarn('FloatContent', props)
+
     const context = useFloatingContext('FloatContent')
     const { placement } = context
 
@@ -877,6 +882,8 @@ export const FloatVirtual = {
   props: FloatVirtualPropsValidators,
   emits: ['initial', 'show', 'hide', 'update'],
   setup(props: FloatVirtualProps, { emit, slots, attrs }: SetupContext<['initial', 'show', 'hide', 'update']>) {
+    showVueTransitionWarn('FloatVirtual', props)
+
     const show = ref(props.show ?? false)
     const reference = ref({
       getBoundingClientRect() {
