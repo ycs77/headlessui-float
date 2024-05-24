@@ -127,7 +127,9 @@ export interface FloatProps {
   tailwindcssOriginClass?: boolean
   portal?: boolean
   transform?: boolean
-  adaptiveWidth?: boolean
+  adaptiveWidth?: boolean | {
+    attribute?: string
+  }
   composable?: boolean
   dialog?: boolean
   middleware?: Middleware[] | ((refs: {
@@ -217,7 +219,7 @@ export const FloatPropsValidators = {
     default: false,
   },
   adaptiveWidth: {
-    type: Boolean,
+    type: [Boolean, Object] as PropType<boolean | { attribute?: string }>,
     default: false,
   },
   composable: {
@@ -335,10 +337,18 @@ export function renderFloatingElement(
     style: {
       ...floatingStyles.value,
       zIndex: props.zIndex,
-      width: props.adaptiveWidth && typeof referenceElWidth.value === 'number'
-        ? `${referenceElWidth.value}px`
-        : undefined,
-    },
+    } as Record<string, any>,
+  }
+
+  if (props.adaptiveWidth && typeof referenceElWidth.value === 'number') {
+    const adaptiveWidthOptions = {
+      attribute: 'width',
+      ...typeof props.adaptiveWidth === 'object'
+        ? props.adaptiveWidth
+        : {},
+    }
+
+    floatingProps.style[adaptiveWidthOptions.attribute] = `${referenceElWidth.value}px`
   }
 
   function renderPortal(node: VNode) {
@@ -506,7 +516,7 @@ export function useFloat<T extends ReferenceElement>(
     arrowY.value = arrowData?.y
   })
 
-  useReferenceElResizeObserver(props.adaptiveWidth, referenceEl, referenceElWidth)
+  useReferenceElResizeObserver(!!props.adaptiveWidth, referenceEl, referenceElWidth)
 
   watch([show, isVisible], async (value, oldValue, onInvalidate) => {
     await nextTick()
