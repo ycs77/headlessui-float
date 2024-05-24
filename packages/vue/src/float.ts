@@ -16,7 +16,7 @@ import {
   watchEffect,
 } from 'vue'
 import type { ComputedRef, FunctionalComponent, InjectionKey, PropType, Ref, SetupContext, ShallowRef, VNode } from 'vue'
-import { Portal, TransitionChild } from '@headlessui/vue'
+import { Portal, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useFloating } from '@floating-ui/vue'
 import type { AutoPlacementOptions, FlipOptions, HideOptions, OffsetOptions, ShiftOptions } from '@floating-ui/core'
 import { autoUpdate } from '@floating-ui/dom'
@@ -25,6 +25,7 @@ import { dom } from './utils/dom'
 import { roundByDPR } from './utils/dpr'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
 import { getOwnerDocument } from './utils/owner'
+import { showVueTransitionWarn } from './utils/warn'
 import type { ClassResolver } from './class-resolvers'
 import { useFloatingMiddlewareFromProps } from './hooks/use-floating-middleware-from-props'
 import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-observer'
@@ -113,6 +114,7 @@ export interface FloatProps {
   escapedClass?: string
   autoUpdate?: boolean | Partial<AutoUpdateOptions>
   zIndex?: number | string
+  vueTransition?: boolean
   transitionName?: string
   transitionType?: 'transition' | 'animation'
   enter?: string
@@ -188,6 +190,10 @@ export const FloatPropsValidators = {
   zIndex: {
     type: [Number, String],
     default: 9999,
+  },
+  vueTransition: {
+    type: Boolean,
+    default: false,
   },
   transitionName: String,
   transitionType: String as PropType<'transition' | 'animation'>,
@@ -284,20 +290,14 @@ export function renderFloatingElement(
 
   const { enterActiveClassRef, leaveActiveClassRef } = useTransitionAndOriginClass(props, placement)
 
-  const transitionClassesProps = {
-    enterActiveClass: enterActiveClassRef.value,
-    enterFromClass: props.enterFrom,
-    enterToClass: props.enterTo,
-    leaveActiveClass: leaveActiveClassRef.value,
-    leaveFromClass: props.leaveFrom,
-    leaveToClass: props.leaveTo,
-  }
-
   const transitionProps = {
-    name: props.transitionName,
-    type: props.transitionType,
-    appear: true,
-    ...(!props.transitionName ? transitionClassesProps : {}),
+    show: mounted.value ? props.show : false,
+    enter: enterActiveClassRef.value,
+    enterFrom: props.enterFrom,
+    enterTo: props.enterTo,
+    leave: leaveActiveClassRef.value,
+    leaveFrom: props.leaveFrom,
+    leaveTo: props.leaveTo,
     onBeforeEnter() {
       show.value = true
     },
@@ -306,16 +306,24 @@ export function renderFloatingElement(
     },
   }
 
-  const transitionChildProps = {
-    unmount: floatingNode.props?.unmount === false ? false : undefined,
-    enter: enterActiveClassRef.value,
-    enterFrom: props.enterFrom,
-    enterTo: props.enterTo,
-    leave: leaveActiveClassRef.value,
-    leaveFrom: props.leaveFrom,
-    leaveTo: props.leaveTo,
-    onBeforeEnter: transitionProps.onBeforeEnter,
-    onAfterLeave: transitionProps.onAfterLeave,
+  const vueTransitionProps = {
+    name: props.transitionName,
+    type: props.transitionType,
+    appear: true,
+    ...(!props.transitionName ? {
+      enterActiveClass: enterActiveClassRef.value,
+      enterFromClass: props.enterFrom,
+      enterToClass: props.enterTo,
+      leaveActiveClass: leaveActiveClassRef.value,
+      leaveFromClass: props.leaveFrom,
+      leaveToClass: props.leaveTo,
+    } : {}),
+    onBeforeEnter() {
+      show.value = true
+    },
+    onAfterLeave() {
+      show.value = false
+    },
   }
 
   const floatingProps = {
@@ -374,28 +382,32 @@ export function renderFloatingElement(
         return el
       }
 
-      if (typeof props.show === 'boolean' ? props.show : true) {
+      if (props.vueTransition) {
+        if (props.show === false) {
+          return createCommentVNode()
+        }
+
         return el
       }
 
-      return createCommentVNode()
+      return el
     }
 
     if (!mounted.value) {
       return createCommentVNode()
     }
 
-    if (props.transitionChild) {
-      return h(TransitionChild, {
-        key: `placement-${placement.value}`,
+    if (props.vueTransition) {
+      return h(Transition, {
         ...(props.dialog ? { ref: floatingRef } : {}),
-        as: 'template',
-        ...transitionChildProps,
+        ...vueTransitionProps,
       }, createFloatingNode)
     }
 
-    return h(Transition, {
+    return h(props.transitionChild ? TransitionChild : TransitionRoot, {
+      key: `placement-${placement.value}`,
       ...(props.dialog ? { ref: floatingRef } : {}),
+      as: 'template',
       ...transitionProps,
     }, createFloatingNode)
   }
@@ -562,6 +574,8 @@ export const Float = {
   props: FloatPropsValidators,
   emits: ['show', 'hide', 'update'],
   setup(props: FloatProps, { emit, slots, attrs }: SetupContext<['show', 'hide', 'update']>) {
+    showVueTransitionWarn('Float', props)
+
     const show = ref(props.show ?? false)
     const reference = ref(null) as Ref<HTMLElement | null>
     const floating = ref(null) as Ref<HTMLElement | null>
@@ -677,12 +691,13 @@ export const FloatReference = {
   }
 }
 
-export interface FloatContentProps extends Pick<FloatProps, 'as' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> {
+export interface FloatContentProps extends Pick<FloatProps, 'as' | 'vueTransition' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> {
   transitionChild?: boolean
 }
 
 export const FloatContentPropsValidators = {
   as: FloatPropsValidators.floatingAs,
+  vueTransition: FloatPropsValidators.vueTransition,
   transitionName: FloatPropsValidators.transitionName,
   transitionType: FloatPropsValidators.transitionType,
   enter: FloatPropsValidators.enter,
@@ -708,6 +723,8 @@ export const FloatContent = {
   inheritAttrs: false,
   props: FloatContentPropsValidators,
   setup(props: FloatContentProps, { slots, attrs }: SetupContext) {
+    showVueTransitionWarn('FloatContent', props)
+
     const context = useFloatingContext('FloatContent')
     const { placement } = context
 
@@ -815,7 +832,7 @@ export const FloatArrow = {
   }
 }
 
-export interface FloatVirtualProps<FloatingElement = HTMLElement> extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'autoUpdate' | 'zIndex' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
+export interface FloatVirtualProps<FloatingElement = HTMLElement> extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'autoUpdate' | 'zIndex' | 'vueTransition' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
   onInitial?: (props: FloatVirtualInitialProps<FloatingElement>) => any
 }
 
@@ -831,6 +848,7 @@ export const FloatVirtualPropsValidators = {
   autoPlacement: FloatPropsValidators.autoPlacement,
   autoUpdate: FloatPropsValidators.autoUpdate,
   zIndex: FloatPropsValidators.zIndex,
+  vueTransition: FloatPropsValidators.vueTransition,
   transitionName: FloatPropsValidators.transitionName,
   transitionType: FloatPropsValidators.transitionType,
   enter: FloatPropsValidators.enter,
@@ -864,6 +882,8 @@ export const FloatVirtual = {
   props: FloatVirtualPropsValidators,
   emits: ['initial', 'show', 'hide', 'update'],
   setup(props: FloatVirtualProps, { emit, slots, attrs }: SetupContext<['initial', 'show', 'hide', 'update']>) {
+    showVueTransitionWarn('FloatVirtual', props)
+
     const show = ref(props.show ?? false)
     const reference = ref({
       getBoundingClientRect() {
@@ -947,6 +967,7 @@ export const FloatContextMenuPropsValidators = {
   autoPlacement: FloatPropsValidators.autoPlacement,
   autoUpdate: FloatPropsValidators.autoUpdate,
   zIndex: FloatPropsValidators.zIndex,
+  vueTransition: FloatPropsValidators.vueTransition,
   transitionName: FloatPropsValidators.transitionName,
   transitionType: FloatPropsValidators.transitionType,
   enter: FloatPropsValidators.enter,
@@ -1039,6 +1060,7 @@ export const FloatCursorPropsValidators = {
   autoPlacement: FloatPropsValidators.autoPlacement,
   autoUpdate: FloatPropsValidators.autoUpdate,
   zIndex: FloatPropsValidators.zIndex,
+  vueTransition: FloatPropsValidators.vueTransition,
   transitionName: FloatPropsValidators.transitionName,
   transitionType: FloatPropsValidators.transitionType,
   enter: FloatPropsValidators.enter,
