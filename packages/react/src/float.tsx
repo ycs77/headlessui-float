@@ -115,7 +115,9 @@ export interface FloatProps {
   tailwindcssOriginClass?: boolean
   portal?: boolean
   transform?: boolean
-  adaptiveWidth?: boolean
+  adaptiveWidth?: boolean | {
+    attribute?: string
+  }
   composable?: boolean
   dialog?: boolean
   middleware?: Middleware[] | ((refs: {
@@ -205,10 +207,18 @@ export function renderFloatingElement(
     style: {
       ...floatingStyles,
       zIndex: props.zIndex || 9999,
-      width: props.adaptiveWidth && typeof referenceElWidth === 'number'
-        ? `${referenceElWidth}px`
-        : undefined,
-    },
+    } as Record<string, any>,
+  }
+
+  if (props.adaptiveWidth && typeof referenceElWidth === 'number') {
+    const adaptiveWidthOptions = {
+      attribute: 'width',
+      ...typeof props.adaptiveWidth === 'object'
+        ? props.adaptiveWidth
+        : {},
+    }
+
+    floatingProps.style[adaptiveWidthOptions.attribute] = `${referenceElWidth}px`
   }
 
   function renderPortal(children: ReactElement) {
@@ -336,7 +346,7 @@ function useFloat(
     }
   }, [middlewareData, props.hide, isPositioned])
 
-  useReferenceElResizeObserver(props.adaptiveWidth, refs.reference, setReferenceElWidth)
+  useReferenceElResizeObserver(!!props.adaptiveWidth, refs.reference, setReferenceElWidth)
 
   useEffect(() => {
     if (refs.reference.current &&
