@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react'
 import type { CSSProperties, Dispatch, ElementType, MutableRefObject, ReactElement, RefObject, SetStateAction } from 'react'
-import { Portal, Transition } from '@headlessui/react'
+import { Portal, Transition, TransitionChild } from '@headlessui/react'
 import { type ExtendedRefs, useFloating } from '@floating-ui/react'
 import type { AutoPlacementOptions, FlipOptions, HideOptions, OffsetOptions, ShiftOptions, VirtualElement } from '@floating-ui/core'
 import { autoUpdate } from '@floating-ui/dom'
@@ -266,9 +266,9 @@ export function renderFloatingElement(
 
     if (props.transitionChild) {
       return (
-        <Transition.Child as={Fragment} {...transitionProps}>
+        <TransitionChild as={Fragment} {...transitionProps}>
           <FloatingNode.type {...FloatingNode.props} />
-        </Transition.Child>
+        </TransitionChild>
       )
     }
 
