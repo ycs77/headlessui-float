@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "types": ["vite/client", "unplugin-icons/types/vue3"],
     "strict": true,
+    "noEmit": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "isolatedModules": true,

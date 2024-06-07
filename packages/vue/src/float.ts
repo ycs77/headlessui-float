@@ -654,7 +654,7 @@ export const Float = {
   new (): {
     $props: FloatProps
     $slots: {
-      default(props: FloatSlotProps): any
+      default: (props: FloatSlotProps) => any
     }
   }
 }
@@ -696,7 +696,7 @@ export const FloatReference = {
   new (): {
     $props: FloatReferenceProps
     $slots: {
-      default(props: FloatReferenceSlotProps): any
+      default: (props: FloatReferenceSlotProps) => any
     }
   }
 }
@@ -768,7 +768,7 @@ export const FloatContent = {
   new (): {
     $props: FloatContentProps
     $slots: {
-      default(props: FloatContentSlotProps): any
+      default: (props: FloatContentSlotProps) => any
     }
   }
 }
@@ -837,7 +837,7 @@ export const FloatArrow = {
   new (): {
     $props: FloatArrowProps
     $slots: {
-      default(props: FloatArrowSlotProps): any
+      default: (props: FloatArrowSlotProps) => any
     }
   }
 }
@@ -956,7 +956,7 @@ export const FloatVirtual = {
   new (): {
     $props: FloatVirtualProps<any>
     $slots: {
-      default(props: FloatVirtualSlotProps): any
+      default: (props: FloatVirtualSlotProps) => any
     }
   }
 }
@@ -1050,7 +1050,7 @@ export const FloatContextMenu = {
   new (): {
     $props: FloatContextMenuProps
     $slots: {
-      default(props: FloatVirtualSlotProps): any
+      default: (props: FloatVirtualSlotProps) => any
     }
   }
 }
@@ -1191,7 +1191,7 @@ export const FloatCursor = {
   new (): {
     $props: FloatCursorProps
     $slots: {
-      default(props: FloatVirtualSlotProps): any
+      default: (props: FloatVirtualSlotProps) => any
     }
   }
 }

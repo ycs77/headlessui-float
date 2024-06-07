@@ -11,7 +11,7 @@ export function createHighOrderFloatComponent(baseProps: FloatProps) {
     new (): {
       $props: FloatProps
       $slots: {
-        default(props: FloatSlotProps): any
+        default: (props: FloatSlotProps) => any
       }
     }
   }

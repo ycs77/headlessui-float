@@ -1,4 +1,4 @@
-/* eslint-disable ts/ban-ts-comment, ts/prefer-ts-expect-error */
+/* eslint-disable ts/prefer-ts-expect-error */
 /** @ts-ignore */
 import type { ComponentResolver } from 'unplugin-vue-components'
 

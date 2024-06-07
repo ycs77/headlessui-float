@@ -1,27 +1,24 @@
-import ycs77, { GLOB_JSX, GLOB_TS, GLOB_TSX, GLOB_VUE } from '@ycs77/eslint-config'
+import ycs77, { GLOB_JSX, GLOB_TS, GLOB_TSX } from '@ycs77/eslint-config'
 
-export default ycs77(
-  {
-    vue: true,
-    typescript: true,
-  },
-  {
+export default ycs77({
+  vue: true,
+  typescript: true,
+})
+  .append({
     rules: {
       'test/prefer-lowercase-title': 'off',
     },
-  },
-  {
+  })
+  .append({
     files: [GLOB_TS, GLOB_TSX],
     rules: {
       'ts/prefer-literal-enum-member': 'off',
 
-      'node/prefer-global/process': 'off',
-
       'antfu/top-level-function': 'off',
       'antfu/consistent-list-newline': 'off',
     },
-  },
-  {
+  })
+  .append({
     files: [GLOB_JSX, GLOB_TSX],
     rules: {
       'antfu/top-level-function': 'off',
@@ -33,21 +30,13 @@ export default ycs77(
       'style/jsx-indent': 'off',
       'style/jsx-max-props-per-line': 'off',
       'style/jsx-one-expression-per-line': 'off',
+      'style/quote-props': 'off',
     },
-  },
-  {
-    files: [GLOB_VUE],
-    rules: {
-      'vue/no-template-shadow': 'off',
-    },
-  },
-  {
-    files: [
-      'packages/react/src/utils/*.ts',
-      'packages/vue/src/utils/*.ts',
-    ],
+  })
+  .append({
+    files: ['packages/*/src/utils/*.ts'],
     rules: {
       'style/comma-dangle': 'off',
+      'ts/comma-dangle': 'off',
     },
-  },
-)
+  })

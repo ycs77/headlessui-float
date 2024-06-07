@@ -5,7 +5,7 @@ afterEach(() => {
   cleanup()
 })
 
-const customRender = (TestComponent: any, options?: RenderOptions) =>
+const customRender = <C>(TestComponent: any, options?: RenderOptions<C>) =>
   render(TestComponent, {
     global: {
       stubs: {
