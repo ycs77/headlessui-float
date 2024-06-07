@@ -13,7 +13,7 @@ jobs:
     name: Linting and type checking
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/type-check
 
@@ -21,7 +21,7 @@ jobs:
     name: Unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/unit
 
@@ -29,6 +29,6 @@ jobs:
     name: Functional tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/functional
