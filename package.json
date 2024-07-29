@@ -10,23 +10,23 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "npm-run-all -p build:*",
+    "build": "run-p build:*",
     "build:react": "yarn react build",
     "build:vue": "yarn vue build",
     "build:nuxt": "yarn nuxt build",
-    "watch": "npm-run-all -p watch:*",
+    "watch": "run-p watch:*",
     "watch:react": "yarn react watch",
     "watch:vue": "yarn vue watch",
-    "watch:example": "npm-run-all -p watch:example:*",
+    "watch:example": "run-p watch:example:*",
     "watch:example:react": "yarn react:example dev --port=3011",
     "watch:example:react-ts": "yarn react-ts:example dev --port=3012",
     "watch:example:vue": "yarn vue:example dev --port=3013",
     "watch:example:vue-ts": "yarn vue-ts:example dev --port=3014",
-    "test": "npm-run-all test:unit test:functional",
-    "test:unit": "npm-run-all -p test:unit:*",
+    "test": "run-s test:unit test:functional",
+    "test:unit": "run-p test:unit:*",
     "test:unit:react": "yarn react test:unit --run",
     "test:unit:vue": "yarn vue test:unit --run",
-    "test:functional": "npm-run-all test:functional:*",
+    "test:functional": "run-s test:functional:*",
     "test:functional:react": "yarn react test:functional",
     "test:functional:vue": "yarn vue test:functional",
     "react": "yarn workspace @headlessui-float/react",
@@ -39,8 +39,8 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@ycs77/eslint-config": "^2.2.0",
+    "@ycs77/eslint-config": "^2.3.0",
     "eslint": "^9.0.0",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all2": "^6.2.0"
   }
 }

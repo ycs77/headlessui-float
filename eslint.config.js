@@ -24,6 +24,7 @@ export default ycs77({
       'antfu/top-level-function': 'off',
       'antfu/consistent-list-newline': 'off',
 
+      'style/indent': 'off',
       'style/jsx-closing-bracket-location': 'off',
       'style/jsx-curly-newline': 'off',
       'style/jsx-first-prop-new-line': 'off',
@@ -31,6 +32,10 @@ export default ycs77({
       'style/jsx-max-props-per-line': 'off',
       'style/jsx-one-expression-per-line': 'off',
       'style/quote-props': 'off',
+
+      'no-unused-vars': 'off',
+      'unused-imports/no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'off',
     },
   })
   .append({
@@ -38,5 +43,6 @@ export default ycs77({
     rules: {
       'style/comma-dangle': 'off',
       'ts/comma-dangle': 'off',
+      'ts/no-unsafe-function-type': 'off',
     },
   })
