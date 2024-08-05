@@ -54,6 +54,6 @@
     "@nuxtjs/tailwindcss": "^6.11.0",
     "@types/node": "^20.0.0",
     "cross-env": "^7.0.3",
-    "nuxt": "~3.11.0"
+    "nuxt": "~3.12.4"
   }
 }
