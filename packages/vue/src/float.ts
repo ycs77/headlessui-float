@@ -20,7 +20,7 @@ import { Portal, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useFloating } from '@floating-ui/vue'
 import type { AutoPlacementOptions, FlipOptions, HideOptions, OffsetOptions, ShiftOptions } from '@floating-ui/core'
 import { autoUpdate } from '@floating-ui/dom'
-import type { AutoUpdateOptions, DetectOverflowOptions, FloatingElement, Middleware, Placement, ReferenceElement, Strategy, VirtualElement } from '@floating-ui/dom'
+import type { AutoUpdateOptions, DetectOverflowOptions, Middleware, Placement, Strategy, VirtualElement } from '@floating-ui/dom'
 import { dom } from './utils/dom'
 import { roundByDPR } from './utils/dpr'
 import { flattenFragment, isValidElement, isVisibleDOMElement } from './utils/render'
@@ -32,6 +32,7 @@ import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-ob
 import { useTransitionAndOriginClass } from './hooks/use-transition-and-origin-class'
 import { useOutsideClick } from './hooks/use-outside-click'
 import { useDocumentEvent } from './hooks/use-document-event'
+import type { FloatingElement, ReferenceElement } from './types'
 
 interface ReferenceState {
   referenceRef: Ref<ReferenceElement | null>
@@ -134,7 +135,7 @@ export interface FloatProps {
   dialog?: boolean
   middleware?: Middleware[] | ((refs: {
     referenceEl: ComputedRef<ReferenceElement | null>
-    floatingEl: ComputedRef<HTMLElement | null>
+    floatingEl: ComputedRef<FloatingElement | null>
   }) => Middleware[])
   onShow?: () => any
   onHide?: () => any

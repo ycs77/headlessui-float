@@ -2,15 +2,15 @@ import type { Ref } from 'vue'
 import { dom } from './dom'
 import { env } from './env'
 
-// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-vue/src/utils/owner.ts
+// Reference: https://github.com/tailwindlabs/headlessui/blob/226042231d7529d530be7c65790fbb681b5adb63/packages/%40headlessui-vue/src/utils/owner.ts
 
-export function getOwnerDocument<T extends Element | Ref<Element | null>>(
+export function getOwnerDocument<T extends HTMLElement | Ref<HTMLElement | null>>(
   element: T | null | undefined
 ) {
   if (env.isServer) return null
   if (element instanceof Node) return element.ownerDocument
-  if (Object.prototype.hasOwnProperty.call(element, 'value')) {
-    const domElement = dom(element)
+  if (element && Object.prototype.hasOwnProperty.call(element, 'value')) {
+    const domElement = dom(element as any)
     if (domElement) return domElement.ownerDocument
   }
 

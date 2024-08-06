@@ -1,7 +1,7 @@
 import type { MutableRefObject } from 'react'
 import { env } from './env'
 
-// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-react/src/utils/owner.ts
+// Reference: https://github.com/tailwindlabs/headlessui/blob/226042231d7529d530be7c65790fbb681b5adb63/packages/%40headlessui-react/src/utils/owner.ts
 
 export function getOwnerDocument<T extends Element | MutableRefObject<Element | null>>(
   element: T | null | undefined

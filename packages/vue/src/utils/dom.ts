@@ -1,5 +1,6 @@
-import type { VirtualElement } from '@floating-ui/core'
-import { type ComponentPublicInstance, type Ref, ref as createRef } from 'vue'
+import type { VirtualElement } from '@floating-ui/dom'
+import { ref as createRef } from 'vue'
+import type { ComponentPublicInstance, Ref } from 'vue'
 
 // Reference: https://github.com/tailwindlabs/headlessui/blob/d4a94cb5647d9e11ffc72d92033d43cbc3361da7/packages/%40headlessui-vue/src/utils/dom.ts
 

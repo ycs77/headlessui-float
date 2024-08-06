@@ -1,13 +1,15 @@
-import { type ComputedRef, type Ref, type ShallowRef, watch } from 'vue'
+import { watch } from 'vue'
+import type { ComputedRef, Ref, ShallowRef } from 'vue'
 import type { AutoPlacementOptions, FlipOptions, HideOptions, OffsetOptions, ShiftOptions } from '@floating-ui/core'
 import { autoPlacement, flip, hide, offset, shift } from '@floating-ui/dom'
-import type { DetectOverflowOptions, Middleware, ReferenceElement } from '@floating-ui/dom'
+import type { DetectOverflowOptions, Middleware } from '@floating-ui/dom'
 import { arrow } from '@floating-ui/vue'
+import type { FloatingElement, ReferenceElement } from '../types'
 
 export function useFloatingMiddlewareFromProps(
   middleware: ShallowRef<Middleware[]>,
   referenceEl: ComputedRef<ReferenceElement | null>,
-  floatingEl: ComputedRef<HTMLElement | null>,
+  floatingEl: ComputedRef<FloatingElement | null>,
   arrowRef: Ref<HTMLElement | null>,
   props: {
     offset?: OffsetOptions
@@ -18,7 +20,7 @@ export function useFloatingMiddlewareFromProps(
     hide?: boolean | Partial<HideOptions & DetectOverflowOptions> | Partial<HideOptions & DetectOverflowOptions>[]
     middleware?: Middleware[] | ((refs: {
       referenceEl: ComputedRef<ReferenceElement | null>
-      floatingEl: ComputedRef<HTMLElement | null>
+      floatingEl: ComputedRef<FloatingElement | null>
     }) => Middleware[])
   }
 ) {
