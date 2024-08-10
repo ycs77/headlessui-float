@@ -39,7 +39,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@ycs77/eslint-config": "^2.3.0",
+    "@ycs77/eslint-config": "^2.4.0",
     "eslint": "^9.0.0",
     "npm-run-all2": "^6.2.0"
   }
