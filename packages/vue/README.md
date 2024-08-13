@@ -12,6 +12,9 @@
 
 <hr>
 
+> [!NOTE]
+> [Headless UI](https://headlessui.com/) has [released version 2.0](https://tailwindcss.com/blog/headless-ui-v2#built-in-anchor-positioning) (currently for React only), which builds in anchor positioning with Floating UI. Therefore, this package will be unnecessary when Headless UI v2 supports Vue.
+
 ## Features
 
 * 💙 Easily use Headless UI & Tailwind CSS
