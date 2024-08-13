@@ -1,7 +1,7 @@
 <h2 align="center">Headless UI Float Nuxt</h2>
 
 <p align="center">
-  Easily use <a href="https://headlessui.dev/">Headless UI</a> for Nuxt 3 with <a href="https://floating-ui.com/">Floating UI</a> (New version Popper.js) to position floating elements.
+  Easily use <a href="https://headlessui.com/">Headless UI</a> for Nuxt 3 with <a href="https://floating-ui.com/">Floating UI</a> (New version Popper.js) to position floating elements.
 </p>
 
 <p align="center">
@@ -41,7 +41,7 @@ If you think this package has helped you, please consider [Becoming a sponsor](h
 
 ## Credits
 
-* [Headless UI](https://headlessui.dev/)
+* [Headless UI](https://headlessui.com/)
 * [Floating UI](https://floating-ui.com/)
 * This package is inspired by the [headlessui#154 example](https://github.com/tailwindlabs/headlessui/issues/154)
 
