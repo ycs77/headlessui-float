@@ -10,7 +10,7 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "run-p build:*",
+    "build": "run-s build:*",
     "build:react": "yarn react build",
     "build:vue": "yarn vue build",
     "build:nuxt": "yarn nuxt build",
@@ -23,7 +23,7 @@
     "watch:example:vue": "yarn vue:example dev --port=3013",
     "watch:example:vue-ts": "yarn vue-ts:example dev --port=3014",
     "test": "run-s test:unit test:functional",
-    "test:unit": "run-p test:unit:*",
+    "test:unit": "run-s test:unit:*",
     "test:unit:react": "yarn react test:unit --run",
     "test:unit:vue": "yarn vue test:unit --run",
     "test:functional": "run-s test:functional:*",

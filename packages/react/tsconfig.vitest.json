@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
+    "lib": [],
+    "types": ["node", "jsdom", "vitest/globals"]
+  },
+  "include": ["src/**/*", "test/unit/**/*"]
+}

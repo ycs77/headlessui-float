@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.node.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.playwright.tsbuildinfo",
+    "lib": [],
+    "types": ["node"]
+  },
+  "include": ["test/functional/**/*"]
+}
