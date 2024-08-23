@@ -1,10 +1,10 @@
+// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-vue/src/hooks/use-outside-click.ts
+
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref } from 'vue'
 import { FocusableMode, isFocusableElement } from '../utils/focus-management'
 import { dom } from '../utils/dom'
 import { useDocumentEvent } from './use-document-event'
-
-// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-vue/src/hooks/use-outside-click.ts
 
 type Container = Ref<HTMLElement | null> | HTMLElement | null
 type ContainerCollection = Container[] | Set<Container>

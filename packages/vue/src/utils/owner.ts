@@ -1,8 +1,8 @@
+// Reference: https://github.com/tailwindlabs/headlessui/blob/226042231d7529d530be7c65790fbb681b5adb63/packages/%40headlessui-vue/src/utils/owner.ts
+
 import type { Ref } from 'vue'
 import { dom } from './dom'
 import { env } from './env'
-
-// Reference: https://github.com/tailwindlabs/headlessui/blob/226042231d7529d530be7c65790fbb681b5adb63/packages/%40headlessui-vue/src/utils/owner.ts
 
 export function getOwnerDocument<T extends HTMLElement | Ref<HTMLElement | null>>(
   element: T | null | undefined

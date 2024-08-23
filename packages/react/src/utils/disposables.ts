@@ -1,6 +1,6 @@
-import { microTask } from './micro-task'
-
 // Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-react/src/utils/disposables.ts
+
+import { microTask } from './micro-task'
 
 export type Disposables = ReturnType<typeof disposables>
 

@@ -1,7 +1,7 @@
+// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-vue/src/hooks/use-document-event.ts
+
 import { watchEffect } from 'vue'
 import { env } from '../utils/env'
-
-// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-vue/src/hooks/use-document-event.ts
 
 export function useDocumentEvent<TType extends keyof DocumentEventMap>(
   type: TType,

@@ -1,8 +1,8 @@
+// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-react/src/utils/focus-management.ts
+
 import { disposables } from './disposables'
 import { match } from './match'
 import { getOwnerDocument } from './owner'
-
-// Reference: https://github.com/tailwindlabs/headlessui/blob/7794d563e181787e995db1f877cd26c460e385ee/packages/%40headlessui-react/src/utils/focus-management.ts
 
 // Credit:
 //  - https://stackoverflow.com/a/30753870
