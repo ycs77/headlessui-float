@@ -1,18 +1,17 @@
-import { type SetupContext, h, mergeProps } from 'vue'
-import { Float, type FloatProps, type FloatSlotProps } from './float'
+import { defineComponent, h, mergeProps } from 'vue'
+import { Float } from './float'
+import type { FloatProps } from './float'
 
 export function createHighOrderFloatComponent(baseProps: FloatProps) {
-  return ((overrideProps: FloatProps, { slots }: SetupContext) => {
-    return h(Float, mergeProps(
-      baseProps as Record<string, any>,
-      overrideProps as Record<string, any>
-    ), slots)
-  }) as unknown as {
-    new (): {
-      $props: FloatProps
-      $slots: {
-        default: (props: FloatSlotProps) => any
-      }
-    }
-  }
+  const HighOrderFloat = defineComponent({
+    name: 'HighOrderFloat',
+    setup(overrideProps, { slots }) {
+      return () => h(Float, mergeProps(
+        baseProps as Record<string, any>,
+        overrideProps as Record<string, any>
+      ), slots)
+    },
+  })
+
+  return HighOrderFloat as unknown as typeof Float
 }

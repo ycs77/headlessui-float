@@ -3,6 +3,7 @@ import {
   cloneVNode,
   computed,
   createCommentVNode,
+  defineComponent,
   h,
   inject,
   mergeProps,
@@ -32,7 +33,7 @@ import { useReferenceElResizeObserver } from './hooks/use-reference-el-resize-ob
 import { useTransitionAndOriginClass } from './hooks/use-transition-and-origin-class'
 import { useOutsideClick } from './hooks/use-outside-click'
 import { useDocumentEvent } from './hooks/use-document-event'
-import type { FloatingElement, ReferenceElement } from './types'
+import type { FloatingElement, ReferenceElement, __VLS_WithTemplateSlots } from './types'
 
 interface ReferenceState {
   referenceRef: Ref<ReferenceElement | null>
@@ -157,11 +158,11 @@ export const FloatPropsValidators = {
   },
   placement: {
     type: String as PropType<Placement>,
-    default: 'bottom-start',
+    default: 'bottom-start' as Placement,
   },
   strategy: {
     type: String as PropType<Strategy>,
-    default: 'absolute',
+    default: 'absolute' as Strategy,
   },
   offset: [Number, Function, Object] as PropType<OffsetOptions>,
   shift: {
@@ -579,7 +580,7 @@ export function useFloat<T extends ReferenceElement>(
   return { referenceApi, floatingApi, arrowApi, placement, referenceEl, floatingEl, middlewareData, update: updateFloating }
 }
 
-export const Float = {
+const FloatComp = defineComponent({
   name: 'Float',
   inheritAttrs: false,
   props: FloatPropsValidators,
@@ -651,14 +652,12 @@ export const Float = {
       ])
     }
   },
-} as unknown as {
-  new (): {
-    $props: FloatProps
-    $slots: {
-      default: (props: FloatSlotProps) => any
-    }
-  }
-}
+})
+export const Float = FloatComp as __VLS_WithTemplateSlots<typeof FloatComp, Readonly<{
+  default: (props: FloatSlotProps) => any
+}> & {
+  default: (props: FloatSlotProps) => any
+}>
 
 export interface FloatReferenceProps extends Pick<FloatProps, 'as'> {}
 
@@ -670,7 +669,7 @@ export interface FloatReferenceSlotProps {
   placement: Placement
 }
 
-export const FloatReference = {
+const FloatReferenceComp = defineComponent({
   name: 'FloatReference',
   inheritAttrs: false,
   props: FloatReferencePropsValidators,
@@ -693,14 +692,12 @@ export const FloatReference = {
       )
     }
   },
-} as unknown as {
-  new (): {
-    $props: FloatReferenceProps
-    $slots: {
-      default: (props: FloatReferenceSlotProps) => any
-    }
-  }
-}
+})
+export const FloatReference = FloatReferenceComp as __VLS_WithTemplateSlots<typeof FloatReferenceComp, Readonly<{
+  default: (props: FloatReferenceSlotProps) => any
+}> & {
+  default: (props: FloatReferenceSlotProps) => any
+}>
 
 export interface FloatContentProps extends Pick<FloatProps, 'as' | 'vueTransition' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass'> {
   transitionChild?: boolean
@@ -729,7 +726,7 @@ export interface FloatContentSlotProps {
   placement: Placement
 }
 
-export const FloatContent = {
+const FloatContentComp = defineComponent({
   name: 'FloatContent',
   inheritAttrs: false,
   props: FloatContentPropsValidators,
@@ -765,14 +762,12 @@ export const FloatContent = {
       )
     }
   },
-} as unknown as {
-  new (): {
-    $props: FloatContentProps
-    $slots: {
-      default: (props: FloatContentSlotProps) => any
-    }
-  }
-}
+})
+export const FloatContent = FloatContentComp as __VLS_WithTemplateSlots<typeof FloatContentComp, Readonly<{
+  default: (props: FloatContentSlotProps) => any
+}> & {
+  default: (props: FloatContentSlotProps) => any
+}>
 
 export interface FloatArrowProps extends Pick<FloatProps, 'as'> {
   offset?: number
@@ -793,7 +788,7 @@ export interface FloatArrowSlotProps {
   placement: Placement
 }
 
-export const FloatArrow = {
+const FloatArrowComp = defineComponent({
   name: 'FloatArrow',
   props: FloatArrowPropsValidators,
   setup(props: FloatArrowProps, { slots, attrs }: SetupContext) {
@@ -834,14 +829,12 @@ export const FloatArrow = {
       return h(props.as!, mergeProps(attrs, { ref, style }))
     }
   },
-} as unknown as {
-  new (): {
-    $props: FloatArrowProps
-    $slots: {
-      default: (props: FloatArrowSlotProps) => any
-    }
-  }
-}
+})
+export const FloatArrow = FloatArrowComp as __VLS_WithTemplateSlots<typeof FloatArrowComp, Readonly<{
+  default: (props: FloatArrowSlotProps) => any
+}> & {
+  default: (props: FloatArrowSlotProps) => any
+}>
 
 export interface FloatVirtualProps<FloatingElement = HTMLElement> extends Pick<FloatProps, 'as' | 'show' | 'placement' | 'strategy' | 'offset' | 'shift' | 'flip' | 'arrow' | 'autoPlacement' | 'autoUpdate' | 'zIndex' | 'vueTransition' | 'transitionName' | 'transitionType' | 'enter' | 'enterFrom' | 'enterTo' | 'leave' | 'leaveFrom' | 'leaveTo' | 'originClass' | 'tailwindcssOriginClass' | 'portal' | 'transform' | 'middleware' | 'onShow' | 'onHide' | 'onUpdate'> {
   onInitial?: (props: FloatVirtualInitialProps<FloatingElement>) => any
@@ -887,7 +880,7 @@ export interface FloatVirtualInitialProps<FloatingElement = HTMLElement> {
   floating: Ref<FloatingElement | null>
 }
 
-export const FloatVirtual = {
+const FloatVirtualComp = defineComponent({
   name: 'FloatVirtual',
   inheritAttrs: false,
   props: FloatVirtualPropsValidators,
@@ -953,14 +946,12 @@ export const FloatVirtual = {
       )
     }
   },
-} as unknown as {
-  new (): {
-    $props: FloatVirtualProps<any>
-    $slots: {
-      default: (props: FloatVirtualSlotProps) => any
-    }
-  }
-}
+})
+export const FloatVirtual = FloatVirtualComp as __VLS_WithTemplateSlots<typeof FloatVirtualComp, Readonly<{
+  default: (props: FloatVirtualSlotProps) => any
+}> & {
+  default: (props: FloatVirtualSlotProps) => any
+}>
 
 export interface FloatContextMenuProps extends Omit<FloatVirtualProps, 'show' | 'portal'> {}
 
@@ -993,7 +984,7 @@ export const FloatContextMenuPropsValidators = {
   middleware: FloatPropsValidators.middleware,
 }
 
-export const FloatContextMenu = {
+const FloatContextMenuComp = defineComponent({
   name: 'FloatContextMenu',
   inheritAttrs: false,
   props: FloatContextMenuPropsValidators,
@@ -1047,14 +1038,12 @@ export const FloatContextMenu = {
       }, slots.default)
     }
   },
-} as unknown as {
-  new (): {
-    $props: FloatContextMenuProps
-    $slots: {
-      default: (props: FloatVirtualSlotProps) => any
-    }
-  }
-}
+})
+export const FloatContextMenu = FloatContextMenuComp as __VLS_WithTemplateSlots<typeof FloatContextMenuComp, Readonly<{
+  default: (props: FloatVirtualSlotProps) => any
+}> & {
+  default: (props: FloatVirtualSlotProps) => any
+}>
 
 export interface FloatCursorProps extends Omit<FloatVirtualProps, 'show' | 'portal'> {
   globalHideCursor?: boolean
@@ -1090,7 +1079,7 @@ export const FloatCursorPropsValidators = {
   },
 }
 
-export const FloatCursor = {
+const FloatCursorComp = defineComponent({
   name: 'FloatCursor',
   inheritAttrs: false,
   props: FloatCursorPropsValidators,
@@ -1188,11 +1177,9 @@ export const FloatCursor = {
       }, slots.default)
     }
   },
-} as unknown as {
-  new (): {
-    $props: FloatCursorProps
-    $slots: {
-      default: (props: FloatVirtualSlotProps) => any
-    }
-  }
-}
+})
+export const FloatCursor = FloatCursorComp as __VLS_WithTemplateSlots<typeof FloatCursorComp, Readonly<{
+  default: (props: FloatVirtualSlotProps) => any
+}> & {
+  default: (props: FloatVirtualSlotProps) => any
+}>

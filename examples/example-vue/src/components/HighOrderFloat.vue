@@ -1,5 +1,6 @@
 <template>
   <Float
+    v-slot="slotProps"
     :offset="8"
     flip
     :shift="6"
@@ -12,7 +13,7 @@
     leave-to="scale-95 opacity-0"
     tailwindcss-origin-class
   >
-    <slot />
+    <slot v-bind="slotProps" />
   </Float>
 </template>
 
