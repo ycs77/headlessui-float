@@ -136,7 +136,7 @@ export interface FloatProps {
 export function renderReferenceElement(
   ReferenceNode: ReactElement,
   componentProps: FloatReferenceProps & Required<Pick<FloatReferenceProps, 'as'>>,
-  attrs: Record<string, any>,
+  { key, ...attrs }: Record<string, any>,
   context: ReferenceState
 ) {
   const { referenceRef } = context
@@ -146,6 +146,7 @@ export function renderReferenceElement(
   if (props.as === Fragment) {
     return (
       <ReferenceNode.type
+        key={key}
         {...ReferenceNode.props}
         {...attrs}
         ref={referenceRef}
@@ -155,7 +156,7 @@ export function renderReferenceElement(
 
   const Wrapper = props.as || 'div'
   return (
-    <Wrapper {...attrs} ref={referenceRef}>
+    <Wrapper key={key} {...attrs} ref={referenceRef}>
       <ReferenceNode.type {...ReferenceNode.props} />
     </Wrapper>
   )
@@ -169,7 +170,7 @@ export type RenderFloatingElementProps =
 export function renderFloatingElement(
   FloatingNode: ReactElement,
   componentProps: RenderFloatingElementProps,
-  attrs: Record<string, any>,
+  { key, ...attrs }: Record<string, any>,
   context: FloatingState
 ) {
   const { floatingRef, props: rootProps, mounted, setShow, referenceHidden, escaped, placement, floatingStyles, referenceElWidth } = context
@@ -245,6 +246,7 @@ export function renderFloatingElement(
     if (props.as === Fragment) {
       return (
         <FloatingNode.type
+          key={key}
           {...FloatingNode.props}
           {...nodeProps}
         />
@@ -253,7 +255,7 @@ export function renderFloatingElement(
 
     const Wrapper = props.as || 'div'
     return (
-      <Wrapper {...nodeProps}>
+      <Wrapper key={key} {...nodeProps}>
         <FloatingNode.type {...FloatingNode.props} />
       </Wrapper>
     )
