@@ -37,23 +37,24 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run dev:prepare && nuxt-module-build build",
+    "build": "npm run build:prepare && nuxt-module-build build",
+    "build:prepare": "cross-env NUXT_TELEMETRY_DISABLED=1 nuxt-module-build prepare",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && cross-env NUXT_TELEMETRY_DISABLED=1 nuxt-module-build prepare && nuxi prepare playground",
+    "dev:prepare": "nuxt-module-build build --stub && npm run build:prepare && nuxi prepare playground",
     "prepack": "npm run build"
   },
   "dependencies": {
     "@headlessui-float/vue": "^0.14.3",
     "@headlessui/vue": "^1.7.0",
-    "@nuxt/kit": "^3.9.0"
+    "@nuxt/kit": "^3.13.0"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "^0.5.5",
-    "@nuxt/schema": "^3.9.0",
+    "@nuxt/module-builder": "^0.8.3",
+    "@nuxt/schema": "^3.13.0",
     "@nuxtjs/tailwindcss": "^6.11.0",
     "@types/node": "^20.0.0",
     "cross-env": "^7.0.3",
-    "nuxt": "^3.12.4"
+    "nuxt": "^3.13.0"
   }
 }

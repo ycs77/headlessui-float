@@ -1,6 +1,6 @@
-import { createHighOrderFloatComponent } from '@headlessui-float/vue'
+import { type Float, createHighOrderFloatComponent } from '@headlessui-float/vue'
 
-export default createHighOrderFloatComponent({
+const HighOrderFloat: typeof Float = createHighOrderFloatComponent({
   offset: 8,
   flip: true,
   shift: 6,
@@ -13,3 +13,5 @@ export default createHighOrderFloatComponent({
   leaveTo: 'scale-95 opacity-0',
   tailwindcssOriginClass: true,
 })
+
+export default HighOrderFloat

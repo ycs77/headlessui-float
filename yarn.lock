@@ -1280,7 +1280,7 @@
     which "^3.0.1"
     ws "^8.18.0"
 
-"@nuxt/kit@3.13.0", "@nuxt/kit@^3.11.2", "@nuxt/kit@^3.12.3", "@nuxt/kit@^3.12.4", "@nuxt/kit@^3.9.0":
+"@nuxt/kit@3.13.0", "@nuxt/kit@^3.11.2", "@nuxt/kit@^3.12.3", "@nuxt/kit@^3.12.4", "@nuxt/kit@^3.13.0":
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/@nuxt/kit/-/kit-3.13.0.tgz#95d56b7eb2c54ad7873b4e3a9cd7c6fe3bbd3c81"
   integrity sha512-gbhSbDvYfkGQ0R2ztqTLQLHRMv+7g50kAKKuN6mbF4tL9jg7NPnQ8bAarn2I4Qx8xtmwO+qY1ABkmYMn5S1CpA==
@@ -1306,18 +1306,22 @@
     unimport "^3.11.0"
     untyped "^1.4.2"
 
-"@nuxt/module-builder@^0.5.5":
-  version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@nuxt/module-builder/-/module-builder-0.5.5.tgz#7b45e239250884e1382fd0ec8fd43e06d6b21303"
-  integrity sha512-ifFfwA1rbSXSae25RmqA2kAbV3xoShZNrq1yK8VXB/EnIcDn4WiaYR1PytaSxIt5zsvWPn92BJXiIUBiMQZ0hw==
+"@nuxt/module-builder@^0.8.3":
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/@nuxt/module-builder/-/module-builder-0.8.3.tgz#d87312aedd9a025d297f34338d7198652b79fbfa"
+  integrity sha512-m9W3P6f6TFnHmVFKRo/2gELWDi3r0k8i93Z1fY5z410GZmttGVPv8KgRgOgC79agRi/OtpbyG3BPRaWdbDZa5w==
   dependencies:
-    citty "^0.1.5"
+    citty "^0.1.6"
     consola "^3.2.3"
-    mlly "^1.4.2"
-    pathe "^1.1.1"
+    defu "^6.1.4"
+    magic-regexp "^0.8.0"
+    mlly "^1.7.1"
+    pathe "^1.1.2"
+    pkg-types "^1.1.3"
+    tsconfck "^3.1.1"
     unbuild "^2.0.0"
 
-"@nuxt/schema@3.13.0", "@nuxt/schema@^3.12.4", "@nuxt/schema@^3.9.0":
+"@nuxt/schema@3.13.0", "@nuxt/schema@^3.12.4", "@nuxt/schema@^3.13.0":
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/@nuxt/schema/-/schema-3.13.0.tgz#104ce5fdca095ba98268a3dfe47c92e657d08f0d"
   integrity sha512-JBGSjF9Hd8guvTV2312eM1RulCMJc50yR3CeMZPLDsI02A8TXQnABS8EbgvGRvxD43q/ITjj21B2ffG1wEVrnQ==
@@ -5802,6 +5806,19 @@ lz-string@^1.5.0:
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.5.0.tgz#c1ab50f77887b712621201ba9fd4e3a6ed099941"
   integrity sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==
 
+magic-regexp@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/magic-regexp/-/magic-regexp-0.8.0.tgz#c67de16456522a83672c22aa408b774facfd882e"
+  integrity sha512-lOSLWdE156csDYwCTIGiAymOLN7Epu/TU5e/oAnISZfU6qP+pgjkE+xbVjVn3yLPKN8n1G2yIAYTAM5KRk6/ow==
+  dependencies:
+    estree-walker "^3.0.3"
+    magic-string "^0.30.8"
+    mlly "^1.6.1"
+    regexp-tree "^0.1.27"
+    type-level-regexp "~0.1.17"
+    ufo "^1.4.0"
+    unplugin "^1.8.3"
+
 magic-string-ast@^0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/magic-string-ast/-/magic-string-ast-0.6.2.tgz#180679c584bdea9de1dbb6c755fd3e4bf1b0b509"
@@ -6310,7 +6327,7 @@ nuxi@^3.12.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-nuxt@^3.12.4:
+nuxt@^3.13.0:
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/nuxt/-/nuxt-3.13.0.tgz#c8c8d62d13418231bd8014dfbd874cbc61b62855"
   integrity sha512-NZlPGlMav18KXWiOmTguQtH5lcrwooPniWXM3Ca4c9spsMRu3wyWLlN8wiI/cK+lEu3rQyKCGSA75nFVK4Ew3w==
@@ -8186,6 +8203,11 @@ ts-interface-checker@^0.1.9:
   resolved "https://registry.yarnpkg.com/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz#784fd3d679722bc103b1b4b8030bcddb5db2a699"
   integrity sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
 
+tsconfck@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/tsconfck/-/tsconfck-3.1.1.tgz#c7284913262c293b43b905b8b034f524de4a3162"
+  integrity sha512-00eoI6WY57SvZEVjm13stEVE90VkEdJAFGgpFLTsZbJyW/LwFQ7uQxJHWpZ2hzSWgCPKc9AnBnNP+0X7o3hAmQ==
+
 tslib@^2.3.1, tslib@^2.6.2:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.3.tgz#0438f810ad7a9edcde7a241c3d80db693c8cbfe0"
@@ -8240,6 +8262,11 @@ type-is@^1.6.16:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
+
+type-level-regexp@~0.1.17:
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/type-level-regexp/-/type-level-regexp-0.1.17.tgz#ec1bf7dd65b85201f9863031d6f023bdefc2410f"
+  integrity sha512-wTk4DH3cxwk196uGLK/E9pE45aLfeKJacKmcEgEOA/q5dnPGNxXt0cfYdFxb57L+sEpf1oJH4Dnx/pnRcku9jg==
 
 typescript@~5.4.0:
   version "5.4.5"
@@ -8424,7 +8451,7 @@ unplugin-vue-router@^0.10.7:
     unplugin "^1.12.1"
     yaml "^2.5.0"
 
-unplugin@^1.10.0, unplugin@^1.12.1, unplugin@^1.12.2, unplugin@^1.3.1, unplugin@^1.4.0, unplugin@^1.6.0:
+unplugin@^1.10.0, unplugin@^1.12.1, unplugin@^1.12.2, unplugin@^1.3.1, unplugin@^1.4.0, unplugin@^1.6.0, unplugin@^1.8.3:
   version "1.12.2"
   resolved "https://registry.yarnpkg.com/unplugin/-/unplugin-1.12.2.tgz#cc85aef010614394898caccf5f17002af8a4cd6f"
   integrity sha512-bEqQxeC7rxtxPZ3M5V4Djcc4lQqKPgGe3mAWZvxcSmX5jhGxll19NliaRzQSQPrk4xJZSGniK3puLWpRuZN7VQ==
