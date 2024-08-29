@@ -5,14 +5,14 @@ import { html } from './utils/html'
 
 const Wrapper: FunctionalComponent = (props, { slots }) => {
   return h('div', mergeProps(props, {
-    'class': 'wrapper-class',
+    class: 'wrapper-class',
     'data-label': 'wrapper label',
   }), slots)
 }
 
 const FloatingWrapper: FunctionalComponent = (props, { slots }) => {
   return h('div', mergeProps(props, {
-    'class': 'floating-wrapper-class',
+    class: 'floating-wrapper-class',
     'data-label': 'floating wrapper label',
   }), slots)
 }
