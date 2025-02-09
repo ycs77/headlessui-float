@@ -1,4 +1,4 @@
-import ycs77, { GLOB_JSX, GLOB_TS, GLOB_TSX } from '@ycs77/eslint-config'
+import ycs77, { GLOB_JSX, GLOB_TS, GLOB_TSX, GLOB_VUE } from '@ycs77/eslint-config'
 
 export default ycs77({
   vue: true,
@@ -10,8 +10,10 @@ export default ycs77({
     },
   })
   .append({
-    files: [GLOB_TS, GLOB_TSX],
+    files: [GLOB_TS, GLOB_TSX, GLOB_VUE],
     rules: {
+      'style/indent': 'off',
+
       'ts/prefer-literal-enum-member': 'off',
 
       'antfu/top-level-function': 'off',

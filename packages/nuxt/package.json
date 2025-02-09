@@ -50,11 +50,11 @@
     "@nuxt/kit": "^3.13.0"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "^0.8.3",
-    "@nuxt/schema": "^3.13.0",
-    "@nuxtjs/tailwindcss": "^6.11.0",
-    "@types/node": "^20.0.0",
+    "@nuxt/module-builder": "^0.8.4",
+    "@nuxt/schema": "~3.13.0",
+    "@nuxtjs/tailwindcss": "~6.12.2",
+    "@types/node": "^22.0.0",
     "cross-env": "^7.0.3",
-    "nuxt": "^3.13.0"
+    "nuxt": "~3.13.0"
   }
 }
