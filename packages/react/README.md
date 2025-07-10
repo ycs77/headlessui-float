@@ -12,6 +12,9 @@
 
 <hr>
 
+> [!WARNING]
+> This package is unmaintained due to lack of time. It should mostly work but do not expect fixes or new features.
+
 > [!NOTE]
 > [Headless UI](https://headlessui.com/) has [released version 2.0](https://tailwindcss.com/blog/headless-ui-v2#built-in-anchor-positioning) (currently for React only), which builds in anchor positioning with Floating UI, making this package unnecessary.
 
