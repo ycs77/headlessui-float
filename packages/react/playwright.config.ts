@@ -1,6 +1,6 @@
 import type { PlaywrightTestConfig } from '@playwright/test'
 
-export default <PlaywrightTestConfig>{
+export default {
   use: {
     launchOptions: {
       ignoreDefaultArgs: ['--hide-scrollbars'],
@@ -12,4 +12,4 @@ export default <PlaywrightTestConfig>{
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
-}
+} satisfies PlaywrightTestConfig
